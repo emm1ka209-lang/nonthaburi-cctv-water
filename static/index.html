@@ -1,1504 +1,2081 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
 
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
 >
 
 <title>
-ระบบกล้องโทรทัศน์วงจรปิด ตรวจวัดระดับน้ำ จังหวัดนนทบุรี
+ระบบกล้องโทรทัศน์วงจรปิดตรวจวัดระดับน้ำ จังหวัดนนทบุรี
 </title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- =====================================================
+     FONT
+===================================================== -->
 
 <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
+  rel="preconnect"
+  href="https://fonts.googleapis.com"
 >
 
+<link
+  rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin
+>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+>
+
+
+<!-- =====================================================
+     HLS.JS
+===================================================== -->
+
 <script
-    src="https://cdn.jsdelivr.net/npm/hls.js@latest"
+  src="https://cdn.jsdelivr.net/npm/hls.js@latest"
 ></script>
 
 
 <style>
 
-/* =========================================================
-   BASE
-========================================================= */
-
-* {
-    box-sizing: border-box;
-}
+/* =====================================================
+   ROOT
+===================================================== */
 
 :root {
 
-    --purple: #5b35b5;
-    --purple-dark: #40228e;
-    --purple-light: #eee9ff;
+  --purple:
+    #5b35b5;
 
-    --text: #202047;
-    --muted: #77758b;
+  --purple-dark:
+    #45218f;
 
-    --border: #e5e1f4;
+  --purple-light:
+    #eee9ff;
 
-    --bg: #f7f7fc;
-    --card: #ffffff;
+  --purple-soft:
+    #f7f4ff;
 
-    --green: #18a957;
-    --yellow: #e4a400;
-    --red: #df4b4b;
+  --yellow:
+    #e6b629;
 
-    --shadow:
-        0 10px 30px rgba(53, 37, 105, 0.08);
+  --text:
+    #29263b;
+
+  --muted:
+    #777487;
+
+  --border:
+    #e8e3f3;
+
+  --bg:
+    #f7f7fb;
+
+  --white:
+    #ffffff;
+
+  --green:
+    #19a957;
+
+  --red:
+    #df4b4b;
+
+  --shadow:
+    0 8px 25px rgba(55,40,100,.07);
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+
+  box-sizing:
+    border-box;
+
 }
 
 
 html,
 body {
 
-    margin: 0;
-    padding: 0;
+  margin:
+    0;
 
-    min-height: 100%;
+  padding:
+    0;
 
-    font-family:
-        "Noto Sans Thai",
-        system-ui,
-        sans-serif;
+  min-height:
+    100%;
 
-    color: var(--text);
+  font-family:
+    "Noto Sans Thai",
+    system-ui,
+    sans-serif;
 
-    background:
-        linear-gradient(
-            135deg,
-            #f8f8ff 0%,
-            #ffffff 45%,
-            #f4f1ff 100%
-        );
+  color:
+    var(--text);
+
+  background:
+    linear-gradient(
+      135deg,
+      #fafaff 0%,
+      #ffffff 50%,
+      #f5f1ff 100%
+    );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    SPLASH
-========================================================= */
+===================================================== */
 
 .splash {
 
-    position: fixed;
+  position:
+    fixed;
 
-    inset: 0;
+  inset:
+    0;
 
-    z-index: 9999;
+  z-index:
+    9999;
 
-    display: flex;
+  display:
+    flex;
 
-    align-items: center;
-    justify-content: center;
+  align-items:
+    center;
 
-    background: #ffffff;
+  justify-content:
+    center;
 
-    transition:
-        opacity .45s ease,
-        visibility .45s ease;
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff,
+      #f4f0ff
+    );
+
+  transition:
+    opacity .45s ease,
+    visibility .45s ease;
+
 }
 
 
 .splash.hide {
 
-    opacity: 0;
+  opacity:
+    0;
 
-    visibility: hidden;
+  visibility:
+    hidden;
+
 }
 
 
 .splash-inner {
 
-    width: min(90vw, 560px);
+  width:
+    min(90vw,560px);
 
-    padding: 30px;
+  padding:
+    30px;
 
-    text-align: center;
+  text-align:
+    center;
+
 }
 
 
 .splash-logo {
 
-    width: 110px;
-    height: 110px;
+  width:
+    95px;
 
-    object-fit: contain;
+  height:
+    95px;
 
-    display: block;
+  object-fit:
+    contain;
 
-    margin:
-        0 auto 20px auto;
+  display:
+    block;
+
+  margin:
+    0 auto 18px;
+
 }
 
 
 .splash-title {
 
-    font-size: 23px;
+  font-size:
+    clamp(19px,3vw,26px);
 
-    font-weight: 800;
+  line-height:
+    1.5;
 
-    line-height: 1.5;
+  font-weight:
+    800;
+
 }
 
 
 .splash-subtitle {
 
-    margin-top: 6px;
+  margin-top:
+    5px;
 
-    color: #777;
+  color:
+    var(--muted);
+
+  font-size:
+    14px;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    HEADER
-========================================================= */
+   เตี้ยกว่าเดิมมาก
+===================================================== */
 
 .header {
 
-    padding: 22px 30px;
+  height:
+    72px;
 
-    background:
-        linear-gradient(
-            120deg,
-            #ffffff 0%,
-            #f8f5ff 65%,
-            #f0ebff 100%
-        );
+  padding:
+    0 24px;
 
-    border-bottom:
-        1px solid #eeeaf8;
+  display:
+    flex;
 
-    display: flex;
+  align-items:
+    center;
 
-    justify-content: space-between;
+  justify-content:
+    space-between;
 
-    align-items: center;
+  gap:
+    20px;
 
-    gap: 20px;
+  background:
+    rgba(255,255,255,.96);
+
+  border-bottom:
+    1px solid var(--border);
+
+  box-shadow:
+    0 2px 12px rgba(50,40,90,.04);
+
 }
 
+
+/* =====================================================
+   HEADER TITLE
+===================================================== */
 
 .header-left {
 
-    display: flex;
+  min-width:
+    0;
 
-    align-items: center;
+  display:
+    flex;
 
-    gap: 18px;
+  align-items:
+    center;
 
-    min-width: 0;
-}
-
-
-.province-logo {
-
-    width: 70px;
-    height: 70px;
-
-    object-fit: contain;
-
-    flex-shrink: 0;
 }
 
 
 .header-title {
 
-    font-size:
-        clamp(19px, 2vw, 30px);
+  font-size:
+    clamp(15px,1.45vw,21px);
 
-    font-weight: 800;
+  line-height:
+    1.25;
 
-    line-height: 1.35;
+  font-weight:
+    800;
+
+  white-space:
+    nowrap;
+
+  overflow:
+    hidden;
+
+  text-overflow:
+    ellipsis;
+
 }
 
 
 .header-subtitle {
 
-    margin-top: 4px;
+  display:
+    inline;
 
-    color: #77758b;
+  margin-left:
+    10px;
 
-    font-size: 13px;
+  color:
+    var(--muted);
+
+  font-size:
+    12px;
+
+  font-weight:
+    500;
+
 }
 
 
+.header-subtitle::before {
+
+  content:
+    "•";
+
+  margin-right:
+    10px;
+
+  color:
+    var(--purple);
+
+}
+
+
+/* =====================================================
+   HEADER RIGHT
+===================================================== */
+
 .header-right {
 
-    display: flex;
+  flex-shrink:
+    0;
 
-    align-items: center;
+  display:
+    flex;
 
-    gap: 15px;
+  align-items:
+    center;
 
-    white-space: nowrap;
+  gap:
+    18px;
+
+}
+
+
+.update-box {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  font-size:
+    12px;
+
+  white-space:
+    nowrap;
+
+}
+
+
+.update-label {
+
+  color:
+    var(--muted);
+
+}
+
+
+.update-value {
+
+  font-weight:
+    700;
+
 }
 
 
 .status-online {
 
-    display: flex;
+  display:
+    flex;
 
-    align-items: center;
+  align-items:
+    center;
 
-    gap: 7px;
+  gap:
+    6px;
 
-    color: var(--green);
+  color:
+    var(--green);
 
-    font-weight: 600;
+  font-size:
+    12px;
+
+  font-weight:
+    700;
+
+  white-space:
+    nowrap;
+
 }
 
 
 .status-dot {
 
-    width: 9px;
-    height: 9px;
+  width:
+    8px;
 
-    border-radius: 50%;
+  height:
+    8px;
 
-    background: var(--green);
+  border-radius:
+    50%;
+
+  background:
+    var(--green);
+
 }
 
 
-/* =========================================================
+/* =====================================================
    PAGE
-========================================================= */
+===================================================== */
 
 .page {
 
-    width:
-        min(1600px, calc(100% - 32px));
+  width:
+    min(1500px,calc(100% - 28px));
 
-    margin:
-        18px auto 40px;
+  margin:
+    14px auto 28px;
+
 }
 
+
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
 
 .main-layout {
 
-    display: grid;
+  display:
+    grid;
 
-    grid-template-columns:
-        minmax(300px, .9fr)
-        minmax(650px, 2fr);
+  grid-template-columns:
+    310px minmax(0,1fr);
 
-    gap: 18px;
+  gap:
+    14px;
+
+  align-items:
+    start;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    CAMERA PANEL
-========================================================= */
+===================================================== */
 
 .camera-panel {
 
-    background:
-        rgba(255,255,255,.9);
+  background:
+    rgba(255,255,255,.94);
 
-    border:
-        1px solid #eeeaf7;
+  border:
+    1px solid var(--border);
 
-    border-radius: 18px;
+  border-radius:
+    15px;
 
-    padding: 18px;
+  padding:
+    14px;
 
-    box-shadow: var(--shadow);
+  box-shadow:
+    var(--shadow);
+
 }
 
 
 .section-title {
 
-    display: flex;
+  display:
+    flex;
 
-    align-items: center;
+  align-items:
+    center;
 
-    gap: 10px;
+  gap:
+    8px;
 
-    font-size: 21px;
+  font-size:
+    17px;
 
-    font-weight: 800;
+  font-weight:
+    800;
 
-    margin-bottom: 15px;
+  margin-bottom:
+    11px;
+
 }
 
 
 .section-icon {
 
-    width: 38px;
-    height: 38px;
+  width:
+    32px;
 
-    display: flex;
+  height:
+    32px;
 
-    align-items: center;
-    justify-content: center;
+  display:
+    flex;
 
-    border-radius: 12px;
+  align-items:
+    center;
 
-    background:
-        var(--purple-light);
+  justify-content:
+    center;
 
-    color:
-        var(--purple);
+  border-radius:
+    9px;
+
+  background:
+    var(--purple-light);
+
+  color:
+    var(--purple);
+
 }
 
 
+/* =====================================================
+   CAMERA LIST
+===================================================== */
+
 .camera-list {
 
-    display: flex;
+  display:
+    flex;
 
-    flex-direction: column;
+  flex-direction:
+    column;
 
-    gap: 14px;
+  gap:
+    10px;
+
 }
 
 
 .camera-card {
 
-    position: relative;
+  display:
+    grid;
 
-    border:
-        1px solid var(--border);
+  grid-template-columns:
+    105px minmax(0,1fr);
 
-    border-radius: 15px;
+  gap:
+    10px;
 
-    padding: 12px;
+  padding:
+    8px;
 
-    background: #fff;
+  background:
+    #fff;
 
-    display: grid;
+  border:
+    1px solid var(--border);
 
-    grid-template-columns:
-        180px 1fr;
+  border-radius:
+    12px;
 
-    gap: 15px;
+  cursor:
+    pointer;
 
-    cursor: pointer;
+  transition:
+    .2s ease;
 
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        border-color .2s ease;
 }
 
 
 .camera-card:hover {
 
-    transform:
-        translateY(-2px);
+  border-color:
+    #bca9ef;
 
-    box-shadow:
-        0 8px 22px
-        rgba(91,53,181,.12);
+  box-shadow:
+    0 5px 16px rgba(91,53,181,.09);
 
-    border-color:
-        #c9bcf6;
 }
 
 
 .camera-card.active {
 
-    border-color:
-        #8f78dc;
+  border-color:
+    #8e72d7;
 
-    box-shadow:
-        0 0 0 2px
-        rgba(91,53,181,.08);
+  box-shadow:
+    0 0 0 2px
+    rgba(91,53,181,.07);
+
 }
 
 
 .camera-card.disabled {
 
-    cursor: default;
+  cursor:
+    default;
 
-    background:
-        #f7f7f8;
+  background:
+    #f8f8f9;
+
 }
 
 
+/* =====================================================
+   CAMERA THUMBNAIL
+===================================================== */
+
 .camera-thumb {
 
-    width: 100%;
+  position:
+    relative;
 
-    aspect-ratio: 16 / 9;
+  width:
+    100%;
 
-    border-radius: 11px;
+  aspect-ratio:
+    16 / 10;
 
-    overflow: hidden;
+  overflow:
+    hidden;
 
-    background:
-        linear-gradient(
-            135deg,
-            #d8d8dc,
-            #b8b8bf
-        );
+  border-radius:
+    8px;
 
-    position: relative;
+  background:
+    linear-gradient(
+      135deg,
+      #f0edff,
+      #ddd7f4
+    );
+
 }
 
 
 .camera-thumb img {
 
-    width: 100%;
-    height: 100%;
+  width:
+    100%;
 
-    object-fit: cover;
+  height:
+    100%;
 
-    display: block;
+  display:
+    block;
+
+  object-fit:
+    cover;
+
+}
+
+
+.camera-placeholder {
+
+  position:
+    absolute;
+
+  inset:
+    0;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  color:
+    var(--purple);
+
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
+}
+
+
+.camera-placeholder-icon {
+
+  font-size:
+    25px;
+
+  opacity:
+    .6;
+
+}
+
+
+.camera-thumb:has(img[src])
+.camera-placeholder {
+
+  display:
+    none;
+
+}
+
+
+.camera-thumb.no-image
+.camera-placeholder {
+
+  display:
+    flex;
+
 }
 
 
 .camera-thumb-overlay {
 
-    position: absolute;
+  position:
+    absolute;
 
-    inset: 0;
+  inset:
+    0;
 
-    display: flex;
+  display:
+    flex;
 
-    align-items: center;
+  align-items:
+    center;
 
-    justify-content: center;
+  justify-content:
+    center;
 
-    background:
-        rgba(30,30,40,.55);
+  text-align:
+    center;
 
-    color: white;
+  color:
+    #fff;
 
-    font-weight: 700;
+  background:
+    rgba(40,35,60,.6);
 
-    text-align: center;
+  font-size:
+    11px;
+
+  font-weight:
+    700;
+
 }
 
 
+/* =====================================================
+   CAMERA CONTENT
+===================================================== */
+
 .camera-content {
 
-    min-width: 0;
+  min-width:
+    0;
 
-    display: flex;
+  display:
+    flex;
 
-    flex-direction: column;
+  flex-direction:
+    column;
 
-    justify-content: center;
+  justify-content:
+    center;
+
 }
 
 
 .camera-name {
 
-    font-size: 18px;
+  font-size:
+    14px;
 
-    font-weight: 800;
+  line-height:
+    1.4;
 
-    line-height: 1.4;
+  font-weight:
+    800;
+
 }
 
 
 .camera-location {
 
-    color:
-        #69677d;
+  margin-top:
+    3px;
 
-    margin-top: 5px;
+  font-size:
+    11px;
 
-    font-size: 14px;
+  color:
+    var(--muted);
+
 }
 
 
 .camera-id {
 
-    color:
-        #888;
+  margin-top:
+    2px;
 
-    font-size: 12px;
+  font-size:
+    10px;
 
-    margin-top: 5px;
+  color:
+    #999;
+
 }
 
 
 .camera-status {
 
-    margin-top: 13px;
+  margin-top:
+    6px;
 
-    display: flex;
+  display:
+    flex;
 
-    flex-wrap: wrap;
+  gap:
+    5px;
 
-    gap: 7px;
+  flex-wrap:
+    wrap;
+
 }
 
 
 .badge {
 
-    display: inline-flex;
+  display:
+    inline-flex;
 
-    align-items: center;
+  align-items:
+    center;
 
-    gap: 5px;
+  padding:
+    3px 7px;
 
-    padding:
-        5px 10px;
+  border-radius:
+    999px;
 
-    border-radius:
-        999px;
+  font-size:
+    9px;
 
-    font-size: 12px;
+  font-weight:
+    700;
 
-    font-weight: 600;
 }
 
 
 .badge.online {
 
-    background:
-        #e9f9ef;
+  background:
+    #e8f8ef;
 
-    color:
-        #138744;
-}
+  color:
+    #168747;
 
-
-.badge.maintenance {
-
-    background:
-        #eeeeef;
-
-    color:
-        #666;
 }
 
 
 .badge.live {
 
-    background:
-        #ffe7e7;
+  background:
+    #ffe7e7;
 
-    color:
-        #d74444;
+  color:
+    #d64444;
+
 }
 
 
-/* =========================================================
+.badge.maintenance {
+
+  background:
+    #eeeeef;
+
+  color:
+    #666;
+
+}
+
+
+/* =====================================================
    VIEWER
-========================================================= */
+===================================================== */
 
 .viewer {
 
-    min-width: 0;
+  min-width:
+    0;
+
 }
 
 
 .viewer-header {
 
-    background:
-        linear-gradient(
-            100deg,
-            var(--purple-dark),
-            var(--purple)
-        );
+  min-height:
+    58px;
 
-    color: white;
+  padding:
+    9px 15px;
 
-    border-radius:
-        17px;
+  border-radius:
+    13px;
 
-    padding:
-        17px 20px;
+  display:
+    flex;
 
-    display: flex;
+  align-items:
+    center;
 
-    justify-content: space-between;
+  justify-content:
+    space-between;
 
-    align-items: center;
+  gap:
+    12px;
 
-    gap: 15px;
+  color:
+    #fff;
 
-    box-shadow:
-        0 8px 25px
-        rgba(74,40,157,.18);
+  background:
+    linear-gradient(
+      100deg,
+      var(--purple-dark),
+      var(--purple)
+    );
+
+  box-shadow:
+    0 6px 18px rgba(74,40,157,.14);
+
 }
 
 
 .viewer-title {
 
-    font-size: 21px;
+  font-size:
+    17px;
 
-    font-weight: 800;
+  font-weight:
+    800;
+
 }
 
 
 .viewer-location {
 
-    font-size: 13px;
+  margin-top:
+    1px;
 
-    opacity: .85;
+  font-size:
+    11px;
 
-    margin-top: 2px;
+  opacity:
+    .82;
+
 }
 
 
 .live-badge {
 
-    background:
-        #ee6060;
+  flex-shrink:
+    0;
 
-    padding:
-        6px 12px;
+  padding:
+    4px 9px;
 
-    border-radius:
-        999px;
+  border-radius:
+    999px;
 
-    font-size: 12px;
+  background:
+    #ed5e5e;
 
-    font-weight: 700;
+  font-size:
+    10px;
+
+  font-weight:
+    800;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    VIEWER GRID
-========================================================= */
+===================================================== */
 
 .viewer-grid {
 
-    margin-top: 12px;
+  margin-top:
+    10px;
 
-    display: grid;
+  display:
+    grid;
 
-    grid-template-columns:
-        minmax(0, 1fr)
-        350px;
+  grid-template-columns:
+    minmax(0,1fr) 285px;
 
-    gap: 12px;
+  gap:
+    10px;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    VIDEO
-========================================================= */
+===================================================== */
 
 .video-card {
 
-    background: #000;
+  position:
+    relative;
 
-    border-radius:
-        14px;
+  width:
+    100%;
 
-    overflow: hidden;
+  aspect-ratio:
+    4 / 3;
 
-    position: relative;
+  overflow:
+    hidden;
 
-    aspect-ratio:
-        4 / 3;
+  background:
+    #000;
 
-    box-shadow:
-        var(--shadow);
+  border-radius:
+    13px;
+
+  box-shadow:
+    var(--shadow);
+
 }
 
 
 .video-card video {
 
-    width: 100%;
-    height: 100%;
+  width:
+    100%;
 
-    display: block;
+  height:
+    100%;
 
-    object-fit: cover;
+  display:
+    block;
 
-    background: #000;
+  object-fit:
+    cover;
+
+  background:
+    #000;
+
 }
 
 
-.video-time {
-
-    position: absolute;
-
-    left: 12px;
-    top: 10px;
-
-    padding:
-        3px 7px;
-
-    border-radius:
-        5px;
-
-    background:
-        rgba(0,0,0,.55);
-
-    color: white;
-
-    font-family:
-        monospace;
-
-    font-size: 13px;
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   BUFFERING
-========================================================= */
+/* =====================================================
+   VIDEO LOADING
+===================================================== */
 
 .video-loading {
 
-    position: absolute;
+  position:
+    absolute;
 
-    inset: 0;
+  inset:
+    0;
 
-    display: flex;
+  z-index:
+    3;
 
-    align-items: center;
+  display:
+    flex;
 
-    justify-content: center;
+  align-items:
+    center;
 
-    flex-direction: column;
+  justify-content:
+    center;
 
-    gap: 10px;
+  flex-direction:
+    column;
 
-    background:
-        rgba(0,0,0,.35);
+  gap:
+    9px;
 
-    color: white;
+  color:
+    #fff;
 
-    pointer-events: none;
+  background:
+    rgba(0,0,0,.32);
 
-    opacity: 0;
+  opacity:
+    0;
 
-    transition:
-        opacity .2s ease;
+  pointer-events:
+    none;
+
+  transition:
+    opacity .2s ease;
+
 }
 
 
 .video-loading.show {
 
-    opacity: 1;
+  opacity:
+    1;
+
 }
 
 
 .spinner {
 
-    width: 36px;
-    height: 36px;
+  width:
+    31px;
 
-    border:
-        3px solid
-        rgba(255,255,255,.35);
+  height:
+    31px;
 
-    border-top-color:
-        white;
+  border:
+    3px solid
+    rgba(255,255,255,.35);
 
-    border-radius: 50%;
+  border-top-color:
+    #fff;
 
-    animation:
-        spin .8s linear infinite;
+  border-radius:
+    50%;
+
+  animation:
+    spin .8s linear infinite;
+
 }
 
 
 @keyframes spin {
 
-    to {
-        transform:
-            rotate(360deg);
-    }
+  to {
+    transform:
+      rotate(360deg);
+  }
 
 }
 
 
-/* =========================================================
+.video-time {
+
+  position:
+    absolute;
+
+  left:
+    9px;
+
+  top:
+    9px;
+
+  padding:
+    3px 6px;
+
+  border-radius:
+    5px;
+
+  background:
+    rgba(0,0,0,.55);
+
+  color:
+    #fff;
+
+  font-family:
+    monospace;
+
+  font-size:
+    10px;
+
+}
+
+
+/* =====================================================
    WATER PANEL
-========================================================= */
+===================================================== */
 
 .water-panel {
 
-    background:
-        #fff;
+  overflow:
+    hidden;
 
-    border:
-        1px solid var(--border);
+  background:
+    #fff;
 
-    border-radius:
-        15px;
+  border:
+    1px solid var(--border);
 
-    overflow:
-        hidden;
+  border-radius:
+    13px;
 
-    box-shadow:
-        var(--shadow);
+  box-shadow:
+    var(--shadow);
+
 }
 
 
 .water-header {
 
-    background:
-        linear-gradient(
-            100deg,
-            #5a32b2,
-            #7550c9
-        );
+  padding:
+    10px 13px;
 
-    color: white;
+  color:
+    #fff;
 
-    padding:
-        15px 17px;
+  background:
+    linear-gradient(
+      100deg,
+      var(--purple-dark),
+      var(--purple)
+    );
 
-    font-size:
-        19px;
+  font-size:
+    15px;
 
-    font-weight:
-        800;
+  font-weight:
+    800;
+
 }
 
 
 .water-body {
 
-    padding:
-        15px;
-}
+  padding:
+    11px;
 
-
-.water-image {
-
-    width: 100%;
-
-    aspect-ratio:
-        1.45;
-
-    object-fit:
-        contain;
-
-    border-radius:
-        10px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #f2efff,
-            #fafaff
-        );
-
-    display: block;
 }
 
 
 .water-placeholder {
 
-    width: 100%;
+  width:
+    100%;
 
-    aspect-ratio:
-        1.45;
+  aspect-ratio:
+    1.4;
 
-    border-radius:
-        10px;
+  display:
+    flex;
 
-    background:
-        linear-gradient(
-            135deg,
-            #f0ecff,
-            #faf9ff
-        );
+  align-items:
+    center;
 
-    display: flex;
+  justify-content:
+    center;
 
-    flex-direction: column;
+  flex-direction:
+    column;
 
-    align-items: center;
+  text-align:
+    center;
 
-    justify-content: center;
+  padding:
+    12px;
 
-    text-align: center;
+  border-radius:
+    9px;
 
-    color:
-        var(--purple);
+  background:
+    linear-gradient(
+      135deg,
+      #f0edff,
+      #faf9ff
+    );
 
-    padding:
-        20px;
+  color:
+    var(--purple);
+
 }
 
 
 .water-placeholder-icon {
 
-    font-size:
-        55px;
+  font-size:
+    42px;
 
-    opacity:
-        .55;
+  opacity:
+    .55;
 
-    margin-bottom:
-        5px;
 }
 
 
 .water-placeholder strong {
 
-    font-size:
-        18px;
+  font-size:
+    13px;
+
 }
 
 
 .water-placeholder span {
 
-    font-size:
-        12px;
+  margin-top:
+    2px;
 
-    color:
-        #888;
+  color:
+    #888;
 
-    margin-top:
-        3px;
+  font-size:
+    9px;
+
+}
+
+
+.water-image {
+
+  width:
+    100%;
+
+  aspect-ratio:
+    1.4;
+
+  object-fit:
+    contain;
+
+  border-radius:
+    9px;
+
+  background:
+    #f7f5ff;
+
 }
 
 
 .water-value-box {
 
-    margin-top:
-        12px;
+  margin-top:
+    9px;
 
-    padding:
-        13px;
+  padding:
+    10px;
 
-    border-radius:
-        12px;
+  border-radius:
+    9px;
 
-    background:
-        #f7f5ff;
+  background:
+    var(--purple-soft);
+
 }
 
 
 .water-label {
 
-    font-size:
-        13px;
+  font-size:
+    10px;
+
+  color:
+    var(--muted);
+
 }
 
 
 .water-value-row {
 
-    display:
-        flex;
+  display:
+    flex;
 
-    align-items:
-        baseline;
+  align-items:
+    baseline;
 
-    gap:
-        7px;
+  gap:
+    5px;
 
-    margin-top:
-        2px;
 }
 
 
 .water-value {
 
-    font-size:
-        31px;
+  font-size:
+    27px;
 
-    font-weight:
-        800;
+  font-weight:
+    800;
 
-    color:
-        var(--purple);
+  color:
+    var(--purple);
+
 }
 
 
 .water-unit {
 
-    font-size:
-        13px;
+  font-size:
+    11px;
 
-    color:
-        #666;
+  color:
+    #666;
+
 }
 
 
 .water-status {
 
-    margin-top:
-        8px;
+  display:
+    inline-flex;
 
-    display:
-        inline-flex;
+  margin-top:
+    5px;
 
-    align-items:
-        center;
+  padding:
+    4px 8px;
 
-    gap:
-        7px;
+  border-radius:
+    999px;
 
-    padding:
-        6px 10px;
+  font-size:
+    10px;
 
-    border-radius:
-        999px;
+  font-weight:
+    700;
 
-    font-size:
-        12px;
-
-    font-weight:
-        700;
 }
 
 
 .water-status.normal {
 
-    background:
-        #e8f8ee;
+  background:
+    #e8f8ee;
 
-    color:
-        #148847;
+  color:
+    #148847;
+
 }
 
 
 .water-status.warning {
 
-    background:
-        #fff5d9;
+  background:
+    #fff5d9;
 
-    color:
-        #9b7100;
+  color:
+    #9b7100;
+
 }
 
 
 .water-status.critical {
 
-    background:
-        #ffe6e6;
+  background:
+    #ffe6e6;
 
-    color:
-        #c83b3b;
+  color:
+    #c83b3b;
+
 }
 
 
 .water-status.waiting {
 
-    background:
-        #ededf0;
+  background:
+    #ededf0;
 
-    color:
-        #777;
+  color:
+    #777;
+
 }
 
 
+/* =====================================================
+   WATER META
+===================================================== */
+
 .water-meta {
 
-    margin-top:
-        15px;
+  margin-top:
+    7px;
+
 }
 
 
 .meta-row {
 
-    display:
-        flex;
+  display:
+    flex;
 
-    justify-content:
-        space-between;
+  justify-content:
+    space-between;
 
-    gap:
-        15px;
+  gap:
+    8px;
 
-    padding:
-        9px 0;
+  padding:
+    6px 0;
 
-    border-bottom:
-        1px solid #f0eef5;
+  border-bottom:
+    1px solid #f0eef5;
 
-    font-size:
-        12px;
+  font-size:
+    9px;
+
 }
 
 
 .meta-row:last-child {
 
-    border-bottom:
-        0;
+  border-bottom:
+    0;
+
 }
 
 
 .meta-label {
 
-    color:
-        #999;
+  color:
+    #999;
+
 }
 
 
 .meta-value {
 
-    font-weight:
-        600;
+  font-weight:
+    600;
 
-    text-align:
-        right;
+  text-align:
+    right;
+
 }
 
 
-/* =========================================================
-   INFO
-========================================================= */
+/* =====================================================
+   CAMERA INFO
+===================================================== */
 
 .camera-info {
 
-    margin-top:
-        12px;
+  margin-top:
+    10px;
 
-    background:
-        #fff;
+  padding:
+    11px;
 
-    border:
-        1px solid var(--border);
+  background:
+    #fff;
 
-    border-radius:
-        15px;
+  border:
+    1px solid var(--border);
 
-    padding:
-        17px;
+  border-radius:
+    12px;
 
-    box-shadow:
-        var(--shadow);
+  box-shadow:
+    var(--shadow);
+
 }
 
 
 .info-title {
 
-    font-size:
-        17px;
+  margin-bottom:
+    8px;
 
-    font-weight:
-        800;
+  color:
+    var(--purple);
 
-    color:
-        var(--purple);
+  font-size:
+    13px;
 
-    margin-bottom:
-        13px;
+  font-weight:
+    800;
+
 }
 
 
 .info-grid {
 
-    display:
-        grid;
+  display:
+    grid;
 
-    grid-template-columns:
-        1fr 1fr;
+  grid-template-columns:
+    1fr 1fr;
 
-    gap:
-        15px;
+  gap:
+    10px;
+
 }
 
 
 .logo-info {
 
-    display:
-        flex;
+  min-width:
+    0;
 
-    align-items:
-        center;
+  display:
+    flex;
 
-    gap:
-        12px;
+  align-items:
+    center;
+
+  gap:
+    8px;
+
 }
 
 
 .logo-info img {
 
-    width:
-        62px;
+  width:
+    45px;
 
-    height:
-        62px;
+  height:
+    45px;
 
-    object-fit:
-        contain;
+  object-fit:
+    contain;
 
-    flex-shrink:
-        0;
+  flex-shrink:
+    0;
+
 }
 
 
 .logo-info-text {
 
-    font-size:
-        13px;
+  min-width:
+    0;
+
+  font-size:
+    9px;
+
 }
 
 
 .logo-info-text strong {
 
-    display:
-        block;
+  display:
+    block;
 
-    font-size:
-        15px;
+  font-size:
+    11px;
+
 }
 
 
 .logo-info-text span {
 
-    color:
-        #777;
+  color:
+    #777;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    MAINTENANCE
-========================================================= */
+===================================================== */
 
 .maintenance-page {
 
-    min-height:
-        500px;
+  min-height:
+    450px;
 
-    background:
-        white;
+  display:
+    flex;
 
-    border:
-        1px solid var(--border);
+  align-items:
+    center;
 
-    border-radius:
-        20px;
+  justify-content:
+    center;
 
-    box-shadow:
-        var(--shadow);
+  text-align:
+    center;
 
-    display:
-        flex;
+  padding:
+    30px;
 
-    align-items:
-        center;
+  background:
+    #fff;
 
-    justify-content:
-        center;
+  border:
+    1px solid var(--border);
 
-    text-align:
-        center;
+  border-radius:
+    15px;
 
-    padding:
-        40px;
+  box-shadow:
+    var(--shadow);
+
 }
 
 
 .maintenance-icon {
 
-    font-size:
-        70px;
+  font-size:
+    55px;
 
-    margin-bottom:
-        10px;
 }
 
 
 .maintenance-page h2 {
 
-    margin:
-        0;
+  margin:
+    5px 0;
 
-    color:
-        var(--purple);
+  color:
+    var(--purple);
 
-    font-size:
-        28px;
+  font-size:
+    23px;
+
 }
 
 
 .maintenance-page p {
 
-    color:
-        #777;
+  color:
+    #777;
 
-    line-height:
-        1.8;
+  line-height:
+    1.7;
+
+  font-size:
+    13px;
+
 }
 
 
 .back-button {
 
-    border:
-        0;
+  border:
+    0;
 
-    background:
-        var(--purple);
+  padding:
+    8px 15px;
 
-    color:
-        white;
+  border-radius:
+    9px;
 
-    padding:
-        10px 18px;
+  color:
+    #fff;
 
-    border-radius:
-        10px;
+  background:
+    var(--purple);
 
-    font-family:
-        inherit;
+  font-family:
+    inherit;
 
-    cursor:
-        pointer;
+  cursor:
+    pointer;
+
 }
 
 
-/* =========================================================
-   RESPONSIVE
-========================================================= */
+/* =====================================================
+   TABLET
+===================================================== */
 
 @media (max-width:1200px) {
 
-    .main-layout {
+  .main-layout {
 
-        grid-template-columns:
-            1fr;
-    }
+    grid-template-columns:
+      260px minmax(0,1fr);
 
-    .camera-panel {
+  }
 
-        order:
-            2;
-    }
 
-    .viewer {
+  .viewer-grid {
 
-        order:
-            1;
-    }
+    grid-template-columns:
+      minmax(0,1fr) 250px;
 
-    .camera-list {
+  }
 
-        display:
-            grid;
 
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0,1fr)
-            );
-    }
+  .header-title {
+
+    font-size:
+      15px;
+
+  }
+
 }
 
 
-@media (max-width:900px) {
+/* =====================================================
+   SMALL TABLET
+===================================================== */
 
-    .viewer-grid {
+@media (max-width:950px) {
 
-        grid-template-columns:
-            1fr;
-    }
+  .header {
 
-    .water-panel {
+    height:
+      auto;
 
-        order:
-            2;
-    }
+    min-height:
+      64px;
 
-    .camera-list {
+    padding:
+      9px 15px;
 
-        grid-template-columns:
-            1fr;
-    }
+  }
 
-    .header {
 
-        align-items:
-            flex-start;
+  .header-title {
 
-        flex-direction:
-            column;
-    }
+    white-space:
+      normal;
 
-    .header-right {
+  }
 
-        width:
-            100%;
 
-        justify-content:
-            space-between;
-    }
+  .header-subtitle {
+
+    display:
+      block;
+
+    margin:
+      2px 0 0;
+
+  }
+
+
+  .header-subtitle::before {
+
+    display:
+      none;
+
+  }
+
+
+  .main-layout {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .camera-panel {
+
+    order:
+      2;
+
+  }
+
+
+  .viewer {
+
+    order:
+      1;
+
+  }
+
+
+  .camera-list {
+
+    display:
+      grid;
+
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+
+  }
+
 }
 
 
-@media (max-width:600px) {
+/* =====================================================
+   MOBILE
+===================================================== */
 
-    .page {
+@media (max-width:700px) {
 
-        width:
-            calc(100% - 18px);
+  .page {
 
-        margin-top:
-            10px;
-    }
+    width:
+      calc(100% - 14px);
 
-    .header {
+    margin:
+      8px auto 20px;
 
-        padding:
-            18px 15px;
-    }
+  }
 
-    .province-logo {
 
-        width:
-            58px;
+  .header {
 
-        height:
-            58px;
-    }
+    padding:
+      8px 11px;
 
-    .header-left {
+  }
 
-        gap:
-            10px;
-    }
 
-    .header-title {
+  .header-right {
 
-        font-size:
-            18px;
-    }
+    gap:
+      8px;
 
-    .camera-card {
+  }
 
-        grid-template-columns:
-            120px 1fr;
 
-        gap:
-            10px;
+  .status-online {
 
-        padding:
-            9px;
-    }
+    display:
+      none;
 
-    .camera-name {
+  }
 
-        font-size:
-            15px;
-    }
 
-    .camera-location {
+  .header-title {
 
-        font-size:
-            12px;
-    }
+    font-size:
+      14px;
 
-    .viewer-header {
+  }
 
-        padding:
-            13px;
-    }
 
-    .viewer-title {
+  .header-subtitle {
 
-        font-size:
-            17px;
-    }
+    font-size:
+      10px;
 
-    .info-grid {
+  }
 
-        grid-template-columns:
-            1fr;
-    }
+
+  .viewer-grid {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .water-panel {
+
+    order:
+      2;
+
+  }
+
+
+  .camera-list {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+
+  .camera-card {
+
+    grid-template-columns:
+      125px minmax(0,1fr);
+
+  }
+
+
+  .info-grid {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+}
+
+
+/* =====================================================
+   VERY SMALL MOBILE
+===================================================== */
+
+@media (max-width:450px) {
+
+  .header {
+
+    align-items:
+      flex-start;
+
+  }
+
+
+  .header-right {
+
+    align-self:
+      center;
+
+  }
+
+
+  .update-box {
+
+    display:
+      block;
+
+    text-align:
+      right;
+
+  }
+
+
+  .update-label {
+
+    display:
+      none;
+
+  }
+
+
+  .viewer-title {
+
+    font-size:
+      14px;
+
+  }
+
+
+  .viewer-location {
+
+    font-size:
+      9px;
+
+  }
+
+
+  .camera-card {
+
+    grid-template-columns:
+      100px minmax(0,1fr);
+
+  }
 
 }
 
@@ -1510,195 +2087,204 @@ body {
 <body>
 
 
+<!-- =====================================================
+     SPLASH
+===================================================== -->
 
-/* =========================================================
-   SPLASH
-========================================================= */
+<div
+  id="splash"
+  class="splash"
+>
 
-.splash {
+  <div
+    class="splash-inner"
+  >
 
-    position: fixed;
+    <img
+      id="splashLogo"
+      class="splash-logo"
+      src="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png"
+      alt=""
+    >
 
-    inset: 0;
 
-    z-index: 9999;
+    <div
+      class="splash-title"
+    >
 
-    display: flex;
+      ระบบกล้องโทรทัศน์วงจรปิด
+      ตรวจวัดระดับน้ำ
+      จังหวัดนนทบุรี
 
-    align-items: center;
-    justify-content: center;
+    </div>
 
-    background: #ffffff;
 
-    transition:
-        opacity .45s ease,
-        visibility .45s ease;
-}
+    <div
+      class="splash-subtitle"
+    >
 
+      CCTV Water Monitoring System
 
-.splash.hide {
+    </div>
 
-    opacity: 0;
+  </div>
 
-    visibility: hidden;
-}
+</div>
 
 
-.splash-inner {
 
-    width: min(90vw, 560px);
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-    padding: 30px;
+<header
+  class="header"
+>
 
-    text-align: center;
-}
+  <div
+    class="header-left"
+  >
 
+    <div>
 
-.splash-logo {
+      <span
+        class="header-title"
+      >
 
-    width: 110px;
-    height: 110px;
+        ระบบกล้องโทรทัศน์วงจรปิดตรวจวัดระดับน้ำ
+        จังหวัดนนทบุรี
 
-    object-fit: contain;
+      </span>
 
-    display: block;
 
-    margin:
-        0 auto 20px auto;
-}
+      <span
+        class="header-subtitle"
+      >
 
+        CCTV Water Monitoring System
 
-.splash-title {
+      </span>
 
-    font-size: 23px;
+    </div>
 
-    font-weight: 800;
+  </div>
 
-    line-height: 1.5;
-}
 
+  <div
+    class="header-right"
+  >
 
-.splash-subtitle {
+    <div
+      class="update-box"
+    >
 
-    margin-top: 6px;
+      <span
+        class="update-label"
+      >
+        อัปเดตล่าสุด
+      </span>
 
-    color: #777;
-}
 
+      <span
+        id="headerUpdate"
+        class="update-value"
+      >
+        --
+      </span>
 
-/* =========================================================
-   HEADER
-========================================================= */
+    </div>
 
-.header {
 
-    padding: 22px 30px;
+    <div
+      class="status-online"
+    >
 
-    background:
-        linear-gradient(
-            120deg,
-            #ffffff 0%,
-            #f8f5ff 65%,
-            #f0ebff 100%
-        );
+      <span
+        class="status-dot"
+      ></span>
 
-    border-bottom:
-        1px solid #eeeaf8;
+      ระบบออนไลน์
 
-    display: flex;
+    </div>
 
-    justify-content: space-between;
+  </div>
 
-    align-items: center;
+</header>
 
-    gap: 20px;
-}
 
 
-.header-left {
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
-    display: flex;
+<main
+  class="page"
+>
 
-    align-items: center;
+  <div
+    class="main-layout"
+  >
 
-    gap: 18px;
 
-    min-width: 0;
-}
+    <!-- =================================================
+         CAMERA LIST
+    ================================================== -->
 
+    <aside
+      class="camera-panel"
+    >
 
-.province-logo {
+      <div
+        class="section-title"
+      >
 
-    width: 70px;
-    height: 70px;
+        <div
+          class="section-icon"
+        >
+          📹
+        </div>
 
-    object-fit: contain;
+        เลือกจุดตรวจวัด
 
-    flex-shrink: 0;
-}
+      </div>
 
 
-.header-title {
+      <div
+        id="cameraList"
+        class="camera-list"
+      >
 
-    font-size:
-        clamp(19px, 2vw, 30px);
+        กำลังโหลดข้อมูล...
 
-    font-weight: 800;
+      </div>
 
-    line-height: 1.35;
-}
+    </aside>
 
 
-.header-subtitle {
 
-    margin-top: 4px;
+    <!-- =================================================
+         VIEWER
+    ================================================== -->
 
-    color: #77758b;
+    <section
+      id="viewer"
+      class="viewer"
+    >
 
-    font-size: 13px;
-}
+    </section>
 
 
-.header-right {
+  </div>
 
-    display: flex;
+</main>
 
-    align-items: center;
 
-    gap: 15px;
 
-    white-space: nowrap;
-}
+<script>
 
-
-.status-online {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    color: var(--green);
-
-    font-weight: 600;
-}
-
-
-.status-dot {
-
-    width: 9px;
-    height: 9px;
-
-    border-radius: 50%;
-
-    background: var(--green);
-}
-
-
-/* =========================================================
-   STATE
-========================================================= */
+/* =====================================================
+   GLOBAL
+===================================================== */
 
 let cameras = [];
 
@@ -1715,261 +2301,511 @@ let hlsErrorCount = 0;
 let mediaErrorCount = 0;
 
 
-/* =========================================================
+
+/* =====================================================
    LOAD CAMERAS
-========================================================= */
+===================================================== */
 
 async function loadCameras() {
 
-    try {
+  try {
 
-        const response =
-            await fetch(
-                "/api/cameras",
-                {
-                    cache: "no-store"
-                }
-            );
-
-        if (!response.ok) {
-
-            throw new Error(
-                "ไม่สามารถโหลดข้อมูลกล้องได้"
-            );
-
+    const response =
+      await fetch(
+        "/api/cameras",
+        {
+          cache:
+            "no-store"
         }
-
-        cameras =
-            await response.json();
+      );
 
 
-        if (!cameras.length) {
+    if (!response.ok) {
 
-            throw new Error(
-                "ไม่พบข้อมูลกล้อง"
-            );
-
-        }
-
-
-        renderCameraList();
-
-
-        const firstEnabled =
-            cameras.find(
-                c => c.enabled
-            );
-
-
-        if (firstEnabled) {
-
-            selectCamera(
-                firstEnabled.id
-            );
-
-        }
-
-        else {
-
-            showMaintenance(
-                cameras[0]
-            );
-
-        }
+      throw new Error(
+        "ไม่สามารถโหลดข้อมูลกล้องได้"
+      );
 
     }
 
-    catch (error) {
 
-        console.error(error);
+    const data =
+      await response.json();
 
-        document
-            .getElementById("cameraList")
-            .innerHTML = `
 
-                <div
-                    style="
-                        padding:20px;
-                        text-align:center;
-                        color:#777;
-                    "
-                >
+    /*
+      รองรับทั้ง
 
-                    ไม่สามารถโหลดข้อมูลกล้องได้
+      [
+        {...},
+        {...}
+      ]
 
-                </div>
+      และ
 
-            `;
+      {
+        "CCTV-01": {...},
+        "CCTV-02": {...}
+      }
+    */
+
+    if (
+      Array.isArray(data)
+    ) {
+
+      cameras = data;
 
     }
+
+    else {
+
+      cameras =
+        Object.values(data);
+
+    }
+
+
+    renderCameraList();
+
+
+    const firstEnabled =
+      cameras.find(
+        camera =>
+          camera.enabled
+      );
+
+
+    if (firstEnabled) {
+
+      selectCamera(
+        firstEnabled.id
+      );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    document
+      .getElementById(
+        "cameraList"
+      )
+      .innerHTML = `
+
+        <div
+          style="
+            padding:18px;
+            text-align:center;
+            color:#777;
+            font-size:12px;
+          "
+        >
+
+          ไม่สามารถโหลดข้อมูลกล้องได้
+
+        </div>
+
+      `;
+
+  }
 
 }
 
 
-/* =========================================================
-   CAMERA LIST
-========================================================= */
+
+/* =====================================================
+   RENDER CAMERA LIST
+===================================================== */
+
 function renderCameraList() {
 
   const container =
-    document.getElementById("cameraList");
-
-  container.innerHTML = "";
-
-
-  cameras.forEach(camera => {
-
-    const card =
-      document.createElement("div");
+    document.getElementById(
+      "cameraList"
+    );
 
 
-    card.className =
-      "camera-card" +
-      (
-        !camera.enabled
-          ? " disabled"
-          : ""
-      );
+  container.innerHTML =
+    "";
 
 
-    if (camera.enabled) {
+  cameras.forEach(
+    camera => {
 
-      card.onclick = () =>
-        selectCamera(camera.id);
-
-    }
-    else {
-
-      card.onclick = () =>
-        showMaintenance(camera);
-
-    }
+      const card =
+        document.createElement(
+          "div"
+        );
 
 
-    /*
-    =====================================================
-    THUMBNAIL
-    =====================================================
-    */
+      card.className =
+        "camera-card" +
+        (
+          !camera.enabled
+            ? " disabled"
+            : ""
+        );
 
-    let thumbnailHTML = "";
+
+      if (camera.enabled) {
+
+        card.onclick =
+          () =>
+            selectCamera(
+              camera.id
+            );
+
+      }
+
+      else {
+
+        card.onclick =
+          () =>
+            showMaintenance(
+              camera
+            );
+
+      }
 
 
-    if (
-      camera.thumbnail &&
-      camera.thumbnail.trim() !== ""
-    ) {
+      /*
+      ===============================================
+      THUMBNAIL
+      ===============================================
+      */
 
-      thumbnailHTML = `
+      let imageHTML =
+        "";
 
-        <img
-          src="${camera.thumbnail}"
-          alt="${camera.name}"
-          loading="lazy"
 
-          onerror="
-            this.style.display='none';
-            this.parentElement.classList.add('no-image');
-          "
+      if (
+        camera.thumbnail &&
+        camera.thumbnail.trim() !== ""
+      ) {
+
+        imageHTML = `
+
+          <img
+            src="${camera.thumbnail}"
+            alt="${camera.name}"
+            loading="lazy"
+
+            onerror="
+              this.style.display='none';
+              this.parentElement.classList.add('no-image');
+            "
+          >
+
+        `;
+
+      }
+
+
+      /*
+      ===============================================
+      PLACEHOLDER
+      ===============================================
+      */
+
+      const placeholderHTML = `
+
+        <div
+          class="camera-placeholder"
         >
+
+          <div
+            class="camera-placeholder-icon"
+          >
+            📹
+          </div>
+
+          CCTV
+
+        </div>
 
       `;
 
-    }
 
+      /*
+      ===============================================
+      MAINTENANCE
+      ===============================================
+      */
 
-    /*
-    ถ้าไม่มีรูป
-    */
+      const maintenanceHTML =
+        !camera.enabled
+        ?
 
-    const placeholderHTML = `
+        `
 
-      <div
-        class="camera-placeholder"
-      >
+          <div
+            class="camera-thumb-overlay"
+          >
 
-        <div
-          class="camera-placeholder-icon"
-        >
-          📹
-        </div>
+            <div>
 
-        <div>
-          CCTV
-        </div>
+              <div
+                style="
+                  font-size:22px;
+                  margin-bottom:3px;
+                "
+              >
+                🔧
+              </div>
 
-      </div>
+              กำลังปรับปรุงระบบ
 
-    `;
-
-
-    /*
-    =====================================================
-    MAINTENANCE OVERLAY
-    =====================================================
-    */
-
-    const maintenanceHTML =
-      !camera.enabled
-      ?
-
-      `
-
-        <div
-          class="camera-thumb-overlay"
-        >
-
-          <div>
-
-            <div
-              style="
-                font-size:25px;
-                margin-bottom:5px;
-              "
-            >
-              🔧
             </div>
 
-            กำลังปรับปรุงระบบ
+          </div>
+
+        `
+
+        :
+
+        "";
+
+
+      /*
+      ===============================================
+      CARD
+      ===============================================
+      */
+
+      card.innerHTML = `
+
+        <div
+          class="camera-thumb"
+        >
+
+          ${imageHTML}
+
+          ${placeholderHTML}
+
+          ${maintenanceHTML}
+
+        </div>
+
+
+        <div
+          class="camera-content"
+        >
+
+          <div
+            class="camera-name"
+          >
+
+            ${camera.name}
+
+          </div>
+
+
+          <div
+            class="camera-location"
+          >
+
+            จุดวัด
+            ${camera.location}
+
+          </div>
+
+
+          <div
+            class="camera-id"
+          >
+
+            ${camera.id}
+
+          </div>
+
+
+          <div
+            class="camera-status"
+          >
+
+            ${
+              camera.enabled
+
+              ?
+
+              `
+
+                <span
+                  class="badge online"
+                >
+                  ● ออนไลน์
+                </span>
+
+                <span
+                  class="badge live"
+                >
+                  LIVE
+                </span>
+
+              `
+
+              :
+
+              `
+
+                <span
+                  class="
+                    badge
+                    maintenance
+                  "
+                >
+                  ● กำลังปรับปรุงระบบ
+                </span>
+
+              `
+            }
 
           </div>
 
         </div>
 
-      `
-
-      :
-
-      "";
+      `;
 
 
-    /*
-    =====================================================
-    CARD
-    =====================================================
-    */
+      container.appendChild(
+        card
+      );
 
-    card.innerHTML = `
+    }
+  );
 
-      <div
-        class="camera-thumb"
-      >
-
-        ${thumbnailHTML}
-
-        ${placeholderHTML}
-
-        ${maintenanceHTML}
-
-      </div>
+}
 
 
-      <div
-        class="camera-content"
-      >
+
+/* =====================================================
+   SELECT CAMERA
+===================================================== */
+
+function selectCamera(
+  cameraId
+) {
+
+  const camera =
+    cameras.find(
+      c =>
+        c.id === cameraId
+    );
+
+
+  if (!camera) {
+
+    return;
+
+  }
+
+
+  selectedCamera =
+    camera;
+
+
+  stopPlayer();
+
+
+  renderCamera(
+    camera
+  );
+
+
+  updateActiveCard(
+    camera.id
+  );
+
+
+  setupVideo(
+    camera
+  );
+
+
+  updateWaterPanel(
+    camera
+  );
+
+}
+
+
+
+/* =====================================================
+   ACTIVE CARD
+===================================================== */
+
+function updateActiveCard(
+  cameraId
+) {
+
+  document
+    .querySelectorAll(
+      ".camera-card"
+    )
+    .forEach(
+      card =>
+        card.classList.remove(
+          "active"
+        )
+    );
+
+
+  const index =
+    cameras.findIndex(
+      c =>
+        c.id === cameraId
+    );
+
+
+  const cards =
+    document.querySelectorAll(
+      ".camera-card"
+    );
+
+
+  if (cards[index]) {
+
+    cards[index]
+      .classList.add(
+        "active"
+      );
+
+  }
+
+}
+
+
+
+/* =====================================================
+   RENDER VIEWER
+===================================================== */
+
+function renderCamera(
+  camera
+) {
+
+  const viewer =
+    document.getElementById(
+      "viewer"
+    );
+
+
+  viewer.innerHTML = `
+
+    <div
+      class="viewer-header"
+    >
+
+      <div>
 
         <div
-          class="camera-name"
+          class="viewer-title"
         >
 
           ${camera.name}
@@ -1978,1844 +2814,1388 @@ function renderCameraList() {
 
 
         <div
-          class="camera-location"
+          class="viewer-location"
         >
 
           จุดวัด
           ${camera.location}
 
-        </div>
-
-
-        <div
-          class="camera-id"
-        >
+          ·
 
           ${camera.id}
 
         </div>
 
+      </div>
 
-        <div
-          class="camera-status"
-        >
 
-          ${
-            camera.enabled
+      <div
+        class="live-badge"
+      >
 
-            ?
-
-            `
-
-              <span
-                class="badge online"
-              >
-                ● ออนไลน์
-              </span>
-
-              <span
-                class="badge live"
-              >
-                LIVE
-              </span>
-
-            `
-
-            :
-
-            `
-
-              <span
-                class="badge maintenance"
-              >
-
-                ● กำลังปรับปรุงระบบ
-
-              </span>
-
-            `
-          }
-
-        </div>
+        ● LIVE
 
       </div>
 
-    `;
+    </div>
 
 
-    container.appendChild(card);
 
-  });
+    <div
+      class="viewer-grid"
+    >
 
-}
 
-/* =========================================================
-   CAMERA THUMBNAIL
-========================================================= */
-
-.camera-thumb {
-
-  width: 100%;
-
-  aspect-ratio: 16 / 9;
-
-  border-radius: 11px;
-
-  overflow: hidden;
-
-  position: relative;
-
-  background:
-    linear-gradient(
-      135deg,
-      #eeeaff,
-      #dcd6f5
-    );
-
-}
-
-
-/* รูปที่เราใส่เอง */
-
-.camera-thumb img {
-
-  width: 100%;
-
-  height: 100%;
-
-  display: block;
-
-  object-fit: cover;
-
-  transition:
-    transform .35s ease,
-    filter .35s ease;
-
-}
-
-
-/* เวลาเอาเมาส์ไปวาง */
-
-.camera-card:hover
-.camera-thumb img {
-
-  transform:
-    scale(1.04);
-
-}
-
-
-/* =========================================================
-   PLACEHOLDER
-========================================================= */
-
-.camera-placeholder {
-
-  position: absolute;
-
-  inset: 0;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: center;
-
-  color:
-    #6750b7;
-
-  font-size:
-    13px;
-
-  font-weight:
-    700;
-
-  background:
-    linear-gradient(
-      135deg,
-      #f0edff,
-      #faf9ff
-    );
-
-}
-
-
-/* ซ่อน placeholder ถ้ามีรูป */
-
-.camera-thumb:has(img[src]) 
-.camera-placeholder {
-
-  display: none;
-
-}
-
-
-/* ถ้ารูปโหลดไม่ได้ */
-
-.camera-thumb.no-image
-.camera-placeholder {
-
-  display: flex;
-
-}
-
-
-.camera-placeholder-icon {
-
-  font-size:
-    38px;
-
-  margin-bottom:
-    2px;
-
-  opacity:
-    .65;
-
-}
-
-
-/* =========================================================
-   MAINTENANCE
-========================================================= */
-
-.camera-thumb-overlay {
-
-  position: absolute;
-
-  inset: 0;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  text-align: center;
-
-  background:
-    rgba(40,35,60,.58);
-
-  color:
-    white;
-
-  font-size:
-    13px;
-
-  font-weight:
-    700;
-
-  backdrop-filter:
-    blur(2px);
-
-}
-
-/* =========================================================
-   SELECT CAMERA
-========================================================= */
-
-function selectCamera(
-    cameraId
-) {
-
-    const camera =
-        cameras.find(
-            c => c.id === cameraId
-        );
-
-
-    if (!camera) {
-        return;
-    }
-
-
-    if (!camera.enabled) {
-
-        showMaintenance(
-            camera
-        );
-
-        return;
-
-    }
-
-
-    selectedCamera =
-        camera;
-
-
-    stopPlayer();
-
-
-    renderCamera(
-        camera
-    );
-
-
-    updateActiveCard(
-        camera.id
-    );
-
-
-    setupVideo(
-        camera
-    );
-
-
-    updateWaterPanel(
-        camera
-    );
-
-}
-
-
-/* =========================================================
-   ACTIVE CARD
-========================================================= */
-
-function updateActiveCard(
-    cameraId
-) {
-
-    document
-        .querySelectorAll(
-            ".camera-card"
-        )
-        .forEach(
-            card => {
-
-                card.classList.remove(
-                    "active"
-                );
-
-            }
-        );
-
-
-    const index =
-        cameras.findIndex(
-            c => c.id === cameraId
-        );
-
-
-    const cards =
-        document.querySelectorAll(
-            ".camera-card"
-        );
-
-
-    if (cards[index]) {
-
-        cards[index]
-            .classList.add(
-                "active"
-            );
-
-    }
-
-}
-
-
-/* =========================================================
-   RENDER CAMERA
-========================================================= */
-
-function renderCamera(
-    camera
-) {
-
-    const viewer =
-        document.getElementById(
-            "viewer"
-        );
-
-
-    viewer.innerHTML = `
-
-        <div
-            class="viewer-header"
-        >
-
-            <div>
-
-                <div
-                    class="viewer-title"
-                >
-
-                    ${camera.name}
-
-                </div>
-
-
-                <div
-                    class="viewer-location"
-                >
-
-                    จุดวัด
-                    ${camera.location}
-
-                    |
-
-                    ${camera.id}
-
-                </div>
-
-            </div>
-
-
-            <div
-                class="live-badge"
-            >
-
-                ● LIVE
-
-            </div>
-
-        </div>
+      <div>
 
 
         <div
-            class="viewer-grid"
+          class="video-card"
         >
 
-
-            <div>
-
-                <div
-                    class="video-card"
-                >
-
-                    <video
-                        id="cctvVideo"
-                        controls
-                        autoplay
-                        muted
-                        playsinline
-                        preload="auto"
-                    ></video>
+          <video
+            id="cctvVideo"
+            controls
+            autoplay
+            muted
+            playsinline
+            preload="auto"
+          ></video>
 
 
-                    <div
-                        id="videoLoading"
-                        class="
-                            video-loading
-                            show
-                        "
-                    >
-
-                        <div
-                            class="spinner"
-                        ></div>
-
-                        <div>
-                            กำลังเชื่อมต่อกล้อง...
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        id="videoTime"
-                        class="video-time"
-                    >
-                        --
-                    </div>
-
-                </div>
-
-
-                <div
-                    class="camera-info"
-                >
-
-                    <div
-                        class="info-title"
-                    >
-
-                        📹 ข้อมูลกล้อง
-
-                    </div>
-
-
-                    <div
-                        class="info-grid"
-                    >
-
-
-                        <div
-                            class="logo-info"
-                        >
-
-                            <img
-                                src="${camera.municipalityLogo || ""}"
-                                alt=""
-                            >
-
-                            <div
-                                class="
-                                    logo-info-text
-                                "
-                            >
-
-                                <strong>
-                                    ${camera.name}
-                                </strong>
-
-                                <span>
-                                    จุดวัด
-                                    ${camera.location}
-                                </span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="logo-info"
-                        >
-
-                            <img
-                                src="${camera.agencyLogo || ""}"
-                                alt=""
-                            >
-
-                            <div
-                                class="
-                                    logo-info-text
-                                "
-                            >
-
-                                <strong>
-                                    หน่วยงานที่เกี่ยวข้อง
-                                </strong>
-
-                                <span>
-                                    ${camera.agencyName || ""}
-                                </span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+          <div
+            id="videoLoading"
+            class="
+              video-loading
+              show
+            "
+          >
 
             <div
-                id="waterPanel"
+              class="spinner"
             ></div>
 
 
+            <div>
+              กำลังเชื่อมต่อกล้อง...
+            </div>
+
+          </div>
+
+
+          <div
+            id="videoTime"
+            class="video-time"
+          >
+            --
+          </div>
+
         </div>
 
-    `;
+
+
+        <div
+          class="camera-info"
+        >
+
+          <div
+            class="info-title"
+          >
+
+            📹 ข้อมูลกล้อง
+
+          </div>
+
+
+          <div
+            class="info-grid"
+          >
+
+
+            <div
+              class="logo-info"
+            >
+
+              ${
+                camera.municipalityLogo
+                ?
+
+                `
+                  <img
+                    src="${camera.municipalityLogo}"
+                    alt=""
+                  >
+                `
+
+                :
+
+                ""
+              }
+
+
+              <div
+                class="logo-info-text"
+              >
+
+                <strong>
+                  ${camera.name}
+                </strong>
+
+                <span>
+                  ${camera.location}
+                </span>
+
+              </div>
+
+            </div>
+
+
+
+            <div
+              class="logo-info"
+            >
+
+              ${
+                camera.agencyLogo
+                ?
+
+                `
+                  <img
+                    src="${camera.agencyLogo}"
+                    alt=""
+                  >
+                `
+
+                :
+
+                ""
+              }
+
+
+              <div
+                class="logo-info-text"
+              >
+
+                <strong>
+                  หน่วยงานผู้ดูแลระบบ
+                </strong>
+
+                <span>
+                  ${camera.agencyName || ""}
+                </span>
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div
+        id="waterPanel"
+      ></div>
+
+
+    </div>
+
+  `;
 
 }
 
 
-/* =========================================================
+
+/* =====================================================
    STOP PLAYER
-========================================================= */
+===================================================== */
 
 function stopPlayer() {
 
-    clearTimeout(
-        reconnectTimer
-    );
+  clearTimeout(
+    reconnectTimer
+  );
 
-    clearTimeout(
-        stallTimer
-    );
-
-
-    reconnectTimer =
-        null;
-
-    stallTimer =
-        null;
+  clearTimeout(
+    stallTimer
+  );
 
 
-    if (hls) {
+  reconnectTimer =
+    null;
 
-        try {
+  stallTimer =
+    null;
 
-            hls.stopLoad();
 
-            hls.detachMedia();
+  if (hls) {
 
-            hls.destroy();
+    try {
 
-        }
+      hls.stopLoad();
 
-        catch (error) {
+      hls.detachMedia();
 
-            console.warn(
-                "HLS destroy error",
-                error
-            );
-
-        }
-
-        hls = null;
+      hls.destroy();
 
     }
 
+    catch (error) {
 
-    const oldVideo =
-        document.getElementById(
-            "cctvVideo"
-        );
-
-
-    if (oldVideo) {
-
-        try {
-
-            oldVideo.pause();
-
-            oldVideo.removeAttribute(
-                "src"
-            );
-
-            oldVideo.load();
-
-        }
-
-        catch (error) {}
+      console.warn(
+        error
+      );
 
     }
+
+    hls =
+      null;
+
+  }
+
+
+  const video =
+    document.getElementById(
+      "cctvVideo"
+    );
+
+
+  if (video) {
+
+    try {
+
+      video.pause();
+
+      video.removeAttribute(
+        "src"
+      );
+
+      video.load();
+
+    }
+
+    catch (error) {}
+
+  }
 
 }
 
 
-/* =========================================================
-   CCTV STREAM
-========================================================= */
+
+/* =====================================================
+   SETUP VIDEO
+===================================================== */
 
 function setupVideo(
-    camera
+  camera
 ) {
 
-    const video =
-        document.getElementById(
-            "cctvVideo"
-        );
+  const video =
+    document.getElementById(
+      "cctvVideo"
+    );
 
 
-    if (!video) {
-        return;
-    }
+  if (!video) {
+
+    return;
+
+  }
 
 
-    hlsErrorCount = 0;
+  hlsErrorCount =
+    0;
 
-    mediaErrorCount = 0;
-
-
-    /*
-     IMPORTANT
-
-     ใช้ index.m3u8?cookieCheck=1
-     ตาม stream ที่ผู้ใช้ระบุ
-    */
-
-    let streamUrl =
-        camera.stream;
+  mediaErrorCount =
+    0;
 
 
-    if (
-        camera.id === "CCTV-01"
-    ) {
-
-        streamUrl =
-            "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1";
-
-    }
+  let streamUrl =
+    camera.stream;
 
 
-    /*
-     =====================================================
+  if (
+    camera.id ===
+    "CCTV-01"
+  ) {
+
+    streamUrl =
+      "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1";
+
+  }
+
+
+
+  /* ===================================================
      HLS.JS
-     =====================================================
-    */
+  =================================================== */
 
-    if (
-        window.Hls &&
-        Hls.isSupported()
-    ) {
-
-
-        hls =
-            new Hls({
-
-                debug: false,
-
-                enableWorker: true,
-
-                lowLatencyMode: false,
-
-                backBufferLength: 30,
-
-                maxBufferLength: 15,
-
-                maxMaxBufferLength: 30,
-
-                maxBufferSize:
-                    30 * 1000 * 1000,
-
-                maxBufferHole: 0.5,
-
-                initialLiveManifestSize: 3,
-
-                liveSyncMode:
-                    "edge",
-
-                liveSyncDurationCount: 4,
-
-                liveMaxLatencyDurationCount: 12,
-
-                liveSyncOnStallIncrease: 2,
-
-                nudgeOffset: 0.2,
-
-                nudgeMaxRetry: 5,
-
-                highBufferWatchdogPeriod: 2,
-
-                startFragPrefetch: true,
-
-                testBandwidth: false,
-
-                fragLoadingTimeOut: 20000,
-
-                fragLoadingMaxRetry: 4,
-
-                fragLoadingRetryDelay: 1000,
-
-                fragLoadingMaxRetryTimeout: 8000
-
-            });
+  if (
+    window.Hls &&
+    Hls.isSupported()
+  ) {
 
 
-        hls.loadSource(
-            streamUrl
+    hls =
+      new Hls({
+
+        debug:
+          false,
+
+        enableWorker:
+          true,
+
+        lowLatencyMode:
+          false,
+
+        backBufferLength:
+          30,
+
+        maxBufferLength:
+          15,
+
+        maxMaxBufferLength:
+          30,
+
+        maxBufferSize:
+          30 * 1000 * 1000,
+
+        maxBufferHole:
+          .5,
+
+        initialLiveManifestSize:
+          3,
+
+        liveSyncMode:
+          "edge",
+
+        liveSyncDurationCount:
+          4,
+
+        liveMaxLatencyDurationCount:
+          12,
+
+        liveSyncOnStallIncrease:
+          2,
+
+        nudgeOffset:
+          .2,
+
+        nudgeMaxRetry:
+          5,
+
+        highBufferWatchdogPeriod:
+          2,
+
+        startFragPrefetch:
+          true,
+
+        testBandwidth:
+          false,
+
+        fragLoadingTimeOut:
+          20000,
+
+        fragLoadingMaxRetry:
+          4,
+
+        fragLoadingRetryDelay:
+          1000,
+
+        fragLoadingMaxRetryTimeout:
+          8000
+
+      });
+
+
+    hls.loadSource(
+      streamUrl
+    );
+
+
+    hls.attachMedia(
+      video
+    );
+
+
+    hls.on(
+      Hls.Events.MANIFEST_PARSED,
+      function() {
+
+        hideVideoLoading();
+
+        playVideo(
+          video
+        );
+
+      }
+    );
+
+
+    hls.on(
+      Hls.Events.FRAG_BUFFERED,
+      function() {
+
+        hideVideoLoading();
+
+        resetStallWatchdog();
+
+      }
+    );
+
+
+    hls.on(
+      Hls.Events.ERROR,
+      function(
+        event,
+        data
+      ) {
+
+        console.warn(
+          "HLS error:",
+          data
         );
 
 
-        hls.attachMedia(
-            video
+        if (
+          !data.fatal
+        ) {
+
+          return;
+
+        }
+
+
+        hlsErrorCount++;
+
+
+        if (
+          data.type ===
+          Hls.ErrorTypes.NETWORK_ERROR
+        ) {
+
+          showVideoLoading(
+            "กำลังเชื่อมต่อกล้องใหม่..."
+          );
+
+
+          if (
+            hlsErrorCount <= 3
+          ) {
+
+            hls.startLoad();
+
+          }
+
+          else {
+
+            reconnectPlayer(
+              camera,
+              1500
+            );
+
+          }
+
+
+          return;
+
+        }
+
+
+        if (
+          data.type ===
+          Hls.ErrorTypes.MEDIA_ERROR
+        ) {
+
+          mediaErrorCount++;
+
+
+          if (
+            mediaErrorCount <= 2
+          ) {
+
+            hls.recoverMediaError();
+
+          }
+
+          else {
+
+            reconnectPlayer(
+              camera,
+              1200
+            );
+
+          }
+
+
+          return;
+
+        }
+
+
+        reconnectPlayer(
+          camera,
+          2000
         );
 
+      }
+    );
 
-        hls.on(
-            Hls.Events.MANIFEST_PARSED,
-            function() {
 
-                console.log(
-                    "HLS manifest loaded"
-                );
+    video.addEventListener(
+      "playing",
+      function() {
 
-                hideVideoLoading();
+        hideVideoLoading();
 
-                playVideo(
-                    video
-                );
+        resetStallWatchdog();
 
-            }
-        );
+      }
+    );
 
 
-        hls.on(
-            Hls.Events.FRAG_BUFFERED,
-            function() {
-
-                hideVideoLoading();
-
-                resetStallWatchdog();
-
-            }
-        );
-
-
-        hls.on(
-            Hls.Events.ERROR,
-            function(
-                event,
-                data
-            ) {
-
-                console.warn(
-                    "HLS error:",
-                    data
-                );
-
-
-                if (
-                    !data.fatal
-                ) {
-
-                    return;
-
-                }
-
-
-                hlsErrorCount++;
-
-
-                /*
-                 =========================================
-                 NETWORK ERROR
-                 =========================================
-                */
-
-                if (
-                    data.type ===
-                    Hls.ErrorTypes.NETWORK_ERROR
-                ) {
-
-                    showVideoLoading(
-                        "กำลังเชื่อมต่อกล้องใหม่..."
-                    );
-
-
-                    if (
-                        hlsErrorCount <= 3
-                    ) {
-
-                        hls.startLoad();
-
-                    }
-
-                    else {
-
-                        reconnectPlayer(
-                            camera,
-                            1500
-                        );
-
-                    }
-
-
-                    return;
-
-                }
-
-
-                /*
-                 =========================================
-                 MEDIA ERROR
-                 =========================================
-                */
-
-                if (
-                    data.type ===
-                    Hls.ErrorTypes.MEDIA_ERROR
-                ) {
-
-                    mediaErrorCount++;
-
-
-                    if (
-                        mediaErrorCount <= 2
-                    ) {
-
-                        console.warn(
-                            "Attempting media recovery"
-                        );
-
-
-                        hls.recoverMediaError();
-
-                    }
-
-                    else {
-
-                        reconnectPlayer(
-                            camera,
-                            1200
-                        );
-
-                    }
-
-
-                    return;
-
-                }
-
-
-                /*
-                 =========================================
-                 OTHER FATAL ERROR
-                 =========================================
-                */
-
-                reconnectPlayer(
-                    camera,
-                    2000
-                );
-
-            }
-        );
-
-
-        /*
-         =================================================
-         VIDEO EVENTS
-         =================================================
-        */
-
-        video.addEventListener(
-            "playing",
-            function() {
-
-                hideVideoLoading();
-
-                resetStallWatchdog();
-
-            }
-        );
-
-
-        video.addEventListener(
-            "waiting",
-            function() {
-
-                showVideoLoading(
-                    "กำลังโหลดภาพ..."
-                );
-
-                startStallWatchdog(
-                    camera
-                );
-
-            }
-        );
-
-
-        video.addEventListener(
-            "stalled",
-            function() {
-
-                showVideoLoading(
-                    "สัญญาณกล้องหยุดชั่วคราว..."
-                );
-
-                startStallWatchdog(
-                    camera
-                );
-
-            }
-        );
-
-
-        video.addEventListener(
-            "error",
-            function() {
-
-                console.warn(
-                    "HTML video error"
-                );
-
-                startStallWatchdog(
-                    camera
-                );
-
-            }
-        );
-
-
-        video.addEventListener(
-            "timeupdate",
-            function() {
-
-                resetStallWatchdog();
-
-            }
-        );
-
-    }
-
-
-    /*
-     =====================================================
-     SAFARI / NATIVE HLS
-     =====================================================
-    */
-
-    else if (
-        video.canPlayType(
-            "application/vnd.apple.mpegurl"
-        )
-    ) {
-
-        video.src =
-            streamUrl;
-
-
-        video.addEventListener(
-            "loadedmetadata",
-            function() {
-
-                playVideo(
-                    video
-                );
-
-            }
-        );
-
-
-        video.addEventListener(
-            "waiting",
-            function() {
-
-                showVideoLoading(
-                    "กำลังโหลดภาพ..."
-                );
-
-            }
-        );
-
-
-        video.addEventListener(
-            "playing",
-            function() {
-
-                hideVideoLoading();
-
-            }
-        );
-
-    }
-
-    else {
+    video.addEventListener(
+      "waiting",
+      function() {
 
         showVideoLoading(
-            "เบราว์เซอร์นี้ไม่รองรับ HLS"
+          "กำลังโหลดภาพ..."
         );
 
-    }
-
-}
-
-
-/* =========================================================
-   PLAY
-========================================================= */
-
-function playVideo(
-    video
-) {
-
-    if (!video) {
-        return;
-    }
-
-
-    const promise =
-        video.play();
-
-
-    if (
-        promise &&
-        typeof promise.catch ===
-        "function"
-    ) {
-
-        promise.catch(
-            function(error) {
-
-                console.warn(
-                    "Autoplay prevented:",
-                    error
-                );
-
-            }
+        startStallWatchdog(
+          camera
         );
 
-    }
-
-}
-
-
-/* =========================================================
-   RECONNECT PLAYER
-========================================================= */
-
-function reconnectPlayer(
-    camera,
-    delay
-) {
-
-    clearTimeout(
-        reconnectTimer
+      }
     );
 
+
+    video.addEventListener(
+      "stalled",
+      function() {
+
+        showVideoLoading(
+          "สัญญาณกล้องหยุดชั่วคราว..."
+        );
+
+        startStallWatchdog(
+          camera
+        );
+
+      }
+    );
+
+
+    video.addEventListener(
+      "timeupdate",
+      function() {
+
+        resetStallWatchdog();
+
+      }
+    );
+
+  }
+
+
+  /* ===================================================
+     NATIVE HLS
+  =================================================== */
+
+  else if (
+    video.canPlayType(
+      "application/vnd.apple.mpegurl"
+    )
+  ) {
+
+    video.src =
+      streamUrl;
+
+
+    video.addEventListener(
+      "loadedmetadata",
+      function() {
+
+        playVideo(
+          video
+        );
+
+      }
+    );
+
+
+    video.addEventListener(
+      "playing",
+      function() {
+
+        hideVideoLoading();
+
+      }
+    );
+
+
+    video.addEventListener(
+      "waiting",
+      function() {
+
+        showVideoLoading(
+          "กำลังโหลดภาพ..."
+        );
+
+      }
+    );
+
+  }
+
+
+  else {
 
     showVideoLoading(
-        "กำลังเชื่อมต่อกล้องใหม่..."
+      "เบราว์เซอร์นี้ไม่รองรับ HLS"
     );
 
-
-    reconnectTimer =
-        setTimeout(
-            function() {
-
-                if (
-                    !selectedCamera ||
-                    selectedCamera.id !==
-                    camera.id
-                ) {
-
-                    return;
-
-                }
-
-
-                console.log(
-                    "Reconnecting HLS..."
-                );
-
-
-                setupVideo(
-                    camera
-                );
-
-            },
-            delay
-        );
+  }
 
 }
 
 
-/* =========================================================
-   STALL WATCHDOG
-========================================================= */
 
-function startStallWatchdog(
-    camera
+/* =====================================================
+   PLAY
+===================================================== */
+
+function playVideo(
+  video
 ) {
 
-    clearTimeout(
-        stallTimer
+  const promise =
+    video.play();
+
+
+  if (
+    promise &&
+    typeof promise.catch ===
+    "function"
+  ) {
+
+    promise.catch(
+      error =>
+        console.warn(
+          "Autoplay:",
+          error
+        )
     );
 
-
-    stallTimer =
-        setTimeout(
-            function() {
-
-                const video =
-                    document.getElementById(
-                        "cctvVideo"
-                    );
-
-
-                if (!video) {
-                    return;
-                }
-
-
-                if (
-                    video.readyState <
-                    3 ||
-                    video.paused
-                ) {
-
-                    console.warn(
-                        "Video stall detected"
-                    );
-
-
-                    /*
-                     ถ้า HLS ยังอยู่
-                     พยายาม recover ก่อน
-                    */
-
-                    if (hls) {
-
-                        try {
-
-                            if (
-                                hls.liveSyncPosition
-                            ) {
-
-                                video.currentTime =
-                                    hls.liveSyncPosition;
-
-                            }
-
-                            hls.startLoad();
-
-                        }
-
-                        catch (error) {
-
-                            console.warn(
-                                error
-                            );
-
-                        }
-
-                    }
-
-
-                    /*
-                     ถ้ายังไม่เล่น
-                     restart player
-                    */
-
-                    setTimeout(
-                        function() {
-
-                            if (
-                                video.paused ||
-                                video.readyState < 3
-                            ) {
-
-                                reconnectPlayer(
-                                    camera,
-                                    500
-                                );
-
-                            }
-
-                        },
-                        2500
-                    );
-
-                }
-
-            },
-            5000
-        );
+  }
 
 }
 
 
-/* =========================================================
-   RESET STALL WATCHDOG
-========================================================= */
+
+/* =====================================================
+   RECONNECT
+===================================================== */
+
+function reconnectPlayer(
+  camera,
+  delay
+) {
+
+  clearTimeout(
+    reconnectTimer
+  );
+
+
+  showVideoLoading(
+    "กำลังเชื่อมต่อกล้องใหม่..."
+  );
+
+
+  reconnectTimer =
+    setTimeout(
+      function() {
+
+        if (
+          !selectedCamera ||
+          selectedCamera.id !==
+          camera.id
+        ) {
+
+          return;
+
+        }
+
+
+        setupVideo(
+          camera
+        );
+
+      },
+      delay
+    );
+
+}
+
+
+
+/* =====================================================
+   STALL WATCHDOG
+===================================================== */
+
+function startStallWatchdog(
+  camera
+) {
+
+  clearTimeout(
+    stallTimer
+  );
+
+
+  stallTimer =
+    setTimeout(
+      function() {
+
+        const video =
+          document.getElementById(
+            "cctvVideo"
+          );
+
+
+        if (!video) {
+
+          return;
+
+        }
+
+
+        if (
+          video.readyState < 3 ||
+          video.paused
+        ) {
+
+          if (hls) {
+
+            try {
+
+              hls.startLoad();
+
+            }
+
+            catch (error) {}
+
+          }
+
+
+          setTimeout(
+            function() {
+
+              if (
+                video.paused ||
+                video.readyState < 3
+              ) {
+
+                reconnectPlayer(
+                  camera,
+                  500
+                );
+
+              }
+
+            },
+            2500
+          );
+
+        }
+
+      },
+      5000
+    );
+
+}
+
+
+
+/* =====================================================
+   RESET WATCHDOG
+===================================================== */
 
 function resetStallWatchdog() {
 
-    clearTimeout(
-        stallTimer
-    );
+  clearTimeout(
+    stallTimer
+  );
 
 }
 
 
-/* =========================================================
+
+/* =====================================================
    LOADING
-========================================================= */
+===================================================== */
 
 function showVideoLoading(
-    text
+  text
 ) {
 
-    const loading =
-        document.getElementById(
-            "videoLoading"
-        );
-
-
-    if (!loading) {
-        return;
-    }
-
-
-    loading.classList.add(
-        "show"
+  const loading =
+    document.getElementById(
+      "videoLoading"
     );
 
 
-    const textElement =
-        loading.querySelector(
-            "div:last-child"
-        );
+  if (!loading) {
+
+    return;
+
+  }
 
 
-    if (textElement) {
+  loading.classList.add(
+    "show"
+  );
 
-        textElement.textContent =
-            text ||
-            "กำลังโหลดภาพ...";
 
-    }
+  const label =
+    loading.querySelector(
+      "div:last-child"
+    );
+
+
+  if (label) {
+
+    label.textContent =
+      text;
+
+  }
 
 }
 
 
 function hideVideoLoading() {
 
-    const loading =
-        document.getElementById(
-            "videoLoading"
-        );
+  const loading =
+    document.getElementById(
+      "videoLoading"
+    );
 
 
-    if (!loading) {
-        return;
-    }
-
+  if (loading) {
 
     loading.classList.remove(
-        "show"
+      "show"
     );
+
+  }
 
 }
 
 
-/* =========================================================
+
+/* =====================================================
    WATER PANEL
-========================================================= */
+===================================================== */
 
 function updateWaterPanel(
-    camera
+  camera
 ) {
 
-    const panel =
-        document.getElementById(
-            "waterPanel"
-        );
+  const panel =
+    document.getElementById(
+      "waterPanel"
+    );
 
 
-    if (!panel) {
-        return;
-    }
+  if (!panel) {
+
+    return;
+
+  }
 
 
-    const water =
-        camera.water || {};
+  const water =
+    camera.water ||
+    {};
 
 
-    const value =
-        water.value === null ||
-        water.value === undefined ||
-        water.value === ""
-        ?
-        "--"
-        :
-        Number(
-            water.value
+  const value =
+    water.value === null ||
+    water.value === undefined ||
+    water.value === ""
+      ? "--"
+      : Number(
+          water.value
         ).toFixed(2);
 
 
-    const status =
-        water.status ||
-        "waiting";
+  const status =
+    water.status ||
+    "waiting";
 
 
-    const statusText =
-        water.statusText ||
-        "รอข้อมูล";
+  const statusText =
+    water.statusText ||
+    "รอข้อมูล";
 
 
-    let imageHTML = "";
+  let imageHTML;
 
 
-    if (
-        camera.waterStatusImage
-    ) {
+  if (
+    camera.waterStatusImage
+  ) {
 
-        imageHTML = `
+    imageHTML = `
 
-            <img
-                class="water-image"
-                src="${camera.waterStatusImage}"
-                alt="ข้อมูลระดับน้ำ"
-            >
+      <img
+        class="water-image"
+        src="${camera.waterStatusImage}"
+        alt="ข้อมูลระดับน้ำ"
+      >
 
-        `;
+    `;
 
-    }
+  }
 
-    else {
+  else {
 
-        imageHTML = `
+    imageHTML = `
 
-            <div
-                class="water-placeholder"
-            >
-
-                <div
-                    class="
-                        water-placeholder-icon
-                    "
-                >
-                    🌊
-                </div>
-
-                <strong>
-                    พื้นที่สำหรับรูปข้อมูลระดับน้ำ
-                </strong>
-
-                <span>
-                    สามารถใส่ภาพสถานะระดับน้ำของคุณได้
-                </span>
-
-            </div>
-
-        `;
-
-    }
-
-
-    panel.innerHTML = `
+      <div
+        class="water-placeholder"
+      >
 
         <div
-            class="water-panel"
+          class="water-placeholder-icon"
+        >
+          🌊
+        </div>
+
+
+        <strong>
+          พื้นที่สำหรับข้อมูลระดับน้ำ
+        </strong>
+
+
+        <span>
+          สามารถเพิ่มรูปสถานะระดับน้ำได้
+        </span>
+
+      </div>
+
+    `;
+
+  }
+
+
+  panel.innerHTML = `
+
+    <div
+      class="water-panel"
+    >
+
+      <div
+        class="water-header"
+      >
+
+        💧 ข้อมูลระดับน้ำ
+
+      </div>
+
+
+      <div
+        class="water-body"
+      >
+
+        ${imageHTML}
+
+
+        <div
+          class="water-value-box"
         >
 
-            <div
-                class="water-header"
+          <div
+            class="water-label"
+          >
+
+            ระดับน้ำปัจจุบัน
+
+          </div>
+
+
+          <div
+            class="water-value-row"
+          >
+
+            <span
+              class="water-value"
             >
 
-                💧 ข้อมูลระดับน้ำ
+              ${value}
 
-            </div>
+            </span>
 
 
-            <div
-                class="water-body"
+            <span
+              class="water-unit"
             >
 
-                ${imageHTML}
+              ${water.unit || "ซม."}
+
+            </span>
+
+          </div>
 
 
-                <div
-                    class="water-value-box"
-                >
+          <div
+            class="
+              water-status
+              ${status}
+            "
+          >
 
-                    <div
-                        class="water-label"
-                    >
+            ●
+            ${statusText}
 
-                        ระดับน้ำปัจจุบัน
-
-                    </div>
-
-
-                    <div
-                        class="water-value-row"
-                    >
-
-                        <span
-                            class="water-value"
-                        >
-
-                            ${value}
-
-                        </span>
-
-
-                        <span
-                            class="water-unit"
-                        >
-
-                            ${water.unit || "ซม."}
-
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="
-                            water-status
-                            ${status}
-                        "
-                    >
-
-                        ●
-                        ${statusText}
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    class="water-meta"
-                >
-
-                    <div
-                        class="meta-row"
-                    >
-
-                        <span
-                            class="meta-label"
-                        >
-                            รหัสกล้อง
-                        </span>
-
-                        <span
-                            class="meta-value"
-                        >
-                            ${camera.id}
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="meta-row"
-                    >
-
-                        <span
-                            class="meta-label"
-                        >
-                            จุดติดตั้ง
-                        </span>
-
-                        <span
-                            class="meta-value"
-                        >
-                            ${camera.location}
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="meta-row"
-                    >
-
-                        <span
-                            class="meta-label"
-                        >
-                            ข้อมูลระดับน้ำ
-                        </span>
-
-                        <span
-                            class="meta-value"
-                        >
-
-                            ${
-                                water.mode ===
-                                "manual"
-                                ?
-                                "ข้อมูล Manual"
-                                :
-                                "--"
-                            }
-
-                        </span>
-
-                    </div>
-
-
-                    <div
-                        class="meta-row"
-                    >
-
-                        <span
-                            class="meta-label"
-                        >
-                            อัปเดตล่าสุด
-                        </span>
-
-                        <span
-                            class="meta-value"
-                        >
-
-                            ${
-                                water.updatedAt
-                                ?
-                                formatDate(
-                                    water.updatedAt
-                                )
-                                :
-                                "--"
-                            }
-
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
+          </div>
 
         </div>
 
-    `;
+
+        <div
+          class="water-meta"
+        >
+
+          <div
+            class="meta-row"
+          >
+
+            <span
+              class="meta-label"
+            >
+              รหัสกล้อง
+            </span>
+
+            <span
+              class="meta-value"
+            >
+              ${camera.id}
+            </span>
+
+          </div>
+
+
+          <div
+            class="meta-row"
+          >
+
+            <span
+              class="meta-label"
+            >
+              จุดติดตั้ง
+            </span>
+
+            <span
+              class="meta-value"
+            >
+              ${camera.location}
+            </span>
+
+          </div>
+
+
+          <div
+            class="meta-row"
+          >
+
+            <span
+              class="meta-label"
+            >
+              อัปเดตข้อมูลน้ำ
+            </span>
+
+            <span
+              class="meta-value"
+            >
+
+              ${
+                water.updatedAt
+                  ? formatDate(
+                      water.updatedAt
+                    )
+                  : "--"
+              }
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
 
 }
 
 
-/* =========================================================
+
+/* =====================================================
    MAINTENANCE
-========================================================= */
+===================================================== */
 
 function showMaintenance(
-    camera
+  camera
 ) {
 
-    stopPlayer();
+  stopPlayer();
 
 
-    const viewer =
-        document.getElementById(
-            "viewer"
-        );
+  const viewer =
+    document.getElementById(
+      "viewer"
+    );
 
 
-    viewer.innerHTML = `
+  viewer.innerHTML = `
+
+    <div
+      class="maintenance-page"
+    >
+
+      <div>
 
         <div
-            class="maintenance-page"
+          class="maintenance-icon"
         >
-
-            <div>
-
-                <div
-                    class="maintenance-icon"
-                >
-                    🔧
-                </div>
-
-
-                <h2>
-                    ${camera.name}
-                </h2>
-
-
-                <p>
-
-                    จุดวัด
-                    ${camera.location}
-
-                    <br>
-
-                    ระบบอยู่ระหว่างการปรับปรุง
-
-                    <br>
-
-                    ขณะนี้ยังไม่เปิดให้บริการ
-
-                </p>
-
-
-                <button
-                    class="back-button"
-                    onclick="backToCamera()"
-                >
-
-                    ← กลับไปเลือกกล้อง
-
-                </button>
-
-            </div>
-
+          🔧
         </div>
 
-    `;
+
+        <h2>
+          ${camera.name}
+        </h2>
+
+
+        <p>
+
+          จุดวัด
+          ${camera.location}
+
+          <br>
+
+          ระบบอยู่ระหว่างการปรับปรุง
+
+        </p>
+
+
+        <button
+          class="back-button"
+          onclick="backToCamera()"
+        >
+
+          ← กลับไปเลือกกล้อง
+
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
 
 }
 
 
-/* =========================================================
+
+/* =====================================================
    BACK
-========================================================= */
+===================================================== */
 
 function backToCamera() {
 
-    const firstEnabled =
-        cameras.find(
-            c => c.enabled
-        );
-
-
-    if (firstEnabled) {
-
-        selectCamera(
-            firstEnabled.id
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   DATE
-========================================================= */
-
-function formatDate(
-    value
-) {
-
-    if (!value) {
-        return "--";
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if (
-        isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return value;
-
-    }
-
-
-    return date.toLocaleString(
-        "th-TH",
-        {
-            dateStyle:
-                "short",
-
-            timeStyle:
-                "short"
-        }
+  const camera =
+    cameras.find(
+      c =>
+        c.enabled
     );
 
+
+  if (camera) {
+
+    selectCamera(
+      camera.id
+    );
+
+  }
+
 }
 
 
-/* =========================================================
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function formatDate(
+  value
+) {
+
+  if (!value) {
+
+    return "--";
+
+  }
+
+
+  const date =
+    new Date(value);
+
+
+  if (
+    isNaN(
+      date.getTime()
+    )
+  ) {
+
+    return value;
+
+  }
+
+
+  return date.toLocaleString(
+    "th-TH",
+    {
+      dateStyle:
+        "short",
+
+      timeStyle:
+        "short"
+    }
+  );
+
+}
+
+
+
+/* =====================================================
    CLOCK
-========================================================= */
+===================================================== */
 
 function updateClock() {
 
-    const el =
-        document.getElementById(
-            "videoTime"
-        );
+  const now =
+    new Date();
 
 
-    if (!el) {
-        return;
-    }
+  const header =
+    document.getElementById(
+      "headerUpdate"
+    );
 
 
-    const now =
-        new Date();
+  if (header) {
+
+    header.textContent =
+      now.toLocaleString(
+        "th-TH",
+        {
+          dateStyle:
+            "short",
+
+          timeStyle:
+            "short"
+        }
+      );
+
+  }
 
 
-    const text =
-
-        now.getFullYear()
-        + "-"
-        + String(
-            now.getMonth() + 1
-        ).padStart(2, "0")
-        + "-"
-        + String(
-            now.getDate()
-        ).padStart(2, "0")
-        + " "
-        + String(
-            now.getHours()
-        ).padStart(2, "0")
-        + ":"
-        + String(
-            now.getMinutes()
-        ).padStart(2, "0")
-        + ":"
-        + String(
-            now.getSeconds()
-        ).padStart(2, "0");
+  const videoTime =
+    document.getElementById(
+      "videoTime"
+    );
 
 
-    el.textContent =
-        text;
+  if (videoTime) {
 
+    videoTime.textContent =
+      now.toLocaleTimeString(
+        "th-TH"
+      );
 
-    const header =
-        document.getElementById(
-            "headerUpdate"
-        );
-
-
-    if (header) {
-
-        header.textContent =
-            now.toLocaleString(
-                "th-TH",
-                {
-                    dateStyle:
-                        "short",
-
-                    timeStyle:
-                        "short"
-                }
-            );
-
-    }
+  }
 
 }
 
 
 setInterval(
-    updateClock,
-    1000
+  updateClock,
+  1000
 );
 
+updateClock();
 
-/* =========================================================
+
+
+/* =====================================================
    SPLASH
-========================================================= */
+===================================================== */
 
 window.addEventListener(
-    "load",
-    function() {
+  "load",
+  function() {
 
-        setTimeout(
-            function() {
+    setTimeout(
+      function() {
 
-                const splash =
-                    document.getElementById(
-                        "splash"
-                    );
+        const splash =
+          document.getElementById(
+            "splash"
+          );
 
 
-                if (splash) {
+        if (splash) {
 
-                    splash.classList.add(
-                        "hide"
-                    );
+          splash.classList.add(
+            "hide"
+          );
 
-                }
+        }
 
-            },
-            900
-        );
+      },
+      900
+    );
 
-    }
+  }
 );
 
 
-/* =========================================================
-   PAGE CLOSE
-========================================================= */
+
+/* =====================================================
+   CLEANUP
+===================================================== */
 
 window.addEventListener(
-    "beforeunload",
-    function() {
+  "beforeunload",
+  function() {
 
-        stopPlayer();
+    stopPlayer();
 
-    }
+  }
 );
 
 
-/* =========================================================
+
+/* =====================================================
    START
-========================================================= */
+===================================================== */
 
 loadCameras();
 
@@ -3823,4 +4203,5 @@ loadCameras();
 
 
 </body>
+
 </html>
