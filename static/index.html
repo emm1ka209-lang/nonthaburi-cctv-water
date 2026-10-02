@@ -1555,21 +1555,12 @@ body {
 
     <div class="header-left">
 
-        <img
-            id="provinceLogo"
-            class="province-logo"
-            src=""
-            alt=""
-        >
-
         <div>
 
             <div class="header-title">
 
                 ระบบกล้องโทรทัศน์วงจรปิด
-                ตรวจวัดระดับน้ำ<br>
-
-                จังหวัดนนทบุรี
+                ตรวจวัดระดับน้ำ จังหวัดนนทบุรี
                 ในช่วง อุทกภัยปี 2569
 
             </div>
@@ -1590,10 +1581,7 @@ body {
         <div>
 
             <strong>
-                อัปเดตล่าสุด
-            </strong>
-
-            <div id="headerUpdate">
+                อัปเดตล่าสุด <div id="headerUpdate">
                 --
             </div>
 
@@ -1774,192 +1762,407 @@ async function loadCameras() {
 /* =========================================================
    CAMERA LIST
 ========================================================= */
-
 function renderCameraList() {
 
-    const container =
-        document.getElementById(
-            "cameraList"
-        );
+  const container =
+    document.getElementById("cameraList");
+
+  container.innerHTML = "";
 
 
-    container.innerHTML = "";
+  cameras.forEach(camera => {
+
+    const card =
+      document.createElement("div");
 
 
-    cameras.forEach(
-        camera => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "camera-card" +
-                (
-                    !camera.enabled
-                    ?
-                    " disabled"
-                    :
-                    ""
-                );
+    card.className =
+      "camera-card" +
+      (
+        !camera.enabled
+          ? " disabled"
+          : ""
+      );
 
 
-            const image =
-                camera.municipalityLogo ||
-                camera.provinceLogo ||
-                "";
+    if (camera.enabled) {
+
+      card.onclick = () =>
+        selectCamera(camera.id);
+
+    }
+    else {
+
+      card.onclick = () =>
+        showMaintenance(camera);
+
+    }
 
 
-            if (camera.enabled) {
+    /*
+    =====================================================
+    THUMBNAIL
+    =====================================================
+    */
 
-                card.onclick =
-                    () =>
-                        selectCamera(
-                            camera.id
-                        );
-
-            }
-
-            else {
-
-                card.onclick =
-                    () =>
-                        showMaintenance(
-                            camera
-                        );
-
-            }
+    let thumbnailHTML = "";
 
 
-            card.innerHTML = `
+    if (
+      camera.thumbnail &&
+      camera.thumbnail.trim() !== ""
+    ) {
 
-                <div
-                    class="camera-thumb"
-                >
+      thumbnailHTML = `
 
-                    ${
-                        image
-                        ?
-                        `
-                        <img
-                            src="${image}"
-                            alt=""
-                        >
-                        `
-                        :
-                        ""
-                    }
+        <img
+          src="${camera.thumbnail}"
+          alt="${camera.name}"
+          loading="lazy"
 
+          onerror="
+            this.style.display='none';
+            this.parentElement.classList.add('no-image');
+          "
+        >
 
-                    ${
-                        !camera.enabled
-                        ?
-                        `
-                        <div
-                            class="
-                                camera-thumb-overlay
-                            "
-                        >
+      `;
 
-                            🔧<br>
-
-                            กำลังปรับปรุงระบบ
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
+    }
 
 
-                <div
-                    class="camera-content"
-                >
+    /*
+    ถ้าไม่มีรูป
+    */
 
-                    <div
-                        class="camera-name"
-                    >
+    const placeholderHTML = `
 
-                        ${camera.name}
+      <div
+        class="camera-placeholder"
+      >
 
-                    </div>
+        <div
+          class="camera-placeholder-icon"
+        >
+          📹
+        </div>
 
+        <div>
+          CCTV
+        </div>
 
-                    <div
-                        class="camera-location"
-                    >
+      </div>
 
-                        จุดวัด
-                        ${camera.location}
-
-                    </div>
-
-
-                    <div
-                        class="camera-id"
-                    >
-
-                        ${camera.id}
-
-                    </div>
+    `;
 
 
-                    <div
-                        class="camera-status"
-                    >
+    /*
+    =====================================================
+    MAINTENANCE OVERLAY
+    =====================================================
+    */
 
-                        ${
-                            camera.enabled
-                            ?
-                            `
-                            <span
-                                class="
-                                    badge online
-                                "
-                            >
-                                ● ออนไลน์
-                            </span>
+    const maintenanceHTML =
+      !camera.enabled
+      ?
 
-                            <span
-                                class="
-                                    badge live
-                                "
-                            >
-                                LIVE
-                            </span>
-                            `
-                            :
-                            `
-                            <span
-                                class="
-                                    badge maintenance
-                                "
-                            >
-                                ● กำลังปรับปรุงระบบ
-                            </span>
-                            `
-                        }
+      `
 
-                    </div>
+        <div
+          class="camera-thumb-overlay"
+        >
 
-                </div>
+          <div>
 
-            `;
+            <div
+              style="
+                font-size:25px;
+                margin-bottom:5px;
+              "
+            >
+              🔧
+            </div>
+
+            กำลังปรับปรุงระบบ
+
+          </div>
+
+        </div>
+
+      `
+
+      :
+
+      "";
 
 
-            container.appendChild(
-                card
-            );
+    /*
+    =====================================================
+    CARD
+    =====================================================
+    */
 
-        }
+    card.innerHTML = `
+
+      <div
+        class="camera-thumb"
+      >
+
+        ${thumbnailHTML}
+
+        ${placeholderHTML}
+
+        ${maintenanceHTML}
+
+      </div>
+
+
+      <div
+        class="camera-content"
+      >
+
+        <div
+          class="camera-name"
+        >
+
+          ${camera.name}
+
+        </div>
+
+
+        <div
+          class="camera-location"
+        >
+
+          จุดวัด
+          ${camera.location}
+
+        </div>
+
+
+        <div
+          class="camera-id"
+        >
+
+          ${camera.id}
+
+        </div>
+
+
+        <div
+          class="camera-status"
+        >
+
+          ${
+            camera.enabled
+
+            ?
+
+            `
+
+              <span
+                class="badge online"
+              >
+                ● ออนไลน์
+              </span>
+
+              <span
+                class="badge live"
+              >
+                LIVE
+              </span>
+
+            `
+
+            :
+
+            `
+
+              <span
+                class="badge maintenance"
+              >
+
+                ● กำลังปรับปรุงระบบ
+
+              </span>
+
+            `
+          }
+
+        </div>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(card);
+
+  });
+
+}
+
+/* =========================================================
+   CAMERA THUMBNAIL
+========================================================= */
+
+.camera-thumb {
+
+  width: 100%;
+
+  aspect-ratio: 16 / 9;
+
+  border-radius: 11px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eeeaff,
+      #dcd6f5
     );
 
 }
 
+
+/* รูปที่เราใส่เอง */
+
+.camera-thumb img {
+
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition:
+    transform .35s ease,
+    filter .35s ease;
+
+}
+
+
+/* เวลาเอาเมาส์ไปวาง */
+
+.camera-card:hover
+.camera-thumb img {
+
+  transform:
+    scale(1.04);
+
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+.camera-placeholder {
+
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color:
+    #6750b7;
+
+  font-size:
+    13px;
+
+  font-weight:
+    700;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0edff,
+      #faf9ff
+    );
+
+}
+
+
+/* ซ่อน placeholder ถ้ามีรูป */
+
+.camera-thumb:has(img[src]) 
+.camera-placeholder {
+
+  display: none;
+
+}
+
+
+/* ถ้ารูปโหลดไม่ได้ */
+
+.camera-thumb.no-image
+.camera-placeholder {
+
+  display: flex;
+
+}
+
+
+.camera-placeholder-icon {
+
+  font-size:
+    38px;
+
+  margin-bottom:
+    2px;
+
+  opacity:
+    .65;
+
+}
+
+
+/* =========================================================
+   MAINTENANCE
+========================================================= */
+
+.camera-thumb-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  background:
+    rgba(40,35,60,.58);
+
+  color:
+    white;
+
+  font-size:
+    13px;
+
+  font-weight:
+    700;
+
+  backdrop-filter:
+    blur(2px);
+
+}
 
 /* =========================================================
    SELECT CAMERA
