@@ -82,7 +82,7 @@ CAMERAS = {
         "unit": "ซม.",
         "status": "critical",
         "statusText": "วิกฤต ธงแดง",
-        "updatedAt": "2026-10-02T13:55:00+07:00",
+        "updatedAt": "",
         "message": "บันทึกข้อมูลระดับน้ำ"
     }
 },
