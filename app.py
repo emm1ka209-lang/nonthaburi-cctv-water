@@ -46,91 +46,86 @@ CAMERAS = {
     # -----------------------------------------------------
     # CCTV-01
     # -----------------------------------------------------
+"CCTV-01": {
+    "id": "CCTV-01",
 
-    "CCTV-01": {
-        "id": "CCTV-01",
+    "enabled": True,
 
-        "enabled": True,
+    "name": "เทศบาลนครนนทบุรี (เมือง)",
+    "location": "ท่าน้ำนนท์",
+    "title": "เทศบาลนครนนทบุรี (เมือง)",
+    "description": "จุดวัด ท่าน้ำนนท์",
 
-        "name": "เทศบาลนครนนทบุรี (เมือง)",
-        "location": "ท่าน้ำนนท์",
-        "title": "เทศบาลนครนนทบุรี (เมือง)",
-        "description": "จุดวัด ท่าน้ำนนท์",
+    "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1",
 
-        "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1",
+    # รูปภาพสำหรับการ์ดเลือกจุดตรวจวัด
+    "thumbnail": "https://raw.githubusercontent.com/emm1ka209-lang/nonthaburi-cctv-water/refs/heads/main/cctvtum01.png",
 
-            # รูปภาพสำหรับการ์ดเลือกจุดตรวจวัด
-    "thumbnail": "/cctvtum01.png",
-        # โลโก้หลักของจังหวัด
-        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
+    # โลโก้หลักของจังหวัด
+    "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
-        # โลโก้เทศบาล
-        "municipalityLogo": "https://nakornnont.go.th/images/content/logo-139-1/logo.png",
+    # โลโก้เทศบาล
+    "municipalityLogo": "https://nakornnont.go.th/images/content/logo-139-1/logo.png",
 
-        # โลโก้หน่วยงานผู้ดูแลระบบ
-        "agencyLogo": "https://cctv-nont.firsttech.co.th/img/FirstTech_Logo.e48d7620.png",
+    # โลโก้หน่วยงานผู้ดูแลระบบ
+    "agencyLogo": "https://cctv-nont.firsttech.co.th/img/FirstTech_Logo.e48d7620.png",
 
-        "agencyName": "Firsttech Design Co., Ltd.",
+    "agencyName": "Firsttech Design Co., Ltd.",
 
-        # รูปสำหรับกล่องข้อมูลระดับน้ำ
-        "waterStatusImage": "",
+    # รูปสำหรับกล่องข้อมูลระดับน้ำ
+    "waterStatusImage": "",
 
-        # ข้อมูลระดับน้ำแบบ MANUAL
-        "water": {
-            "mode": "manual",
-            "value": 35,
-            "unit": "ซม.",
-            "status": "critical",
-            "statusText": "วิกฤต",
-            "updatedAt": "2026-10-02T09:30:00+07:00",
-            "message": "บันทึกข้อมูลระดับน้ำ"
-        }
-    },
+    # ข้อมูลระดับน้ำแบบ MANUAL
+    "water": {
+        "mode": "manual",
+        "value": 35,
+        "unit": "ซม.",
+        "status": "critical",
+        "statusText": "วิกฤต",
+        "updatedAt": "2026-10-02T09:30:00+07:00",
+        "message": "บันทึกข้อมูลระดับน้ำ"
+    }
+},
 
 
     # -----------------------------------------------------
     # CCTV-02
     # -----------------------------------------------------
 
-    "CCTV-02": {
-        "id": "CCTV-02",
+"CCTV-02": {
+    "id": "CCTV-02",
 
-        # เปิดใช้งาน
-        # สำคัญ: Python ต้องใช้ True ตัวใหญ่
-        "enabled": True,
+    "enabled": False,
 
-        "maintenance": True,
+    "name": "เทศบาลนครปากเกร็ด (ปากเกร็ด)",
+    "location": "ท่าน้ำปากเกร็ด-หัวถนน",
+    "title": "เทศบาลนครปากเกร็ด",
+    "description": "ท่าน้ำปากเกร็ด-หัวถนน",
 
-        "name": "เทศบาลนครปากเกร็ด",
-        "location": "ท่าน้ำปากเกร็ด-หัวถนน",
-        "title": "เทศบาลนครปากเกร็ด",
-        "description": "จุดวัด ท่าน้ำปากเกร็ด-หัวถนน",
+    "stream": "https://thaiclouderp.com/video/pakkret-river.m3u8",
 
-        "stream": "https://thaiclouderp.com/video/pakkret-river.m3u8",
+    "thumbnail": "https://raw.githubusercontent.com/emm1ka209-lang/nonthaburi-cctv-water/refs/heads/main/cctvtum02.png",
 
-                    # รูปภาพสำหรับการ์ดเลือกจุดตรวจวัด
-    "thumbnail": "/cctvtum02.png",
+    "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
-        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
+    "municipalityLogo": "https://thaiclouderp.com/video/asset/images/pakkret_logo.png",
 
-        "municipalityLogo": "https://thaiclouderp.com/video/asset/images/pakkret_logo.png",
+    "agencyLogo": "https://thaiclouderp.com/video/asset/images/ccs_logo.png",
 
-        "agencyLogo": "https://thaiclouderp.com/video/asset/images/ccs_logo.png",
+    "agencyName": "Cloud Computing Solutions Co., Ltd.",
 
-        "agencyName": "Cloud Computing Solutions Co., Ltd.",
+    "waterStatusImage": "",
 
-        "waterStatusImage": "",
-
-        "water": {
-            "mode": "manual",
-            "value": None,
-            "unit": "ซม.",
-            "status": "waiting",
-            "statusText": "รอข้อมูล",
-            "updatedAt": None,
-            "message": "ระบบอยู่ระหว่างการปรับปรุง"
-        }
+    "water": {
+        "mode": "manual",
+        "value": 0,
+        "unit": "ซม.",
+        "status": "normal",
+        "statusText": "ปกติ",
+        "updatedAt": "",
+        "message": ""
     }
+},
 
 }
 
