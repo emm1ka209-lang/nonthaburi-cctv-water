@@ -44,110 +44,81 @@ app.add_middleware(
 CAMERAS = {
     "CCTV-01": {
         "id": "CCTV-01",
+        "enabled": True,
 
-        "name": "เทศบาลนครนนทบุรี",
-        "shortName": "เทศบาลนครนนทบุรี",
+        "name": "เทศบาลนครนนทบุรี (เมือง)",
         "location": "ท่าน้ำนนท์",
+        "title": "เทศบาลนครนนทบุรี (เมือง)",
+        "description": "จุดวัด ท่าน้ำนนท์",
 
-        "stream": (
-            "https://stream.firsttech.co.th/"
-            "live/nakornnont.stream/playlist.m3u8"
-        ),
+        "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/playlist.m3u8",
 
-        "municipalityLogo": (
-            "https://nakornnont.go.th/images/content/"
-            "logo-139-1/logo.png"
-        ),
+        # โลโก้หลักของจังหวัด
+        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original",
 
-        "agencyLogo": (
-            "https://cctv-nont.firsttech.co.th/img/"
-            "FirstTech_Logo.e48d7620.png"
-        ),
+        # โลโก้เทศบาล
+        "municipalityLogo": "https://nakornnont.go.th/images/content/logo-139-1/logo.png",
 
-        # ---------------------------------------------
-        # WATER LEVEL CALIBRATION
-        # ---------------------------------------------
-        #
-        # IMPORTANT:
-        # ต้องปรับค่าชุดนี้ให้ตรงกับภาพจริงของกล้อง
-        #
-        # roi:
-        # พื้นที่ที่ต้องการตรวจจับน้ำ
-        # ค่าเป็นสัดส่วน 0.0 - 1.0
-        #
-        # ตัวอย่าง:
-        # x=0.30 หมายถึงเริ่มที่ 30% ของภาพ
-        #
+        # โลโก้หน่วยงานผู้ดูแลระบบ
+        "agencyLogo": "https://cctv-nont.firsttech.co.th/img/FirstTech_Logo.e48d7620.png",
+
+        "agencyName": "Firsttech Design Co., Ltd.",
+
+        # รูปสำหรับกล่องข้อมูลระดับน้ำ
+        # ใส่ URL รูปของคุณเองภายหลังได้
+        "waterStatusImage": "",
+
+        # ข้อมูลระดับน้ำแบบ MANUAL
         "water": {
-            "enabled": False,
+            "mode": "manual",
 
-            "roi": {
-                "x": 0.20,
-                "y": 0.20,
-                "width": 0.60,
-                "height": 0.65
-            },
+            # ถ้าไม่มีข้อมูล ให้ใส่ None
+            "value": None,
 
-            # จุดบนของสเกล
-            "topPixel": 0.10,
+            "unit": "ซม.",
 
-            # จุดล่างของสเกล
-            "bottomPixel": 0.90,
+            "status": "waiting",
+            "statusText": "รอข้อมูล",
 
-            # ระดับน้ำที่ตำแหน่ง topPixel
-            "topCm": 100.0,
+            "updatedAt": None,
 
-            # ระดับน้ำที่ตำแหน่ง bottomPixel
-            "bottomCm": 0.0,
-
-            # ใช้ตรวจแนวผิวน้ำ
-            "minWaterDarkness": 0.0,
-
-            # smoothing
-            "smooth": 9
+            "message": "ยังไม่มีการบันทึกระดับน้ำ"
         }
     },
 
     "CCTV-02": {
         "id": "CCTV-02",
 
+        # ปิดการใช้งานชั่วคราว
+        "enabled": False,
+
+        "maintenance": True,
+
         "name": "เทศบาลนครปากเกร็ด",
-        "shortName": "เทศบาลนครปากเกร็ด",
         "location": "ท่าน้ำปากเกร็ด-หัวถนน",
+        "title": "เทศบาลนครปากเกร็ด",
+        "description": "จุดวัด ท่าน้ำปากเกร็ด-หัวถนน",
 
-        "stream": (
-            "https://thaiclouderp.com/video/"
-            "pakkret-river.m3u8"
-        ),
+        "stream": "https://thaiclouderp.com/video/pakkret-river.m3u8",
 
-        "municipalityLogo": (
-            "https://thaiclouderp.com/video/"
-            "asset/images/pakkret_logo.png"
-        ),
+        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original",
 
-        "agencyLogo": (
-            "https://thaiclouderp.com/video/"
-            "asset/images/ccs_logo.png"
-        ),
+        "municipalityLogo": "https://thaiclouderp.com/video/asset/images/pakkret_logo.png",
+
+        "agencyLogo": "https://thaiclouderp.com/video/asset/images/ccs_logo.png",
+
+        "agencyName": "Cloud Computing Solutions Co., Ltd.",
+
+        "waterStatusImage": "",
 
         "water": {
-            "enabled": False,
-
-            "roi": {
-                "x": 0.20,
-                "y": 0.20,
-                "width": 0.60,
-                "height": 0.65
-            },
-
-            "topPixel": 0.10,
-            "bottomPixel": 0.90,
-
-            "topCm": 100.0,
-            "bottomCm": 0.0,
-
-            "minWaterDarkness": 0.0,
-            "smooth": 9
+            "mode": "manual",
+            "value": None,
+            "unit": "ซม.",
+            "status": "waiting",
+            "statusText": "รอข้อมูล",
+            "updatedAt": None,
+            "message": "ระบบอยู่ระหว่างการปรับปรุง"
         }
     }
 }
