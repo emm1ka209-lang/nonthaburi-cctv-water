@@ -2475,63 +2475,98 @@ function renderCameraList() {
 
 
       /*
-      ===============================================
-      THUMBNAIL
-      ===============================================
-      */
+/*
+===============================================
+THUMBNAIL
+===============================================
+*/
 
-      let imageHTML =
-        "";
+let imageHTML = "";
 
+if (
+  camera.thumbnail &&
+  typeof camera.thumbnail === "string" &&
+  camera.thumbnail.trim() !== ""
+) {
 
-      if (
-        camera.thumbnail &&
-        camera.thumbnail.trim() !== ""
-      ) {
+  const thumbnailURL = camera.thumbnail.trim();
 
-        imageHTML = `
+  imageHTML = `
+    <img
+      class="camera-thumbnail-image"
+      src="${thumbnailURL}"
+      alt="${camera.name || "CCTV"}"
+      loading="eager"
+      referrerpolicy="no-referrer"
+      onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='flex';"
+    >
 
-          <img
-            src="${camera.thumbnail}"
-            alt="${camera.name}"
-            loading="lazy"
+    <div
+      class="camera-placeholder"
+      style="display:none;"
+    >
+      <div class="camera-placeholder-icon">📹</div>
+      <span>CCTV</span>
+    </div>
+  `;
 
-            onerror="
-              this.style.display='none';
-              this.parentElement.classList.add('no-image');
-            "
-          >
+} else {
 
-        `;
+  imageHTML = `
+    <div class="camera-placeholder">
+      <div class="camera-placeholder-icon">📹</div>
+      <span>CCTV</span>
+    </div>
+  `;
 
-      }
+}
 
+      .camera-thumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #f3f4f6;
+}
 
-      /*
-      ===============================================
-      PLACEHOLDER
-      ===============================================
-      */
+.camera-thumbnail-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
 
-      const placeholderHTML = `
+.camera-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
 
-        <div
-          class="camera-placeholder"
-        >
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
-          <div
-            class="camera-placeholder-icon"
-          >
-            📹
-          </div>
+  gap: 8px;
 
-          CCTV
+  color: #7b7f8a;
+  font-size: 14px;
+  font-weight: 600;
 
-        </div>
+  background:
+    linear-gradient(
+      135deg,
+      #f8f8fb 0%,
+      #eef0f5 100%
+    );
+}
 
-      `;
+.camera-placeholder-icon {
+  font-size: 34px;
+  line-height: 1;
+}
 
-
+  
       /*
       ===============================================
       MAINTENANCE
