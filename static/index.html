@@ -1510,144 +1510,191 @@ body {
 <body>
 
 
-<!-- =======================================================
-     SPLASH
-======================================================= -->
 
-<div
-    id="splash"
-    class="splash"
->
+/* =========================================================
+   SPLASH
+========================================================= */
 
-    <div class="splash-inner">
+.splash {
 
-        <img
-            id="splashLogo"
-            class="splash-logo"
-            src="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png"
-            alt=""
-        >
+    position: fixed;
 
-        <div class="splash-title">
+    inset: 0;
 
-            ระบบกล้องโทรทัศน์วงจรปิด
-            ตรวจวัดระดับน้ำ
-            จังหวัดนนทบุรี
+    z-index: 9999;
 
-        </div>
+    display: flex;
 
-        <div class="splash-subtitle">
+    align-items: center;
+    justify-content: center;
 
-            CCTV Water Monitoring System
+    background: #ffffff;
 
-        </div>
-
-    </div>
-
-</div>
+    transition:
+        opacity .45s ease,
+        visibility .45s ease;
+}
 
 
-<!-- =======================================================
-     HEADER
-======================================================= -->
+.splash.hide {
 
-<header class="header">
+    opacity: 0;
 
-    <div class="header-left">
-
-        <div>
-
-            <div class="header-title">
-
-                ระบบกล้องโทรทัศน์วงจรปิด
-                ตรวจวัดระดับน้ำ จังหวัดนนทบุรี
-                ในช่วง อุทกภัยปี 2569
-
-            </div>
-
-            <div class="header-subtitle">
-
-                CCTV Water Monitoring System
-
-            </div>
-
-        </div>
-
-    </div>
+    visibility: hidden;
+}
 
 
-    <div class="header-right">
+.splash-inner {
 
-        <div>
+    width: min(90vw, 560px);
 
-            <strong>
-                อัปเดตล่าสุด <div id="headerUpdate">
-                --
-            </div>
+    padding: 30px;
 
-        </div>
+    text-align: center;
+}
 
 
-        <div class="status-online">
+.splash-logo {
 
-            <span class="status-dot"></span>
+    width: 110px;
+    height: 110px;
 
-            ระบบออนไลน์
+    object-fit: contain;
 
-        </div>
+    display: block;
 
-    </div>
-
-</header>
-
-
-<main class="page">
-
-    <div class="main-layout">
+    margin:
+        0 auto 20px auto;
+}
 
 
-        <!-- CAMERA LIST -->
+.splash-title {
 
-        <aside class="camera-panel">
+    font-size: 23px;
 
-            <div class="section-title">
+    font-weight: 800;
 
-                <div class="section-icon">
-                    📹
-                </div>
-
-                เลือกจุดตรวจวัด
-
-            </div>
+    line-height: 1.5;
+}
 
 
-            <div
-                id="cameraList"
-                class="camera-list"
-            >
+.splash-subtitle {
 
-                กำลังโหลดข้อมูล...
+    margin-top: 6px;
 
-            </div>
-
-        </aside>
+    color: #777;
+}
 
 
-        <!-- VIEWER -->
+/* =========================================================
+   HEADER
+========================================================= */
 
-        <section
-            id="viewer"
-            class="viewer"
-        >
+.header {
 
-        </section>
+    padding: 22px 30px;
 
-    </div>
+    background:
+        linear-gradient(
+            120deg,
+            #ffffff 0%,
+            #f8f5ff 65%,
+            #f0ebff 100%
+        );
 
-</main>
+    border-bottom:
+        1px solid #eeeaf8;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+}
 
 
-<script>
+.header-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    min-width: 0;
+}
+
+
+.province-logo {
+
+    width: 70px;
+    height: 70px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+
+.header-title {
+
+    font-size:
+        clamp(19px, 2vw, 30px);
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.header-subtitle {
+
+    margin-top: 4px;
+
+    color: #77758b;
+
+    font-size: 13px;
+}
+
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    white-space: nowrap;
+}
+
+
+.status-online {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: var(--green);
+
+    font-weight: 600;
+}
+
+
+.status-dot {
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+}
+
 
 /* =========================================================
    STATE
