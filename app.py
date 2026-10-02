@@ -51,7 +51,7 @@ CAMERAS = {
         "title": "เทศบาลนครนนทบุรี (เมือง)",
         "description": "จุดวัด ท่าน้ำนนท์",
 
-        "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/playlist.m3u8",
+        "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1",
 
         # โลโก้หลักของจังหวัด
         "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
@@ -84,7 +84,7 @@ CAMERAS = {
         "id": "CCTV-02",
 
         # ปิดการใช้งานชั่วคราว
-        "enabled": False,
+        "enabled": true,
 
         "maintenance": True,
 
