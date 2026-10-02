@@ -560,20 +560,30 @@ def health():
 # =========================================================
 
 @app.get("/api/cameras")
-def cameras():
-
+def get_cameras():
     result = []
 
     for camera_id, camera in CAMERAS.items():
-
         result.append({
             "id": camera["id"],
-            "name": camera["name"],
-            "shortName": camera["shortName"],
-            "location": camera["location"],
-            "stream": camera["stream"],
-            "municipalityLogo": camera["municipalityLogo"],
-            "agencyLogo": camera["agencyLogo"]
+            "enabled": camera.get("enabled", True),
+            "maintenance": camera.get("maintenance", False),
+
+            "name": camera.get("name", ""),
+            "location": camera.get("location", ""),
+            "title": camera.get("title", ""),
+            "description": camera.get("description", ""),
+
+            "stream": camera.get("stream", ""),
+
+            "provinceLogo": camera.get("provinceLogo", ""),
+            "municipalityLogo": camera.get("municipalityLogo", ""),
+            "agencyLogo": camera.get("agencyLogo", ""),
+            "agencyName": camera.get("agencyName", ""),
+
+            "waterStatusImage": camera.get("waterStatusImage", ""),
+
+            "water": camera.get("water", {})
         })
 
     return result
