@@ -73,7 +73,7 @@ CAMERAS = {
     "agencyName": "Firsttech Design Co., Ltd.",
 
     # รูปสำหรับกล่องข้อมูลระดับน้ำ
-    "waterStatusImage": "https://i.postimg.cc/ZYNCZFhB/phe-mh-wre-xng-(9).png",
+    "waterStatusImage": "https://i.postimg.cc/2yzLSLGN/phe-mh-wre-xng-(8).png",
 
     # ข้อมูลระดับน้ำแบบ MANUAL
     "water": {
