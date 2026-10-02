@@ -54,7 +54,7 @@ CAMERAS = {
         "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/playlist.m3u8",
 
         # โลโก้หลักของจังหวัด
-        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original",
+        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
         # โลโก้เทศบาล
         "municipalityLogo": "https://nakornnont.go.th/images/content/logo-139-1/logo.png",
@@ -73,16 +73,16 @@ CAMERAS = {
             "mode": "manual",
 
             # ถ้าไม่มีข้อมูล ให้ใส่ None
-            "value": None,
+            "value": 32,
 
             "unit": "ซม.",
 
-            "status": "waiting",
-            "statusText": "รอข้อมูล",
+            "status": "critical",
+            "statusText": "วิกฤต",
 
-            "updatedAt": None,
+            "updatedAt": 2026-10-02T10:07:00+07:00,
 
-            "message": "ยังไม่มีการบันทึกระดับน้ำ"
+            "message": "บันทึกข้อมูลระดับน้ำ"
         }
     },
 
@@ -101,7 +101,7 @@ CAMERAS = {
 
         "stream": "https://thaiclouderp.com/video/pakkret-river.m3u8",
 
-        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original",
+        "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
         "municipalityLogo": "https://thaiclouderp.com/video/asset/images/pakkret_logo.png",
 
