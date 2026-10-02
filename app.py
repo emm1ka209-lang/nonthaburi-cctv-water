@@ -42,8 +42,14 @@ app.add_middleware(
 # =========================================================
 
 CAMERAS = {
+
+    # -----------------------------------------------------
+    # CCTV-01
+    # -----------------------------------------------------
+
     "CCTV-01": {
         "id": "CCTV-01",
+
         "enabled": True,
 
         "name": "เทศบาลนครนนทบุรี (เมือง)",
@@ -51,7 +57,7 @@ CAMERAS = {
         "title": "เทศบาลนครนนทบุรี (เมือง)",
         "description": "จุดวัด ท่าน้ำนนท์",
 
-        "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8",
+        "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1",
 
         # โลโก้หลักของจังหวัด
         "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
@@ -65,26 +71,31 @@ CAMERAS = {
         "agencyName": "Firsttech Design Co., Ltd.",
 
         # รูปสำหรับกล่องข้อมูลระดับน้ำ
-        # ใส่ URL รูปของคุณเองภายหลังได้
         "waterStatusImage": "",
 
         # ข้อมูลระดับน้ำแบบ MANUAL
-"water": {
-    "mode": "manual",
-    "value": 35,
-    "unit": "ซม.",
-    "status": "critical",
-    "statusText": "วิกฤต",
-    "updatedAt": "2026-10-02T09:30:00+07:00",
-    "message": "บันทึกข้อมูลระดับน้ำ"
-}
+        "water": {
+            "mode": "manual",
+            "value": 35,
+            "unit": "ซม.",
+            "status": "critical",
+            "statusText": "วิกฤต",
+            "updatedAt": "2026-10-02T09:30:00+07:00",
+            "message": "บันทึกข้อมูลระดับน้ำ"
+        }
     },
+
+
+    # -----------------------------------------------------
+    # CCTV-02
+    # -----------------------------------------------------
 
     "CCTV-02": {
         "id": "CCTV-02",
 
-        # ปิดการใช้งานชั่วคราว
-        "enabled": true,
+        # เปิดใช้งาน
+        # สำคัญ: Python ต้องใช้ True ตัวใหญ่
+        "enabled": True,
 
         "maintenance": True,
 
@@ -115,6 +126,7 @@ CAMERAS = {
             "message": "ระบบอยู่ระหว่างการปรับปรุง"
         }
     }
+
 }
 
 
@@ -186,10 +198,12 @@ def extract_frame(stream_url: str) -> bytes:
             stderr=subprocess.PIPE,
             timeout=20
         )
+
     except subprocess.TimeoutExpired:
         raise RuntimeError("Timeout while reading HLS stream")
 
     if result.returncode != 0 or not result.stdout:
+
         error = result.stderr.decode(
             "utf-8",
             errors="ignore"
@@ -207,6 +221,7 @@ def extract_frame(stream_url: str) -> bytes:
 # =========================================================
 
 def decode_image(image_bytes: bytes):
+
     array = np.frombuffer(
         image_bytes,
         dtype=np.uint8
@@ -238,6 +253,7 @@ def detect_water_level(image, config):
     """
 
     if not config.get("enabled", False):
+
         return {
             "value": None,
             "unit": "cm",
@@ -250,8 +266,13 @@ def detect_water_level(image, config):
 
     roi_config = config["roi"]
 
-    x1 = int(w * roi_config["x"])
-    y1 = int(h * roi_config["y"])
+    x1 = int(
+        w * roi_config["x"]
+    )
+
+    y1 = int(
+        h * roi_config["y"]
+    )
 
     x2 = int(
         w * (
@@ -276,6 +297,7 @@ def detect_water_level(image, config):
     roi = image[y1:y2, x1:x2]
 
     if roi.size == 0:
+
         return {
             "value": None,
             "unit": "cm",
@@ -301,8 +323,6 @@ def detect_water_level(image, config):
 
     # ---------------------------------------------
     # Vertical gradient
-    #
-    # ผิวน้ำมักสร้าง transition ในภาพ
     # ---------------------------------------------
 
     gradient = cv2.Sobel(
@@ -352,6 +372,7 @@ def detect_water_level(image, config):
     ]
 
     if len(search) == 0:
+
         return {
             "value": None,
             "unit": "cm",
@@ -402,6 +423,7 @@ def detect_water_level(image, config):
     )
 
     if abs(denominator) < 0.0001:
+
         return {
             "value": None,
             "unit": "cm",
@@ -440,8 +462,11 @@ def detect_water_level(image, config):
     )
 
     if average <= 0:
+
         confidence = 0
+
     else:
+
         confidence = min(
             100,
             max(
@@ -457,6 +482,7 @@ def detect_water_level(image, config):
 
     # ไม่รับค่าที่ confidence ต่ำมาก
     if confidence < 25:
+
         return {
             "value": None,
             "unit": "cm",
@@ -467,19 +493,20 @@ def detect_water_level(image, config):
 
     # ---------------------------------------------
     # Status
-    #
-    # สามารถเปลี่ยน threshold ได้ภายหลัง
     # ---------------------------------------------
 
     if level >= 70:
+
         status = "critical"
         status_text = "วิกฤต"
 
     elif level >= 50:
+
         status = "warning"
         status_text = "เฝ้าระวัง"
 
     else:
+
         status = "normal"
         status_text = "ปกติ"
 
@@ -498,7 +525,9 @@ def detect_water_level(image, config):
 # =========================================================
 
 def get_camera_snapshot(camera_id: str):
+
     if camera_id not in CAMERAS:
+
         raise HTTPException(
             status_code=404,
             detail="ไม่พบกล้อง"
@@ -542,6 +571,7 @@ def get_camera_snapshot(camera_id: str):
 
 @app.get("/api/health")
 def health():
+
     return {
         "ok": True,
         "service": APP_NAME,
@@ -555,29 +585,76 @@ def health():
 
 @app.get("/api/cameras")
 def get_cameras():
+
     result = []
 
     for camera_id, camera in CAMERAS.items():
+
         result.append({
+
             "id": camera["id"],
+
             "enabled": camera.get("enabled", True),
-            "maintenance": camera.get("maintenance", False),
 
-            "name": camera.get("name", ""),
-            "location": camera.get("location", ""),
-            "title": camera.get("title", ""),
-            "description": camera.get("description", ""),
+            "maintenance": camera.get(
+                "maintenance",
+                False
+            ),
 
-            "stream": camera.get("stream", ""),
+            "name": camera.get(
+                "name",
+                ""
+            ),
 
-            "provinceLogo": camera.get("provinceLogo", ""),
-            "municipalityLogo": camera.get("municipalityLogo", ""),
-            "agencyLogo": camera.get("agencyLogo", ""),
-            "agencyName": camera.get("agencyName", ""),
+            "location": camera.get(
+                "location",
+                ""
+            ),
 
-            "waterStatusImage": camera.get("waterStatusImage", ""),
+            "title": camera.get(
+                "title",
+                ""
+            ),
 
-            "water": camera.get("water", {})
+            "description": camera.get(
+                "description",
+                ""
+            ),
+
+            "stream": camera.get(
+                "stream",
+                ""
+            ),
+
+            "provinceLogo": camera.get(
+                "provinceLogo",
+                ""
+            ),
+
+            "municipalityLogo": camera.get(
+                "municipalityLogo",
+                ""
+            ),
+
+            "agencyLogo": camera.get(
+                "agencyLogo",
+                ""
+            ),
+
+            "agencyName": camera.get(
+                "agencyName",
+                ""
+            ),
+
+            "waterStatusImage": camera.get(
+                "waterStatusImage",
+                ""
+            ),
+
+            "water": camera.get(
+                "water",
+                {}
+            )
         })
 
     return result
@@ -591,6 +668,7 @@ def get_cameras():
 def status(camera_id: str):
 
     if camera_id not in CAMERAS:
+
         raise HTTPException(
             status_code=404,
             detail="ไม่พบกล้อง"
@@ -604,7 +682,9 @@ def status(camera_id: str):
 
     return {
         "camera": camera_id,
+
         "timestamp": None,
+
         "water": {
             "value": None,
             "unit": "cm",
@@ -644,6 +724,7 @@ def snapshot(camera_id: str):
 def analyze(camera_id: str):
 
     try:
+
         raw, result = get_camera_snapshot(
             camera_id
         )
@@ -657,7 +738,9 @@ def analyze(camera_id: str):
         return JSONResponse(
             status_code=503,
             content={
+
                 "camera": camera_id,
+
                 "timestamp": None,
 
                 "water": {
@@ -679,6 +762,7 @@ def analyze(camera_id: str):
 def cached_snapshot(camera_id: str):
 
     if camera_id not in CAMERAS:
+
         raise HTTPException(
             status_code=404,
             detail="ไม่พบกล้อง"
