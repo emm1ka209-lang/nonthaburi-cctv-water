@@ -73,16 +73,16 @@ CAMERAS = {
     "agencyName": "Firsttech Design Co., Ltd.",
 
     # รูปสำหรับกล่องข้อมูลระดับน้ำ
-    "waterStatusImage": "https://i.postimg.cc/2yzLSLGN/phe-mh-wre-xng-(8).png",
+    "waterStatusImage": "https://i.postimg.cc/ZYNCZFhB/phe-mh-wre-xng-(9).png",
 
     # ข้อมูลระดับน้ำแบบ MANUAL
     "water": {
         "mode": "manual",
-        "value": 30,
+        "value": 20.9,
         "unit": "ซม.",
-        "status": "critical",
-        "statusText": "วิกฤต ธงแดง",
-        "updatedAt": "2026-10-02T13:55:00+07:00",
+        "status": "normal",
+        "statusText": "เฝ้าระวัง ธงเหลือง",
+        "updatedAt": "2026-10-02T14:45:01+07:00",
         "message": "บันทึกข้อมูลระดับน้ำ"
     }
 },
@@ -114,16 +114,16 @@ CAMERAS = {
 
     "agencyName": "Cloud Computing Solutions Co., Ltd.",
 
-    "waterStatusImage": "https://i.postimg.cc/2yzLSLGN/phe-mh-wre-xng-(8).png",
+    "waterStatusImage": "https://i.postimg.cc/ZYNCZFhB/phe-mh-wre-xng-(9).png",
 
     "water": {
         "mode": "manual",
-        "value": 0,
+        "value": 20,
         "unit": "ซม.",
         "status": "normal",
-        "statusText": "ปกติ",
-        "updatedAt": "",
-        "message": ""
+        "statusText": "เฝ้าระวัง ธงเหลือง",
+        "updatedAt": "2026-10-02T14:45:01+07:00",
+        "message": "บันทึกข้อมูลระดับน้ำ"
     }
 },
 
