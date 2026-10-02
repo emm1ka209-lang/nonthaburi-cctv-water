@@ -69,21 +69,15 @@ CAMERAS = {
         "waterStatusImage": "",
 
         # ข้อมูลระดับน้ำแบบ MANUAL
-        "water": {
-            "mode": "manual",
-
-            # ถ้าไม่มีข้อมูล ให้ใส่ None
-            "value": 32,
-
-            "unit": "ซม.",
-
-            "status": "critical",
-            "statusText": "วิกฤต",
-
-            "updatedAt": 2026-10-02T10:07:00+07:00,
-
-            "message": "บันทึกข้อมูลระดับน้ำ"
-        }
+"water": {
+    "mode": "manual",
+    "value": 35,
+    "unit": "ซม.",
+    "status": "critical",
+    "statusText": "วิกฤต",
+    "updatedAt": "2026-10-02T09:30:00+07:00",
+    "message": "บันทึกข้อมูลระดับน้ำ"
+}
     },
 
     "CCTV-02": {
