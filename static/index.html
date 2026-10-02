@@ -1,3857 +1,1929 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-\<html lang="th">
+<title>ระบบกล้องโทรทัศน์วงจรปิด ตรวจวัดระดับน้ำ จังหวัดนนทบุรี</title>
 
-\<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-\<meta charset="UTF-8">
+<link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
 
-\<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
+<style>
 
-
-\<title>ระบบกล้องโทรทัศน์วงจรปิด ตรวจวัดระดับน้ำ จังหวัดนนทบุรี\</title>
-
-
-
-\<link rel="preconnect" href="https\://fonts.googleapis.com">
-
-\<link rel="preconnect" href="https\://fonts.gstatic.com" crossorigin>
-
-
-
-\<link
-
-    href="https\://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght\@400;500;600;700;800&display=swap"
-
-    rel="stylesheet"
-
-\>
-
-
-
-\<script src="https\://cdn.jsdelivr.net/npm/hls.js\@latest">\</script>
-
-
-
-\<style>
-
-
-
-\* {
-
-    box-sizing: border-box;
-
+* {
+    box-sizing: border-box;
 }
-
-
 
 :root {
+    --purple: #5b35b5;
+    --purple-dark: #40228e;
+    --purple-light: #eee9ff;
 
-    --purple: #5b35b5;
+    --text: #202047;
+    --muted: #77758b;
 
-    --purple-dark: #40228e;
+    --border: #e5e1f4;
 
-    --purple-light: #eee9ff;
+    --bg: #f7f7fc;
+    --card: #ffffff;
 
+    --green: #18a957;
+    --yellow: #e4a400;
+    --red: #df4b4b;
 
-
-    --text: #202047;
-
-    --muted: #77758b;
-
-
-
-    --border: #e5e1f4;
-
-
-
-    --bg: #f7f7fc;
-
-    --card: #ffffff;
-
-
-
-    --green: #18a957;
-
-    --yellow: #e4a400;
-
-    --red: #df4b4b;
-
-
-
-    --shadow:
-
-        0 10px 30px rgba(53, 37, 105, 0.08);
-
+    --shadow:
+        0 10px 30px rgba(53, 37, 105, 0.08);
 }
-
-
 
 html,
-
 body {
+    margin: 0;
+    padding: 0;
 
-    margin: 0;
+    min-height: 100%;
 
-    padding: 0;
+    font-family:
+        "Noto Sans Thai",
+        system-ui,
+        sans-serif;
 
+    background:
+        linear-gradient(
+            135deg,
+            #f8f8ff 0%,
+            #ffffff 45%,
+            #f4f1ff 100%
+        );
 
-
-    min-height: 100%;
-
-
-
-    font-family:
-
-        "Noto Sans Thai",
-
-        system-ui,
-
-        sans-serif;
-
-
-
-    background:
-
-        linear-gradient(
-
-            135deg,
-
-            #f8f8ff 0%,
-
-            #ffffff 45%,
-
-            #f4f1ff 100%
-
-        );
-
-
-
-    color: var(--text);
-
+    color: var(--text);
 }
 
-
-
-/\* =========================
-
-   SPLASH
-
-\========================= \*/
-
-
+/* =========================
+   SPLASH
+========================= */
 
 .splash {
+    position: fixed;
+    inset: 0;
 
-    position: fixed;
+    z-index: 9999;
 
-    inset: 0;
+    background: #fff;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-
-    z-index: 9999;
-
-
-
-    background: #fff;
-
-
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-
-
-    transition:
-
-        opacity .45s ease,
-
-        visibility .45s ease;
-
+    transition:
+        opacity .45s ease,
+        visibility .45s ease;
 }
-
-
 
 .splash.hide {
-
-    opacity: 0;
-
-    visibility: hidden;
-
+    opacity: 0;
+    visibility: hidden;
 }
-
-
 
 .splash-inner {
+    width: min(90vw, 560px);
 
-    width: min(90vw, 560px);
+    text-align: center;
 
-
-
-    text-align: center;
-
-
-
-    padding: 30px;
-
+    padding: 30px;
 }
-
-
 
 .splash-logo {
+    width: 110px;
+    height: 110px;
 
-    width: 110px;
+    object-fit: contain;
 
-    height: 110px;
-
-
-
-    object-fit: contain;
-
-
-
-    margin-bottom: 20px;
-
+    margin-bottom: 20px;
 }
-
-
 
 .splash-title {
+    font-size: 23px;
+    font-weight: 800;
 
-    font-size: 23px;
-
-    font-weight: 800;
-
-
-
-    line-height: 1.5;
-
+    line-height: 1.5;
 }
-
-
 
 .splash-subtitle {
-
-    color: #777;
-
-    margin-top: 6px;
-
+    color: #777;
+    margin-top: 6px;
 }
 
-
-
-/\* =========================
-
-   HEADER
-
-\========================= \*/
-
-
+/* =========================
+   HEADER
+========================= */
 
 .header {
+    padding: 26px 30px;
 
-    padding: 26px 30px;
+    background:
+        linear-gradient(
+            120deg,
+            #ffffff 0%,
+            #f8f5ff 65%,
+            #f0ebff 100%
+        );
 
+    border-bottom: 1px solid #eeeaf8;
 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    background:
-
-        linear-gradient(
-
-            120deg,
-
-            #ffffff 0%,
-
-            #f8f5ff 65%,
-
-            #f0ebff 100%
-
-        );
-
-
-
-    border-bottom: 1px solid #eeeaf8;
-
-
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-
-
-    gap: 20px;
-
+    gap: 20px;
 }
-
-
 
 .header-left {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 18px;
-
+    display: flex;
+    align-items: center;
+    gap: 18px;
 }
-
-
 
 .province-logo {
+    width: 78px;
+    height: 78px;
 
-    width: 78px;
+    object-fit: contain;
 
-    height: 78px;
-
-
-
-    object-fit: contain;
-
-
-
-    flex-shrink: 0;
-
+    flex-shrink: 0;
 }
-
-
 
 .header-title {
+    font-size: clamp(20px, 2.2vw, 32px);
+    font-weight: 800;
 
-    font-size: clamp(20px, 2.2vw, 32px);
-
-    font-weight: 800;
-
-
-
-    line-height: 1.35;
-
+    line-height: 1.35;
 }
-
-
 
 .header-subtitle {
+    margin-top: 4px;
 
-    margin-top: 4px;
+    color: #77758b;
 
-
-
-    color: #77758b;
-
-
-
-    font-size: 13px;
-
+    font-size: 13px;
 }
-
-
 
 .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
-
-
-
-    color: var(--purple);
-
-    white-space: nowrap;
-
+    color: var(--purple);
+    white-space: nowrap;
 }
-
-
 
 .status-online {
+    display: flex;
+    align-items: center;
+    gap: 7px;
 
-    display: flex;
+    color: var(--green);
 
-    align-items: center;
-
-    gap: 7px;
-
-
-
-    color: var(--green);
-
-
-
-    font-weight: 600;
-
+    font-weight: 600;
 }
-
-
 
 .status-dot {
+    width: 9px;
+    height: 9px;
 
-    width: 9px;
+    border-radius: 50%;
 
-    height: 9px;
-
-
-
-    border-radius: 50%;
-
-
-
-    background: var(--green);
-
+    background: var(--green);
 }
 
-
-
-/\* =========================
-
-   MAIN
-
-\========================= \*/
-
-
+/* =========================
+   MAIN
+========================= */
 
 .page {
+    width: min(1600px, calc(100% - 32px));
 
-    width: min(1600px, calc(100% - 32px));
-
-
-
-    margin: 18px auto 40px;
-
+    margin: 18px auto 40px;
 }
-
-
 
 .main-layout {
+    display: grid;
 
-    display: grid;
+    grid-template-columns:
+        minmax(300px, 0.9fr)
+        minmax(650px, 2fr);
 
-
-
-    grid-template-columns:
-
-        minmax(300px, 0.9fr)
-
-        minmax(650px, 2fr);
-
-
-
-    gap: 18px;
-
+    gap: 18px;
 }
 
-
-
-/\* =========================
-
-   CAMERA LIST
-
-\========================= \*/
-
-
+/* =========================
+   CAMERA LIST
+========================= */
 
 .camera-panel {
+    background: rgba(255,255,255,.9);
 
-    background: rgba(255,255,255,.9);
+    border: 1px solid #eeeaf7;
 
+    border-radius: 18px;
 
+    padding: 18px;
 
-    border: 1px solid #eeeaf7;
-
-
-
-    border-radius: 18px;
-
-
-
-    padding: 18px;
-
-
-
-    box-shadow: var(--shadow);
-
+    box-shadow: var(--shadow);
 }
-
-
 
 .section-title {
+    display: flex;
+    align-items: center;
 
-    display: flex;
+    gap: 10px;
 
-    align-items: center;
+    font-size: 21px;
+    font-weight: 800;
 
-
-
-    gap: 10px;
-
-
-
-    font-size: 21px;
-
-    font-weight: 800;
-
-
-
-    margin-bottom: 15px;
-
+    margin-bottom: 15px;
 }
-
-
 
 .section-icon {
+    width: 38px;
+    height: 38px;
 
-    width: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    height: 38px;
+    border-radius: 12px;
 
+    background: var(--purple-light);
 
+    color: var(--purple);
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-
-
-    border-radius: 12px;
-
-
-
-    background: var(--purple-light);
-
-
-
-    color: var(--purple);
-
-
-
-    font-size: 20px;
-
+    font-size: 20px;
 }
-
-
 
 .camera-list {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 14px;
-
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
-
-
 
 .camera-card {
+    position: relative;
 
-    position: relative;
+    border: 1px solid var(--border);
 
+    border-radius: 15px;
 
+    padding: 12px;
 
-    border: 1px solid var(--border);
+    background: #fff;
 
+    display: grid;
 
+    grid-template-columns: 180px 1fr;
 
-    border-radius: 15px;
+    gap: 15px;
 
+    cursor: pointer;
 
-
-    padding: 12px;
-
-
-
-    background: #fff;
-
-
-
-    display: grid;
-
-
-
-    grid-template-columns: 180px 1fr;
-
-
-
-    gap: 15px;
-
-
-
-    cursor: pointer;
-
-
-
-    transition:
-
-        transform .2s ease,
-
-        box-shadow .2s ease,
-
-        border-color .2s ease;
-
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
 }
-
-
 
 .camera-card:hover {
+    transform: translateY(-2px);
 
-    transform: translateY(-2px);
+    box-shadow:
+        0 8px 22px rgba(91,53,181,.12);
 
-
-
-    box-shadow:
-
-        0 8px 22px rgba(91,53,181,.12);
-
-
-
-    border-color: #c9bcf6;
-
+    border-color: #c9bcf6;
 }
-
-
 
 .camera-card.active {
+    border-color: #8f78dc;
 
-    border-color: #8f78dc;
-
-
-
-    box-shadow:
-
-        0 0 0 2px rgba(91,53,181,.08);
-
+    box-shadow:
+        0 0 0 2px rgba(91,53,181,.08);
 }
-
-
 
 .camera-card.disabled {
+    cursor: default;
 
-    cursor: default;
+    filter: grayscale(.2);
 
-
-
-    filter: grayscale(.2);
-
-
-
-    background: #f7f7f8;
-
+    background: #f7f7f8;
 }
-
-
 
 .camera-thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
 
-    width: 100%;
+    border-radius: 11px;
 
-    aspect-ratio: 16 / 9;
+    overflow: hidden;
 
+    background:
+        linear-gradient(
+            135deg,
+            #d8d8dc,
+            #b8b8bf
+        );
 
-
-    border-radius: 11px;
-
-
-
-    overflow: hidden;
-
-
-
-    background:
-
-        linear-gradient(
-
-            135deg,
-
-            #d8d8dc,
-
-            #b8b8bf
-
-        );
-
-
-
-    position: relative;
-
+    position: relative;
 }
-
-
 
 .camera-thumb img {
+    width: 100%;
+    height: 100%;
 
-    width: 100%;
+    object-fit: cover;
 
-    height: 100%;
-
-
-
-    object-fit: cover;
-
-
-
-    display: block;
-
+    display: block;
 }
-
-
 
 .camera-thumb-overlay {
+    position: absolute;
+    inset: 0;
 
-    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    inset: 0;
+    background:
+        rgba(30,30,40,.55);
 
+    color: white;
 
+    font-weight: 700;
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-
-
-    background:
-
-        rgba(30,30,40,.55);
-
-
-
-    color: white;
-
-
-
-    font-weight: 700;
-
-
-
-    text-align: center;
-
+    text-align: center;
 }
-
-
 
 .camera-content {
+    min-width: 0;
 
-    min-width: 0;
-
-
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: center;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-
-
 
 .camera-name {
+    font-size: 18px;
+    font-weight: 800;
 
-    font-size: 18px;
-
-    font-weight: 800;
-
-
-
-    line-height: 1.4;
-
+    line-height: 1.4;
 }
-
-
 
 .camera-location {
+    color: #69677d;
 
-    color: #69677d;
+    margin-top: 5px;
 
-
-
-    margin-top: 5px;
-
-
-
-    font-size: 14px;
-
+    font-size: 14px;
 }
-
-
 
 .camera-id {
+    color: #888;
 
-    color: #888;
+    font-size: 12px;
 
-
-
-    font-size: 12px;
-
-
-
-    margin-top: 5px;
-
+    margin-top: 5px;
 }
-
-
 
 .camera-status {
+    margin-top: 13px;
 
-    margin-top: 13px;
+    display: flex;
+    flex-wrap: wrap;
 
-
-
-    display: flex;
-
-    flex-wrap: wrap;
-
-
-
-    gap: 7px;
-
+    gap: 7px;
 }
-
-
 
 .badge {
+    display: inline-flex;
 
-    display: inline-flex;
+    align-items: center;
 
+    gap: 5px;
 
+    padding: 5px 10px;
 
-    align-items: center;
+    border-radius: 999px;
 
+    font-size: 12px;
 
-
-    gap: 5px;
-
-
-
-    padding: 5px 10px;
-
-
-
-    border-radius: 999px;
-
-
-
-    font-size: 12px;
-
-
-
-    font-weight: 600;
-
+    font-weight: 600;
 }
-
-
 
 .badge.online {
-
-    background: #e9f9ef;
-
-    color: #138744;
-
+    background: #e9f9ef;
+    color: #138744;
 }
-
-
 
 .badge.maintenance {
-
-    background: #eeeeef;
-
-    color: #666;
-
+    background: #eeeeef;
+    color: #666;
 }
-
-
 
 .badge.live {
-
-    background: #ffe7e7;
-
-    color: #d74444;
-
+    background: #ffe7e7;
+    color: #d74444;
 }
 
-
-
-/\* =========================
-
-   CAMERA VIEW
-
-\========================= \*/
-
-
+/* =========================
+   CAMERA VIEW
+========================= */
 
 .viewer {
-
-    min-width: 0;
-
+    min-width: 0;
 }
-
-
 
 .viewer-header {
+    background:
+        linear-gradient(
+            100deg,
+            var(--purple-dark),
+            var(--purple)
+        );
 
-    background:
+    color: white;
 
-        linear-gradient(
+    border-radius: 17px;
 
-            100deg,
+    padding: 17px 20px;
 
-            var(--purple-dark),
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-            var(--purple)
+    gap: 15px;
 
-        );
-
-
-
-    color: white;
-
-
-
-    border-radius: 17px;
-
-
-
-    padding: 17px 20px;
-
-
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-
-
-    gap: 15px;
-
-
-
-    box-shadow:
-
-        0 8px 25px rgba(74,40,157,.18);
-
+    box-shadow:
+        0 8px 25px rgba(74,40,157,.18);
 }
-
-
 
 .viewer-title {
-
-    font-size: 21px;
-
-    font-weight: 800;
-
+    font-size: 21px;
+    font-weight: 800;
 }
-
-
 
 .viewer-location {
+    font-size: 13px;
+    opacity: .85;
 
-    font-size: 13px;
-
-    opacity: .85;
-
-
-
-    margin-top: 2px;
-
+    margin-top: 2px;
 }
-
-
 
 .live-badge {
+    background: #ee6060;
 
-    background: #ee6060;
+    padding: 6px 12px;
 
+    border-radius: 999px;
 
-
-    padding: 6px 12px;
-
-
-
-    border-radius: 999px;
-
-
-
-    font-size: 12px;
-
-    font-weight: 700;
-
+    font-size: 12px;
+    font-weight: 700;
 }
 
-
-
-/\* =========================
-
-   CONTENT GRID
-
-\========================= \*/
-
-
+/* =========================
+   CONTENT GRID
+========================= */
 
 .viewer-grid {
+    margin-top: 12px;
 
-    margin-top: 12px;
+    display: grid;
 
+    grid-template-columns:
+        minmax(0, 1fr)
+        350px;
 
-
-    display: grid;
-
-
-
-    grid-template-columns:
-
-        minmax(0, 1fr)
-
-        350px;
-
-
-
-    gap: 12px;
-
+    gap: 12px;
 }
 
-
-
-/\* =========================
-
-   VIDEO
-
-\========================= \*/
-
-
+/* =========================
+   VIDEO
+========================= */
 
 .video-card {
+    background: #000;
 
-    background: #000;
+    border-radius: 14px;
 
+    overflow: hidden;
 
+    position: relative;
 
-    border-radius: 14px;
+    aspect-ratio: 4 / 3;
 
-
-
-    overflow: hidden;
-
-
-
-    position: relative;
-
-
-
-    aspect-ratio: 4 / 3;
-
-
-
-    box-shadow: var(--shadow);
-
+    box-shadow: var(--shadow);
 }
-
-
 
 .video-card video {
+    width: 100%;
+    height: 100%;
 
-    width: 100%;
+    display: block;
 
-    height: 100%;
-
-
-
-    display: block;
-
-
-
-    object-fit: cover;
-
+    object-fit: cover;
 }
-
-
 
 .video-time {
+    position: absolute;
 
-    position: absolute;
+    left: 12px;
+    top: 10px;
 
+    padding: 3px 7px;
 
+    border-radius: 5px;
 
-    left: 12px;
+    background: rgba(0,0,0,.55);
 
-    top: 10px;
+    color: white;
 
+    font-family: monospace;
 
+    font-size: 13px;
 
-    padding: 3px 7px;
-
-
-
-    border-radius: 5px;
-
-
-
-    background: rgba(0,0,0,.55);
-
-
-
-    color: white;
-
-
-
-    font-family: monospace;
-
-
-
-    font-size: 13px;
-
-
-
-    pointer-events: none;
-
+    pointer-events: none;
 }
 
-
-
-/\* =========================
-
-   WATER PANEL
-
-\========================= \*/
-
-
+/* =========================
+   WATER PANEL
+========================= */
 
 .water-panel {
+    background: #fff;
 
-    background: #fff;
+    border: 1px solid var(--border);
 
+    border-radius: 15px;
 
+    overflow: hidden;
 
-    border: 1px solid var(--border);
-
-
-
-    border-radius: 15px;
-
-
-
-    overflow: hidden;
-
-
-
-    box-shadow: var(--shadow);
-
+    box-shadow: var(--shadow);
 }
-
-
 
 .water-header {
+    background:
+        linear-gradient(
+            100deg,
+            #5a32b2,
+            #7550c9
+        );
 
-    background:
+    color: white;
 
-        linear-gradient(
+    padding: 15px 17px;
 
-            100deg,
-
-            #5a32b2,
-
-            #7550c9
-
-        );
-
-
-
-    color: white;
-
-
-
-    padding: 15px 17px;
-
-
-
-    font-size: 19px;
-
-    font-weight: 800;
-
+    font-size: 19px;
+    font-weight: 800;
 }
-
-
 
 .water-body {
-
-    padding: 15px;
-
+    padding: 15px;
 }
-
-
 
 .water-image {
+    width: 100%;
 
-    width: 100%;
+    aspect-ratio: 1.45;
 
+    object-fit: contain;
 
+    border-radius: 10px;
 
-    aspect-ratio: 1.45;
+    background:
+        linear-gradient(
+            135deg,
+            #f2efff,
+            #fafaff
+        );
 
-
-
-    object-fit: contain;
-
-
-
-    border-radius: 10px;
-
-
-
-    background:
-
-        linear-gradient(
-
-            135deg,
-
-            #f2efff,
-
-            #fafaff
-
-        );
-
-
-
-    display: block;
-
+    display: block;
 }
-
-
 
 .water-placeholder {
+    width: 100%;
 
-    width: 100%;
+    aspect-ratio: 1.45;
 
+    border-radius: 10px;
 
+    background:
+        linear-gradient(
+            135deg,
+            #f0ecff,
+            #faf9ff
+        );
 
-    aspect-ratio: 1.45;
+    display: flex;
+    flex-direction: column;
 
+    align-items: center;
+    justify-content: center;
 
+    text-align: center;
 
-    border-radius: 10px;
+    color: var(--purple);
 
-
-
-    background:
-
-        linear-gradient(
-
-            135deg,
-
-            #f0ecff,
-
-            #faf9ff
-
-        );
-
-
-
-    display: flex;
-
-    flex-direction: column;
-
-
-
-    align-items: center;
-
-    justify-content: center;
-
-
-
-    text-align: center;
-
-
-
-    color: var(--purple);
-
-
-
-    padding: 20px;
-
+    padding: 20px;
 }
-
-
 
 .water-placeholder-icon {
+    font-size: 55px;
 
-    font-size: 55px;
+    opacity: .55;
 
-
-
-    opacity: .55;
-
-
-
-    margin-bottom: 5px;
-
+    margin-bottom: 5px;
 }
-
-
 
 .water-placeholder strong {
-
-    font-size: 18px;
-
+    font-size: 18px;
 }
-
-
 
 .water-placeholder span {
+    font-size: 12px;
 
-    font-size: 12px;
+    color: #888;
 
-
-
-    color: #888;
-
-
-
-    margin-top: 3px;
-
+    margin-top: 3px;
 }
-
-
 
 .water-value-box {
+    margin-top: 12px;
 
-    margin-top: 12px;
+    padding: 13px;
 
+    border-radius: 12px;
 
-
-    padding: 13px;
-
-
-
-    border-radius: 12px;
-
-
-
-    background: #f7f5ff;
-
+    background: #f7f5ff;
 }
-
-
 
 .water-label {
-
-    font-size: 13px;
-
+    font-size: 13px;
 }
-
-
 
 .water-value-row {
+    display: flex;
 
-    display: flex;
+    align-items: baseline;
 
+    gap: 7px;
 
-
-    align-items: baseline;
-
-
-
-    gap: 7px;
-
-
-
-    margin-top: 2px;
-
+    margin-top: 2px;
 }
-
-
 
 .water-value {
+    font-size: 31px;
 
-    font-size: 31px;
+    font-weight: 800;
 
-
-
-    font-weight: 800;
-
-
-
-    color: var(--purple);
-
+    color: var(--purple);
 }
-
-
 
 .water-unit {
+    font-size: 13px;
 
-    font-size: 13px;
-
-
-
-    color: #666;
-
+    color: #666;
 }
-
-
 
 .water-status {
+    margin-top: 8px;
 
-    margin-top: 8px;
+    display: inline-flex;
 
+    align-items: center;
 
+    gap: 7px;
 
-    display: inline-flex;
+    padding: 6px 10px;
 
+    border-radius: 999px;
 
+    font-size: 12px;
 
-    align-items: center;
-
-
-
-    gap: 7px;
-
-
-
-    padding: 6px 10px;
-
-
-
-    border-radius: 999px;
-
-
-
-    font-size: 12px;
-
-
-
-    font-weight: 700;
-
+    font-weight: 700;
 }
-
-
 
 .water-status.normal {
-
-    background: #e8f8ee;
-
-    color: #148847;
-
+    background: #e8f8ee;
+    color: #148847;
 }
-
-
 
 .water-status.warning {
-
-    background: #fff5d9;
-
-    color: #9b7100;
-
+    background: #fff5d9;
+    color: #9b7100;
 }
-
-
 
 .water-status.critical {
-
-    background: #ffe6e6;
-
-    color: #c83b3b;
-
+    background: #ffe6e6;
+    color: #c83b3b;
 }
-
-
 
 .water-status.waiting {
-
-    background: #ededf0;
-
-    color: #777;
-
+    background: #ededf0;
+    color: #777;
 }
-
-
 
 .water-meta {
-
-    margin-top: 15px;
-
+    margin-top: 15px;
 }
-
-
 
 .meta-row {
+    display: flex;
 
-    display: flex;
+    justify-content: space-between;
 
+    gap: 15px;
 
+    padding: 9px 0;
 
-    justify-content: space-between;
+    border-bottom: 1px solid #f0eef5;
 
-
-
-    gap: 15px;
-
-
-
-    padding: 9px 0;
-
-
-
-    border-bottom: 1px solid #f0eef5;
-
-
-
-    font-size: 12px;
-
+    font-size: 12px;
 }
-
-
 
 .meta-row:last-child {
-
-    border-bottom: 0;
-
+    border-bottom: 0;
 }
-
-
 
 .meta-label {
-
-    color: #999;
-
+    color: #999;
 }
-
-
 
 .meta-value {
+    font-weight: 600;
 
-    font-weight: 600;
-
-
-
-    text-align: right;
-
+    text-align: right;
 }
 
-
-
-/\* =========================
-
-   CAMERA INFORMATION
-
-\========================= \*/
-
-
+/* =========================
+   CAMERA INFORMATION
+========================= */
 
 .camera-info {
+    margin-top: 12px;
 
-    margin-top: 12px;
+    background: #fff;
 
+    border: 1px solid var(--border);
 
+    border-radius: 15px;
 
-    background: #fff;
+    padding: 17px;
 
-
-
-    border: 1px solid var(--border);
-
-
-
-    border-radius: 15px;
-
-
-
-    padding: 17px;
-
-
-
-    box-shadow: var(--shadow);
-
+    box-shadow: var(--shadow);
 }
-
-
 
 .info-title {
+    font-size: 17px;
 
-    font-size: 17px;
+    font-weight: 800;
 
+    color: var(--purple);
 
-
-    font-weight: 800;
-
-
-
-    color: var(--purple);
-
-
-
-    margin-bottom: 13px;
-
+    margin-bottom: 13px;
 }
-
-
 
 .info-grid {
+    display: grid;
 
-    display: grid;
+    grid-template-columns: 1fr 1fr;
 
-
-
-    grid-template-columns: 1fr 1fr;
-
-
-
-    gap: 15px;
-
+    gap: 15px;
 }
-
-
 
 .logo-info {
+    display: flex;
 
-    display: flex;
+    align-items: center;
 
-
-
-    align-items: center;
-
-
-
-    gap: 12px;
-
+    gap: 12px;
 }
-
-
 
 .logo-info img {
+    width: 62px;
+    height: 62px;
 
-    width: 62px;
+    object-fit: contain;
 
-    height: 62px;
-
-
-
-    object-fit: contain;
-
-
-
-    flex-shrink: 0;
-
+    flex-shrink: 0;
 }
-
-
 
 .logo-info-text {
-
-    font-size: 13px;
-
+    font-size: 13px;
 }
-
-
 
 .logo-info-text strong {
+    display: block;
 
-    display: block;
-
-
-
-    font-size: 15px;
-
+    font-size: 15px;
 }
-
-
 
 .logo-info-text span {
-
-    color: #777;
-
+    color: #777;
 }
 
-
-
-/\* =========================
-
-   MAINTENANCE
-
-\========================= \*/
-
-
+/* =========================
+   MAINTENANCE
+========================= */
 
 .maintenance-page {
+    min-height: 500px;
 
-    min-height: 500px;
+    background: white;
 
+    border: 1px solid var(--border);
 
+    border-radius: 20px;
 
-    background: white;
+    box-shadow: var(--shadow);
 
+    display: flex;
 
+    align-items: center;
+    justify-content: center;
 
-    border: 1px solid var(--border);
+    text-align: center;
 
-
-
-    border-radius: 20px;
-
-
-
-    box-shadow: var(--shadow);
-
-
-
-    display: flex;
-
-
-
-    align-items: center;
-
-    justify-content: center;
-
-
-
-    text-align: center;
-
-
-
-    padding: 40px;
-
+    padding: 40px;
 }
-
-
 
 .maintenance-icon {
+    font-size: 70px;
 
-    font-size: 70px;
-
-
-
-    margin-bottom: 10px;
-
+    margin-bottom: 10px;
 }
-
-
 
 .maintenance-page h2 {
+    margin: 0;
 
-    margin: 0;
+    color: var(--purple);
 
-
-
-    color: var(--purple);
-
-
-
-    font-size: 28px;
-
+    font-size: 28px;
 }
-
-
 
 .maintenance-page p {
+    color: #777;
 
-    color: #777;
-
-
-
-    line-height: 1.8;
-
+    line-height: 1.8;
 }
-
-
 
 .back-button {
+    border: 0;
 
-    border: 0;
+    background: var(--purple);
 
+    color: white;
 
+    padding: 10px 18px;
 
-    background: var(--purple);
+    border-radius: 10px;
 
+    font-family: inherit;
 
-
-    color: white;
-
-
-
-    padding: 10px 18px;
-
-
-
-    border-radius: 10px;
-
-
-
-    font-family: inherit;
-
-
-
-    cursor: pointer;
-
+    cursor: pointer;
 }
 
-
-
-/\* =========================
-
-   RESPONSIVE
-
-\========================= \*/
-
-
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media (max-width: 1200px) {
 
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
 
+    .camera-panel {
+        order: 2;
+    }
 
-    .main-layout {
+    .viewer {
+        order: 1;
+    }
 
-        grid-template-columns: 1fr;
+    .camera-list {
+        display: grid;
 
-    }
-
-
-
-    .camera-panel {
-
-        order: 2;
-
-    }
-
-
-
-    .viewer {
-
-        order: 1;
-
-    }
-
-
-
-    .camera-list {
-
-        display: grid;
-
-
-
-        grid-template-columns:
-
-            repeat(2, minmax(0, 1fr));
-
-    }
-
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
 }
-
-
 
 @media (max-width: 900px) {
 
+    .viewer-grid {
+        grid-template-columns: 1fr;
+    }
 
+    .water-panel {
+        order: 2;
+    }
 
-    .viewer-grid {
+    .camera-list {
+        grid-template-columns: 1fr;
+    }
 
-        grid-template-columns: 1fr;
+    .header {
+        align-items: flex-start;
 
-    }
+        flex-direction: column;
+    }
 
+    .header-right {
+        width: 100%;
 
-
-    .water-panel {
-
-        order: 2;
-
-    }
-
-
-
-    .camera-list {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-
-    .header {
-
-        align-items: flex-start;
-
-
-
-        flex-direction: column;
-
-    }
-
-
-
-    .header-right {
-
-        width: 100%;
-
-
-
-        justify-content: space-between;
-
-    }
-
+        justify-content: space-between;
+    }
 }
-
-
 
 @media (max-width: 600px) {
 
+    .page {
+        width: calc(100% - 18px);
 
+        margin-top: 10px;
+    }
 
-    .page {
+    .header {
+        padding: 18px 15px;
+    }
 
-        width: calc(100% - 18px);
+    .province-logo {
+        width: 58px;
+        height: 58px;
+    }
 
+    .header-left {
+        gap: 10px;
+    }
 
+    .header-title {
+        font-size: 18px;
+    }
 
-        margin-top: 10px;
+    .camera-card {
+        grid-template-columns: 120px 1fr;
 
-    }
+        gap: 10px;
 
+        padding: 9px;
+    }
 
+    .camera-name {
+        font-size: 15px;
+    }
 
-    .header {
+    .camera-location {
+        font-size: 12px;
+    }
 
-        padding: 18px 15px;
+    .viewer-header {
+        padding: 13px;
+    }
 
-    }
+    .viewer-title {
+        font-size: 17px;
+    }
 
-
-
-    .province-logo {
-
-        width: 58px;
-
-        height: 58px;
-
-    }
-
-
-
-    .header-left {
-
-        gap: 10px;
-
-    }
-
-
-
-    .header-title {
-
-        font-size: 18px;
-
-    }
-
-
-
-    .camera-card {
-
-        grid-template-columns: 120px 1fr;
-
-
-
-        gap: 10px;
-
-
-
-        padding: 9px;
-
-    }
-
-
-
-    .camera-name {
-
-        font-size: 15px;
-
-    }
-
-
-
-    .camera-location {
-
-        font-size: 12px;
-
-    }
-
-
-
-    .viewer-header {
-
-        padding: 13px;
-
-    }
-
-
-
-    .viewer-title {
-
-        font-size: 17px;
-
-    }
-
-
-
-    .info-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
+</style>
+</head>
 
+<body>
 
-\</style>
+<!-- =========================
+     SPLASH
+========================= -->
 
-\</head>
+<div id="splash" class="splash">
 
+    <div class="splash-inner">
 
+        <img
+            id="splashLogo"
+            class="splash-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original"
+            alt="Province Logo"
+        >
 
-\<body>
+        <div class="splash-title">
+            ระบบกล้องโทรทัศน์วงจรปิด
+            ตรวจวัดระดับน้ำ
+            จังหวัดนนทบุรี
+        </div>
 
+        <div class="splash-subtitle">
+            CCTV Water Monitoring System
+        </div>
 
+    </div>
 
-\<!-- =========================
+</div>
 
-     SPLASH
 
-\========================= -->
+<!-- =========================
+     HEADER
+========================= -->
 
+<header class="header">
 
+    <div class="header-left">
 
-\<div id="splash" class="splash">
+        <img
+            id="provinceLogo"
+            class="province-logo"
+            src=""
+            alt="จังหวัดนนทบุรี"
+        >
 
+        <div>
 
+            <div class="header-title">
+                ระบบกล้องโทรทัศน์วงจรปิด ตรวจวัดระดับน้ำ<br>
+                จังหวัดนนทบุรี ในช่วง อุทกภัยปี 2569
+            </div>
 
-    \<div class="splash-inner">
+            <div class="header-subtitle">
+                CCTV Water Monitoring System
+            </div>
 
+        </div>
 
+    </div>
 
-        \<img
 
-            id="splashLogo"
+    <div class="header-right">
 
-            class="splash-logo"
+        <div>
+            <strong>อัปเดตล่าสุด</strong>
+            <div id="headerUpdate">
+                --
+            </div>
+        </div>
 
-            src="https\://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png"
+        <div class="status-online">
 
-            alt="Province Logo"
+            <span class="status-dot"></span>
 
-        >
+            ระบบออนไลน์
 
+        </div>
 
+    </div>
 
-        \<div class="splash-title">
+</header>
 
-            ระบบกล้องโทรทัศน์วงจรปิด
 
-            ตรวจวัดระดับน้ำ
+<main class="page">
 
-            จังหวัดนนทบุรี
+    <div class="main-layout">
 
-        \</div>
 
+        <!-- =========================
+             CAMERA SELECTOR
+        ========================= -->
 
+        <aside class="camera-panel">
 
-        \<div class="splash-subtitle">
+            <div class="section-title">
 
-            CCTV Water Monitoring System
+                <div class="section-icon">
+                    📹
+                </div>
 
-        \</div>
+                เลือกจุดตรวจวัด
 
+            </div>
 
+            <div id="cameraList" class="camera-list">
+                กำลังโหลดข้อมูล...
+            </div>
 
-    \</div>
+        </aside>
 
 
+        <!-- =========================
+             VIEWER
+        ========================= -->
 
-\</div>
+        <section id="viewer" class="viewer">
 
+            <!-- Content generated by JS -->
 
+        </section>
 
+    </div>
 
+</main>
 
-\<!-- =========================
 
-     HEADER
-
-\========================= -->
-
-
-
-\<header class="header">
-
-
-
-    \<div class="header-left">
-
-
-
-        \<img
-
-            id="provinceLogo"
-
-            class="province-logo"
-
-            src=""
-
-            alt="จังหวัดนนทบุรี"
-
-        >
-
-
-
-        \<div>
-
-
-
-            \<div class="header-title">
-
-                ระบบกล้องโทรทัศน์วงจรปิด ตรวจวัดระดับน้ำ\<br>
-
-                จังหวัดนนทบุรี ในช่วง อุทกภัยปี 2569
-
-            \</div>
-
-
-
-            \<div class="header-subtitle">
-
-                CCTV Water Monitoring System
-
-            \</div>
-
-
-
-        \</div>
-
-
-
-    \</div>
-
-
-
-
-
-    \<div class="header-right">
-
-
-
-        \<div>
-
-            \<strong>อัปเดตล่าสุด\</strong>
-
-            \<div id="headerUpdate">
-
-                --
-
-            \</div>
-
-        \</div>
-
-
-
-        \<div class="status-online">
-
-
-
-            \<span class="status-dot">\</span>
-
-
-
-            ระบบออนไลน์
-
-
-
-        \</div>
-
-
-
-    \</div>
-
-
-
-\</header>
-
-
-
-
-
-\<main class="page">
-
-
-
-    \<div class="main-layout">
-
-
-
-
-
-        \<!-- =========================
-
-             CAMERA SELECTOR
-
-        ========================= -->
-
-
-
-        \<aside class="camera-panel">
-
-
-
-            \<div class="section-title">
-
-
-
-                \<div class="section-icon">
-
-                    📹
-
-                \</div>
-
-
-
-                เลือกจุดตรวจวัด
-
-
-
-            \</div>
-
-
-
-            \<div id="cameraList" class="camera-list">
-
-                กำลังโหลดข้อมูล...
-
-            \</div>
-
-
-
-        \</aside>
-
-
-
-
-
-        \<!-- =========================
-
-             VIEWER
-
-        ========================= -->
-
-
-
-        \<section id="viewer" class="viewer">
-
-
-
-            \<!-- Content generated by JS -->
-
-
-
-        \</section>
-
-
-
-    \</div>
-
-
-
-\</main>
-
-
-
-
-
-\<script>
-
-
+<script>
 
 let cameras = [];
 
-
-
 let selectedCamera = null;
-
-
 
 let hls = null;
 
 
-
-
-
-/\* =========================
-
-   LOAD CAMERAS
-
-\========================= \*/
-
-
+/* =========================
+   LOAD CAMERAS
+========================= */
 
 async function loadCameras() {
 
+    try {
 
+        const response = await fetch("/api/cameras");
 
-    try {
+        if (!response.ok) {
+            throw new Error("ไม่สามารถโหลดข้อมูลกล้องได้");
+        }
 
+        cameras = await response.json();
 
+        if (!cameras.length) {
+            throw new Error("ไม่พบข้อมูลกล้อง");
+        }
 
-        const response = await fetch("/api/cameras");
+        renderCameraList();
 
+        const firstEnabled =
+            cameras.find(c => c.enabled);
 
+        if (firstEnabled) {
 
-        if (!response.ok) {
+            selectCamera(firstEnabled.id);
 
-            throw new Error("ไม่สามารถโหลดข้อมูลกล้องได้");
+        } else {
 
-        }
+            showMaintenance(cameras[0]);
 
+        }
 
+    } catch (error) {
 
-        cameras = await response.json();
+        document.getElementById("cameraList").innerHTML = `
+            <div style="
+                padding:20px;
+                text-align:center;
+                color:#777;
+            ">
+                ไม่สามารถโหลดข้อมูลกล้องได้
+            </div>
+        `;
 
-
-
-        if (!cameras.length) {
-
-            throw new Error("ไม่พบข้อมูลกล้อง");
-
-        }
-
-
-
-        renderCameraList();
-
-
-
-        const firstEnabled =
-
-            cameras.find(c => c.enabled);
-
-
-
-        if (firstEnabled) {
-
-
-
-            selectCamera(firstEnabled.id);
-
-
-
-        } else {
-
-
-
-            showMaintenance(cameras[0]);
-
-
-
-        }
-
-
-
-    } catch (error) {
-
-
-
-        document.getElementById("cameraList").innerHTML = \`
-
-            \<div style="
-
-                padding:20px;
-
-                text-align:center;
-
-                color:#777;
-
-            ">
-
-                ไม่สามารถโหลดข้อมูลกล้องได้
-
-            \</div>
-
-        \`;
-
-
-
-        console.error(error);
-
-    }
-
+        console.error(error);
+    }
 }
 
 
-
-
-
-/\* =========================
-
-   CAMERA LIST
-
-\========================= \*/
-
-
+/* =========================
+   CAMERA LIST
+========================= */
 
 function renderCameraList() {
 
+    const container =
+        document.getElementById("cameraList");
+
+    container.innerHTML = "";
+
+    cameras.forEach(camera => {
+
+        const card =
+            document.createElement("div");
 
+        card.className =
+            "camera-card" +
+            (!camera.enabled ? " disabled" : "");
 
-    const container =
+        const image =
+            camera.municipalityLogo ||
+            camera.provinceLogo ||
+            "";
 
-        document.getElementById("cameraList");
+        if (camera.enabled) {
 
+            card.onclick = () => {
+                selectCamera(camera.id);
+            };
 
+        } else {
 
-    container.innerHTML = "";
+            card.onclick = () => {
+                showMaintenance(camera);
+            };
 
+        }
 
+        card.innerHTML = `
 
-    cameras.forEach(camera => {
+            <div class="camera-thumb">
 
+                ${
+                    image
+                    ?
+                    `<img
+                        src="${image}"
+                        alt=""
+                    >`
+                    :
+                    ``
+                }
 
+                ${
+                    !camera.enabled
+                    ?
+                    `
+                    <div class="camera-thumb-overlay">
+                        🔧<br>
+                        กำลังปรับปรุงระบบ
+                    </div>
+                    `
+                    :
+                    ``
+                }
 
-        const card =
+            </div>
 
-            document.createElement("div");
 
+            <div class="camera-content">
 
+                <div class="camera-name">
+                    ${camera.name}
+                </div>
 
-        card.className =
+                <div class="camera-location">
+                    จุดวัด ${camera.location}
+                </div>
 
-            "camera-card" +
+                <div class="camera-id">
+                    ${camera.id}
+                </div>
 
-            (!camera.enabled ? " disabled" : "");
+                <div class="camera-status">
 
+                    ${
+                        camera.enabled
+                        ?
+                        `
+                        <span class="badge online">
+                            ● ออนไลน์
+                        </span>
 
+                        <span class="badge live">
+                            LIVE
+                        </span>
+                        `
+                        :
+                        `
+                        <span class="badge maintenance">
+                            ● กำลังปรับปรุงระบบ
+                        </span>
+                        `
+                    }
 
-        const image =
+                </div>
 
-            camera.municipalityLogo ||
+            </div>
+        `;
 
-            camera.provinceLogo ||
+        container.appendChild(card);
 
-            "";
-
-
-
-        if (camera.enabled) {
-
-
-
-            card.onclick = () => {
-
-                selectCamera(camera.id);
-
-            };
-
-
-
-        } else {
-
-
-
-            card.onclick = () => {
-
-                showMaintenance(camera);
-
-            };
-
-
-
-        }
-
-
-
-        card.innerHTML = \`
-
-
-
-            \<div class="camera-thumb">
-
-
-
-                ${
-
-                    image
-
-                    ?
-
-                    \`\<img
-
-                        src="${image}"
-
-                        alt=""
-
-                    >\`
-
-                    :
-
-                    \`\`
-
-                }
-
-
-
-                ${
-
-                    !camera.enabled
-
-                    ?
-
-                    \`
-
-                    \<div class="camera-thumb-overlay">
-
-                        🔧\<br>
-
-                        กำลังปรับปรุงระบบ
-
-                    \</div>
-
-                    \`
-
-                    :
-
-                    \`\`
-
-                }
-
-
-
-            \</div>
-
-
-
-
-
-            \<div class="camera-content">
-
-
-
-                \<div class="camera-name">
-
-                    ${camera.name}
-
-                \</div>
-
-
-
-                \<div class="camera-location">
-
-                    จุดวัด ${camera.location}
-
-                \</div>
-
-
-
-                \<div class="camera-id">
-
-                    ${camera.id}
-
-                \</div>
-
-
-
-                \<div class="camera-status">
-
-
-
-                    ${
-
-                        camera.enabled
-
-                        ?
-
-                        \`
-
-                        \<span class="badge online">
-
-                            ● ออนไลน์
-
-                        \</span>
-
-
-
-                        \<span class="badge live">
-
-                            LIVE
-
-                        \</span>
-
-                        \`
-
-                        :
-
-                        \`
-
-                        \<span class="badge maintenance">
-
-                            ● กำลังปรับปรุงระบบ
-
-                        \</span>
-
-                        \`
-
-                    }
-
-
-
-                \</div>
-
-
-
-            \</div>
-
-        \`;
-
-
-
-        container.appendChild(card);
-
-
-
-    });
-
-
+    });
 
 }
 
 
-
-
-
-/\* =========================
-
-   SELECT CAMERA
-
-\========================= \*/
-
-
+/* =========================
+   SELECT CAMERA
+========================= */
 
 function selectCamera(cameraId) {
 
+    const camera =
+        cameras.find(c => c.id === cameraId);
 
+    if (!camera) {
+        return;
+    }
 
-    const camera =
+    if (!camera.enabled) {
 
-        cameras.find(c => c.id === cameraId);
+        showMaintenance(camera);
 
+        return;
+    }
 
+    selectedCamera = camera;
 
-    if (!camera) {
+    renderCamera(camera);
 
-        return;
+    updateActiveCard(camera.id);
 
-    }
+    setupVideo(camera);
 
-
-
-    if (!camera.enabled) {
-
-
-
-        showMaintenance(camera);
-
-
-
-        return;
-
-    }
-
-
-
-    selectedCamera = camera;
-
-
-
-    renderCamera(camera);
-
-
-
-    updateActiveCard(camera.id);
-
-
-
-    setupVideo(camera);
-
-
-
-    updateWaterPanel(camera);
-
-
+    updateWaterPanel(camera);
 
 }
 
 
-
-
-
-/\* =========================
-
-   ACTIVE CARD
-
-\========================= \*/
-
-
+/* =========================
+   ACTIVE CARD
+========================= */
 
 function updateActiveCard(cameraId) {
 
+    document
+        .querySelectorAll(".camera-card")
+        .forEach(card => {
 
+            card.classList.remove("active");
 
-    document
+        });
 
-        .querySelectorAll(".camera-card")
+    const index =
+        cameras.findIndex(c => c.id === cameraId);
 
-        .forEach(card => {
+    const cards =
+        document.querySelectorAll(".camera-card");
 
+    if (cards[index]) {
 
+        cards[index].classList.add("active");
 
-            card.classList.remove("active");
-
-
-
-        });
-
-
-
-    const index =
-
-        cameras.findIndex(c => c.id === cameraId);
-
-
-
-    const cards =
-
-        document.querySelectorAll(".camera-card");
-
-
-
-    if (cards[index]) {
-
-
-
-        cards[index].classList.add("active");
-
-
-
-    }
-
-
+    }
 
 }
 
 
-
-
-
-/\* =========================
-
-   CAMERA VIEW
-
-\========================= \*/
-
-
+/* =========================
+   CAMERA VIEW
+========================= */
 
 function renderCamera(camera) {
 
+    const viewer =
+        document.getElementById("viewer");
 
+    viewer.innerHTML = `
 
-    const viewer =
+        <div class="viewer-header">
 
-        document.getElementById("viewer");
+            <div>
 
+                <div class="viewer-title">
+                    ${camera.name}
+                </div>
 
+                <div class="viewer-location">
+                    จุดวัด ${camera.location}
+                    |
+                    ${camera.id}
+                </div>
 
-    viewer.innerHTML = \`
+            </div>
 
+            <div class="live-badge">
+                ● LIVE
+            </div>
 
+        </div>
 
-        \<div class="viewer-header">
 
+        <div class="viewer-grid">
 
 
-            \<div>
+            <div>
 
+                <div class="video-card">
 
+                    <video
+                        id="cctvVideo"
+                        controls
+                        autoplay
+                        muted
+                        playsinline
+                    ></video>
 
-                \<div class="viewer-title">
+                    <div
+                        id="videoTime"
+                        class="video-time"
+                    >
+                        --
+                    </div>
 
-                    ${camera.name}
+                </div>
 
-                \</div>
 
+                <div class="camera-info">
 
+                    <div class="info-title">
+                        📹 ข้อมูลกล้อง
+                    </div>
 
-                \<div class="viewer-location">
 
-                    จุดวัด ${camera.location}
+                    <div class="info-grid">
 
-                    |
 
-                    ${camera.id}
+                        <div class="logo-info">
 
-                \</div>
+                            <img
+                                src="${camera.municipalityLogo}"
+                                alt=""
+                            >
 
+                            <div class="logo-info-text">
 
+                                <strong>
+                                    ${camera.name}
+                                </strong>
 
-            \</div>
+                                <span>
+                                    จุดวัด ${camera.location}
+                                </span>
 
+                            </div>
 
+                        </div>
 
-            \<div class="live-badge">
 
-                ● LIVE
+                        <div class="logo-info">
 
-            \</div>
+                            <img
+                                src="${camera.agencyLogo}"
+                                alt=""
+                            >
 
+                            <div class="logo-info-text">
 
+                                <strong>
+                                    หน่วยงานที่เกี่ยวข้อง
+                                </strong>
 
-        \</div>
+                                <span>
+                                    ${camera.agencyName}
+                                </span>
 
+                            </div>
 
+                        </div>
 
+                    </div>
 
+                </div>
 
-        \<div class="viewer-grid">
+            </div>
 
 
+            <div id="waterPanel"></div>
 
+        </div>
 
+    `;
 
-            \<div>
-
-
-
-                \<div class="video-card">
-
-
-
-                    \<video
-
-                        id="cctvVideo"
-
-                        controls
-
-                        autoplay
-
-                        muted
-
-                        playsinline
-
-                    >\</video>
-
-
-
-                    \<div
-
-                        id="videoTime"
-
-                        class="video-time"
-
-                    >
-
-                        --
-
-                    \</div>
-
-
-
-                \</div>
-
-
-
-
-
-                \<div class="camera-info">
-
-
-
-                    \<div class="info-title">
-
-                        📹 ข้อมูลกล้อง
-
-                    \</div>
-
-
-
-
-
-                    \<div class="info-grid">
-
-
-
-
-
-                        \<div class="logo-info">
-
-
-
-                            \<img
-
-                                src="${camera.municipalityLogo}"
-
-                                alt=""
-
-                            >
-
-
-
-                            \<div class="logo-info-text">
-
-
-
-                                \<strong>
-
-                                    ${camera.name}
-
-                                \</strong>
-
-
-
-                                \<span>
-
-                                    จุดวัด ${camera.location}
-
-                                \</span>
-
-
-
-                            \</div>
-
-
-
-                        \</div>
-
-
-
-
-
-                        \<div class="logo-info">
-
-
-
-                            \<img
-
-                                src="${camera.agencyLogo}"
-
-                                alt=""
-
-                            >
-
-
-
-                            \<div class="logo-info-text">
-
-
-
-                                \<strong>
-
-                                    หน่วยงานที่เกี่ยวข้อง
-
-                                \</strong>
-
-
-
-                                \<span>
-
-                                    ${camera.agencyName}
-
-                                \</span>
-
-
-
-                            \</div>
-
-
-
-                        \</div>
-
-
-
-                    \</div>
-
-
-
-                \</div>
-
-
-
-            \</div>
-
-
-
-
-
-            \<div id="waterPanel">\</div>
-
-
-
-        \</div>
-
-
-
-    \`;
-
-
-
-    updateClock();
-
-
+    updateClock();
 
 }
 
 
-
-
-
-/\* =========================
-
-   VIDEO
-
-\========================= \*/
-
-
+/* =========================
+   VIDEO
+========================= */
 
 function setupVideo(camera) {
 
+    const video =
+        document.getElementById("cctvVideo");
 
+    if (!video) {
+        return;
+    }
 
-    const video =
+    if (hls) {
 
-        document.getElementById("cctvVideo");
+        try {
+            hls.destroy();
+        } catch (e) {}
 
+        hls = null;
+    }
 
 
-    if (!video) {
+    if (Hls.isSupported()) {
 
-        return;
+        hls = new Hls({
 
-    }
+            enableWorker: true,
 
+            lowLatencyMode: true,
 
+            maxBufferLength: 10
 
-    if (hls) {
+        });
 
+        hls.loadSource(camera.stream);
 
+        hls.attachMedia(video);
 
-        try {
+        hls.on(
+            Hls.Events.MANIFEST_PARSED,
+            function() {
 
-            hls.destroy();
+                video.play().catch(() => {});
 
-        } catch (e) {}
+            }
+        );
 
+    }
 
+    else if (
+        video.canPlayType(
+            "application/vnd.apple.mpegurl"
+        )
+    ) {
 
-        hls = null;
+        video.src = camera.stream;
 
-    }
+        video.addEventListener(
+            "loadedmetadata",
+            function() {
 
+                video.play().catch(() => {});
 
+            }
+        );
 
-
-
-    if (Hls.isSupported()) {
-
-
-
-        hls = new Hls({
-
-
-
-            enableWorker: true,
-
-
-
-            lowLatencyMode: true,
-
-
-
-            maxBufferLength: 10
-
-
-
-        });
-
-
-
-        hls.loadSource(camera.stream);
-
-
-
-        hls.attachMedia(video);
-
-
-
-        hls.on(
-
-            Hls.Events.MANIFEST_PARSED,
-
-            function() {
-
-
-
-                video.play().catch(() => {});
-
-
-
-            }
-
-        );
-
-
-
-    }
-
-
-
-    else if (
-
-        video.canPlayType(
-
-            "application/vnd.apple.mpegurl"
-
-        )
-
-    ) {
-
-
-
-        video.src = camera.stream;
-
-
-
-        video.addEventListener(
-
-            "loadedmetadata",
-
-            function() {
-
-
-
-                video.play().catch(() => {});
-
-
-
-            }
-
-        );
-
-
-
-    }
-
-
+    }
 
 }
 
 
-
-
-
-/\* =========================
-
-   WATER PANEL
-
-\========================= \*/
-
-
+/* =========================
+   WATER PANEL
+========================= */
 
 function updateWaterPanel(camera) {
 
+    const panel =
+        document.getElementById("waterPanel");
 
+    if (!panel) {
+        return;
+    }
 
-    const panel =
+    const water =
+        camera.water || {};
 
-        document.getElementById("waterPanel");
+    const value =
+        water.value === null ||
+        water.value === undefined ||
+        water.value === ""
+        ? "--"
+        : Number(water.value).toFixed(2);
 
 
+    const status =
+        water.status || "waiting";
 
-    if (!panel) {
+    const statusText =
+        water.statusText || "รอข้อมูล";
 
-        return;
 
-    }
+    let imageHTML = "";
 
+    if (camera.waterStatusImage) {
 
+        imageHTML = `
+            <img
+                class="water-image"
+                src="${camera.waterStatusImage}"
+                alt="ข้อมูลระดับน้ำ"
+            >
+        `;
 
-    const water =
+    } else {
 
-        camera.water || {};
+        imageHTML = `
+            <div class="water-placeholder">
 
+                <div class="water-placeholder-icon">
+                    🌊
+                </div>
 
+                <strong>
+                    พื้นที่สำหรับรูปข้อมูลระดับน้ำ
+                </strong>
 
-    const value =
+                <span>
+                    สามารถใส่ภาพสถานะระดับน้ำของคุณได้
+                </span>
 
-        water.value === null ||
+            </div>
+        `;
 
-        water.value === undefined ||
+    }
 
-        water.value === ""
 
-        ? "--"
+    panel.innerHTML = `
 
-        : Number(water.value).toFixed(2);
+        <div class="water-panel">
 
+            <div class="water-header">
+                💧 ข้อมูลระดับน้ำ
+            </div>
 
+            <div class="water-body">
 
+                ${imageHTML}
 
 
-    const status =
+                <div class="water-value-box">
 
-        water.status || "waiting";
+                    <div class="water-label">
+                        ระดับน้ำปัจจุบัน
+                    </div>
 
+                    <div class="water-value-row">
 
+                        <span class="water-value">
+                            ${value}
+                        </span>
 
-    const statusText =
+                        <span class="water-unit">
+                            ${water.unit || "ซม."}
+                        </span>
 
-        water.statusText || "รอข้อมูล";
+                    </div>
 
 
+                    <div class="
+                        water-status
+                        ${status}
+                    ">
 
+                        ● ${statusText}
 
+                    </div>
 
-    let imageHTML = "";
+                </div>
 
 
+                <div class="water-meta">
 
-    if (camera.waterStatusImage) {
+                    <div class="meta-row">
 
+                        <span class="meta-label">
+                            รหัสกล้อง
+                        </span>
 
+                        <span class="meta-value">
+                            ${camera.id}
+                        </span>
 
-        imageHTML = \`
+                    </div>
 
-            \<img
 
-                class="water-image"
+                    <div class="meta-row">
 
-                src="${camera.waterStatusImage}"
+                        <span class="meta-label">
+                            จุดติดตั้ง
+                        </span>
 
-                alt="ข้อมูลระดับน้ำ"
+                        <span class="meta-value">
+                            ${camera.location}
+                        </span>
 
-            >
+                    </div>
 
-        \`;
 
+                    <div class="meta-row">
 
+                        <span class="meta-label">
+                            ความมั่นใจ
+                        </span>
 
-    } else {
+                        <span class="meta-value">
+                            ${water.mode === "manual"
+                                ? "ข้อมูล Manual"
+                                : "--"}
+                        </span>
 
+                    </div>
 
 
-        imageHTML = \`
+                    <div class="meta-row">
 
-            \<div class="water-placeholder">
+                        <span class="meta-label">
+                            อัปเดตล่าสุด
+                        </span>
 
+                        <span class="meta-value">
+                            ${
+                                water.updatedAt
+                                ? formatDate(water.updatedAt)
+                                : "--"
+                            }
+                        </span>
 
+                    </div>
 
-                \<div class="water-placeholder-icon">
+                </div>
 
-                    🌊
+            </div>
 
-                \</div>
+        </div>
 
-
-
-                \<strong>
-
-                    พื้นที่สำหรับรูปข้อมูลระดับน้ำ
-
-                \</strong>
-
-
-
-                \<span>
-
-                    สามารถใส่ภาพสถานะระดับน้ำของคุณได้
-
-                \</span>
-
-
-
-            \</div>
-
-        \`;
-
-
-
-    }
-
-
-
-
-
-    panel.innerHTML = \`
-
-
-
-        \<div class="water-panel">
-
-
-
-            \<div class="water-header">
-
-                💧 ข้อมูลระดับน้ำ
-
-            \</div>
-
-
-
-            \<div class="water-body">
-
-
-
-                ${imageHTML}
-
-
-
-
-
-                \<div class="water-value-box">
-
-
-
-                    \<div class="water-label">
-
-                        ระดับน้ำปัจจุบัน
-
-                    \</div>
-
-
-
-                    \<div class="water-value-row">
-
-
-
-                        \<span class="water-value">
-
-                            ${value}
-
-                        \</span>
-
-
-
-                        \<span class="water-unit">
-
-                            ${water.unit || "ซม."}
-
-                        \</span>
-
-
-
-                    \</div>
-
-
-
-
-
-                    \<div class="
-
-                        water-status
-
-                        ${status}
-
-                    ">
-
-
-
-                        ● ${statusText}
-
-
-
-                    \</div>
-
-
-
-                \</div>
-
-
-
-
-
-                \<div class="water-meta">
-
-
-
-                    \<div class="meta-row">
-
-
-
-                        \<span class="meta-label">
-
-                            รหัสกล้อง
-
-                        \</span>
-
-
-
-                        \<span class="meta-value">
-
-                            ${camera.id}
-
-                        \</span>
-
-
-
-                    \</div>
-
-
-
-
-
-                    \<div class="meta-row">
-
-
-
-                        \<span class="meta-label">
-
-                            จุดติดตั้ง
-
-                        \</span>
-
-
-
-                        \<span class="meta-value">
-
-                            ${camera.location}
-
-                        \</span>
-
-
-
-                    \</div>
-
-
-
-
-
-                    \<div class="meta-row">
-
-
-
-                        \<span class="meta-label">
-
-                            ความมั่นใจ
-
-                        \</span>
-
-
-
-                        \<span class="meta-value">
-
-                            ${water.mode === "manual"
-
-                                ? "ข้อมูล Manual"
-
-                                : "--"}
-
-                        \</span>
-
-
-
-                    \</div>
-
-
-
-
-
-                    \<div class="meta-row">
-
-
-
-                        \<span class="meta-label">
-
-                            อัปเดตล่าสุด
-
-                        \</span>
-
-
-
-                        \<span class="meta-value">
-
-                            ${
-
-                                water.updatedAt
-
-                                ? formatDate(water.updatedAt)
-
-                                : "--"
-
-                            }
-
-                        \</span>
-
-
-
-                    \</div>
-
-
-
-                \</div>
-
-
-
-            \</div>
-
-
-
-        \</div>
-
-
-
-    \`;
-
-
+    `;
 
 }
 
 
-
-
-
-/\* =========================
-
-   MAINTENANCE PAGE
-
-\========================= \*/
-
-
+/* =========================
+   MAINTENANCE PAGE
+========================= */
 
 function showMaintenance(camera) {
 
+    const viewer =
+        document.getElementById("viewer");
 
+    viewer.innerHTML = `
 
-    const viewer =
+        <div class="maintenance-page">
 
-        document.getElementById("viewer");
+            <div>
 
+                <div class="maintenance-icon">
+                    🔧
+                </div>
 
+                <h2>
+                    ${camera.name}
+                </h2>
 
-    viewer.innerHTML = \`
+                <p>
 
+                    จุดวัด ${camera.location}
 
+                    <br>
 
-        \<div class="maintenance-page">
+                    ระบบอยู่ระหว่างการปรับปรุง
 
+                    <br>
 
+                    ขณะนี้ยังไม่เปิดให้บริการ
 
-            \<div>
+                </p>
 
+                <button
+                    class="back-button"
+                    onclick="backToCamera()"
+                >
+                    ← กลับไปเลือกกล้อง
+                </button>
 
+            </div>
 
-                \<div class="maintenance-icon">
+        </div>
 
-                    🔧
-
-                \</div>
-
-
-
-                \<h2>
-
-                    ${camera.name}
-
-                \</h2>
-
-
-
-                \<p>
-
-
-
-                    จุดวัด ${camera.location}
-
-
-
-                    \<br>
-
-
-
-                    ระบบอยู่ระหว่างการปรับปรุง
-
-
-
-                    \<br>
-
-
-
-                    ขณะนี้ยังไม่เปิดให้บริการ
-
-
-
-                \</p>
-
-
-
-                \<button
-
-                    class="back-button"
-
-                    onclick="backToCamera()"
-
-                >
-
-                    ← กลับไปเลือกกล้อง
-
-                \</button>
-
-
-
-            \</div>
-
-
-
-        \</div>
-
-
-
-    \`;
-
-
+    `;
 
 }
 
 
-
-
-
-/\* =========================
-
-   BACK
-
-\========================= \*/
-
-
+/* =========================
+   BACK
+========================= */
 
 function backToCamera() {
 
+    const firstEnabled =
+        cameras.find(c => c.enabled);
 
+    if (firstEnabled) {
 
-    const firstEnabled =
+        selectCamera(firstEnabled.id);
 
-        cameras.find(c => c.enabled);
-
-
-
-    if (firstEnabled) {
-
-
-
-        selectCamera(firstEnabled.id);
-
-
-
-    }
-
-
+    }
 
 }
 
 
-
-
-
-/\* =========================
-
-   DATE
-
-\========================= \*/
-
-
+/* =========================
+   DATE
+========================= */
 
 function formatDate(value) {
 
+    if (!value) {
+        return "--";
+    }
 
+    const date =
+        new Date(value);
 
-    if (!value) {
+    if (isNaN(date.getTime())) {
 
-        return "--";
+        return value;
 
-    }
+    }
 
-
-
-    const date =
-
-        new Date(value);
-
-
-
-    if (isNaN(date.getTime())) {
-
-
-
-        return value;
-
-
-
-    }
-
-
-
-    return date.toLocaleString(
-
-        "th-TH",
-
-        {
-
-            dateStyle: "short",
-
-            timeStyle: "short"
-
-        }
-
-    );
-
-
+    return date.toLocaleString(
+        "th-TH",
+        {
+            dateStyle: "short",
+            timeStyle: "short"
+        }
+    );
 
 }
 
 
-
-
-
-/\* =========================
-
-   CLOCK
-
-\========================= \*/
-
-
+/* =========================
+   CLOCK
+========================= */
 
 function updateClock() {
 
+    const el =
+        document.getElementById("videoTime");
 
+    if (!el) {
+        return;
+    }
 
-    const el =
+    const now = new Date();
 
-        document.getElementById("videoTime");
+    const text =
+        now.getFullYear()
+        + "-"
+        + String(now.getMonth() + 1).padStart(2, "0")
+        + "-"
+        + String(now.getDate()).padStart(2, "0")
+        + " "
+        + String(now.getHours()).padStart(2, "0")
+        + ":"
+        + String(now.getMinutes()).padStart(2, "0")
+        + ":"
+        + String(now.getSeconds()).padStart(2, "0");
 
-
-
-    if (!el) {
-
-        return;
-
-    }
-
-
-
-    const now = new Date();
-
-
-
-    const text =
-
-        now\.getFullYear()
-
-        + "-"
-
-        + String(now\.getMonth() + 1).padStart(2, "0")
-
-        + "-"
-
-        + String(now\.getDate()).padStart(2, "0")
-
-        + " "
-
-        + String(now\.getHours()).padStart(2, "0")
-
-        + ":"
-
-        + String(now\.getMinutes()).padStart(2, "0")
-
-        + ":"
-
-        + String(now\.getSeconds()).padStart(2, "0");
-
-
-
-    el.textContent = text;
-
-
+    el.textContent = text;
 
 }
-
-
-
 
 
 setInterval(updateClock, 1000);
 
 
+/* =========================
+   SPLASH
+========================= */
 
+window.addEventListener(
+    "load",
+    function() {
 
+        setTimeout(
+            function() {
 
-/\* =========================
+                document
+                    .getElementById("splash")
+                    .classList.add("hide");
 
-   SPLASH
+            },
+            900
+        );
 
-\========================= \*/
-
-
-
-window\.addEventListener(
-
-    "load",
-
-    function() {
-
-
-
-        setTimeout(
-
-            function() {
-
-
-
-                document
-
-                    .getElementById("splash")
-
-                    .classList.add("hide");
-
-
-
-            },
-
-            900
-
-        );
-
-
-
-    }
-
+    }
 );
 
 
-
-
-
-/\* =========================
-
-   START
-
-\========================= \*/
-
-
+/* =========================
+   START
+========================= */
 
 loadCameras();
 
+</script>
 
-
-\</script>
-
-
-
-\</body>
-
-\</html>
+</body>
+</html>
