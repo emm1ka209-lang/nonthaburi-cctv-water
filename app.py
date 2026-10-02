@@ -59,7 +59,7 @@ CAMERAS = {
     "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1",
 
     # รูปภาพสำหรับการ์ดเลือกจุดตรวจวัด
-    "thumbnail": "https://raw.githubusercontent.com/emm1ka209-lang/nonthaburi-cctv-water/refs/heads/main/cctvtum01.png",
+    "thumbnail": "https://i.postimg.cc/x1s5Dn01/cctvtum01.png",
 
     # โลโก้หลักของจังหวัด
     "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
@@ -73,16 +73,16 @@ CAMERAS = {
     "agencyName": "Firsttech Design Co., Ltd.",
 
     # รูปสำหรับกล่องข้อมูลระดับน้ำ
-    "waterStatusImage": "",
+    "waterStatusImage": "https://i.postimg.cc/2yzLSLGN/phe-mh-wre-xng-(8).png",
 
     # ข้อมูลระดับน้ำแบบ MANUAL
     "water": {
         "mode": "manual",
-        "value": 35,
+        "value": 30,
         "unit": "ซม.",
         "status": "critical",
-        "statusText": "วิกฤต",
-        "updatedAt": "2026-10-02T09:30:00+07:00",
+        "statusText": "วิกฤต ธงแดง",
+        "updatedAt": "2026-10-02T13:55:00+07:00",
         "message": "บันทึกข้อมูลระดับน้ำ"
     }
 },
@@ -95,7 +95,7 @@ CAMERAS = {
 "CCTV-02": {
     "id": "CCTV-02",
 
-    "enabled": False,
+    "enabled": true,
 
     "name": "เทศบาลนครปากเกร็ด (ปากเกร็ด)",
     "location": "ท่าน้ำปากเกร็ด-หัวถนน",
@@ -104,7 +104,7 @@ CAMERAS = {
 
     "stream": "https://thaiclouderp.com/video/pakkret-river.m3u8",
 
-    "thumbnail": "https://raw.githubusercontent.com/emm1ka209-lang/nonthaburi-cctv-water/refs/heads/main/cctvtum02.png",
+    "thumbnail": "https://i.postimg.cc/9MyyMhjw/cctvtum02.png",
 
     "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
@@ -114,7 +114,7 @@ CAMERAS = {
 
     "agencyName": "Cloud Computing Solutions Co., Ltd.",
 
-    "waterStatusImage": "",
+    "waterStatusImage": "https://i.postimg.cc/2yzLSLGN/phe-mh-wre-xng-(8).png",
 
     "water": {
         "mode": "manual",
