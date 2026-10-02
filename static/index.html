@@ -11,8 +11,24 @@
 >
 
 <title>
-ระบบกล้องโทรทัศน์วงจรปิดตรวจวัดระดับน้ำ จังหวัดนนทบุรี
+NontWater
 </title>
+
+<!-- =====================================================
+     FAVICON / TAB ICON
+===================================================== -->
+
+<link
+  rel="icon"
+  type="image/png"
+  href="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png"
+>
+
+<link
+  rel="shortcut icon"
+  type="image/png"
+  href="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png"
+>
 
 
 <!-- =====================================================
@@ -687,6 +703,7 @@ body {
 }
 
 
+.camera-thumbnail-image,
 .camera-thumb img {
 
   width:
@@ -2480,28 +2497,36 @@ function renderCameraList() {
       ===============================================
       */
 
+      /*
+        รองรับ thumbnail ที่ API ส่งมาเป็นทั้ง
+        string หรือ object เช่น { url: "..." }
+      */
+
+      const thumbnail =
+        typeof camera.thumbnail === "string"
+          ? camera.thumbnail.trim()
+          : (
+              camera.thumbnail?.url ||
+              camera.thumbnail?.src ||
+              ""
+            );
+
+
       let imageHTML =
         "";
 
 
-      if (
-        camera.thumbnail &&
-        camera.thumbnail.trim() !== ""
-      ) {
+      if (thumbnail) {
 
         imageHTML = `
 
           <img
-            src="${camera.thumbnail}"
-            alt="${camera.name}"
+            class="camera-thumbnail-image"
+            src="${thumbnail}"
+            alt="${camera.name || "CCTV"}"
             loading="eager"
-
+            decoding="async"
             referrerpolicy="no-referrer"
-
-            onerror="
-              this.style.display='none';
-              this.parentElement.classList.add('no-image');
-            "
           >
 
         `;
@@ -2513,14 +2538,10 @@ function renderCameraList() {
       ===============================================
       PLACEHOLDER
       ===============================================
-      *
-      * ใช้เฉพาะกรณีที่กล้องไม่มี thumbnail เท่านั้น
-      * ถ้ามี camera.thumbnail จะไม่แสดง placeholder
       */
 
       const placeholderHTML =
-        camera.thumbnail &&
-        camera.thumbnail.trim() !== ""
+        thumbnail
         ? ""
         : `
 
@@ -2539,7 +2560,6 @@ function renderCameraList() {
           </div>
 
         `;
-
 
       /*
       ===============================================
@@ -2685,6 +2705,54 @@ function renderCameraList() {
       container.appendChild(
         card
       );
+
+
+      /*
+        ถ้า thumbnail โหลดไม่ได้ ให้กลับไปใช้ placeholder
+        เฉพาะกรณีที่ URL ของรูปมีปัญหา
+      */
+
+      const thumbnailImage =
+        card.querySelector(
+          ".camera-thumbnail-image"
+        );
+
+
+      if (thumbnailImage) {
+
+        thumbnailImage.addEventListener(
+          "error",
+          () => {
+
+            thumbnailImage.style.display =
+              "none";
+
+            const thumb =
+              thumbnailImage.parentElement;
+
+            if (thumb) {
+
+              thumb.classList.add(
+                "no-image"
+              );
+
+              thumb.insertAdjacentHTML(
+                "beforeend",
+                `
+                  <div class="camera-placeholder">
+                    <div class="camera-placeholder-icon">📹</div>
+                    CCTV
+                  </div>
+                `
+              );
+
+            }
+
+          },
+          { once: true }
+        );
+
+      }
 
     }
   );
