@@ -59,7 +59,7 @@ CAMERAS = {
     "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1",
 
     # รูปภาพสำหรับการ์ดเลือกจุดตรวจวัด
-    "thumbnail": "https://i.postimg.cc/x1s5Dn01/cctvtum01.png",
+    "thumbnail": "https://cdn.discordapp.com/attachments/1408420643644506208/1555483709401071647/cctvtum01.png?backend=b2&ex=6ac0b097&is=6abf5f17&hm=e2c7a5b44c48fb934d841f6c6c7a08648730af224dff13f6cf8e45626ad9d5ce&",
 
     # โลโก้หลักของจังหวัด
     "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
@@ -104,7 +104,7 @@ CAMERAS = {
 
     "stream": "https://thaiclouderp.com/video/pakkret-river.m3u8",
 
-    "thumbnail": "https://i.postimg.cc/9MyyMhjw/cctvtum02.png",
+    "thumbnail": "https://cdn.discordapp.com/attachments/1408420643644506208/1555483710902636654/cctvtum02.png?backend=b2&ex=6ac0b098&is=6abf5f18&hm=d085459e1f6e4f0eb1c43a824b5b7a1a8972454c01716b2278e60a665cdb45a3&",
 
     "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
