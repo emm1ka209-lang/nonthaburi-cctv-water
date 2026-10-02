@@ -78,11 +78,11 @@ CAMERAS = {
     # ข้อมูลระดับน้ำแบบ MANUAL
     "water": {
         "mode": "manual",
-        "value": 20.9,
+        "value": 36.50,
         "unit": "ซม.",
-        "status": "normal",
-        "statusText": "เฝ้าระวัง ธงเหลือง",
-        "updatedAt": "2026-10-02T14:45:01+07:00",
+        "status": "critical",
+        "statusText": "วิกฤต ธงแดง",
+        "updatedAt": "2026-10-02T20:31:01+07:00",
         "message": "บันทึกข้อมูลระดับน้ำ"
     }
 },
@@ -118,11 +118,11 @@ CAMERAS = {
 
     "water": {
         "mode": "manual",
-        "value": 20,
+        "value": 27.5,
         "unit": "ซม.",
         "status": "normal",
         "statusText": "เฝ้าระวัง ธงเหลือง",
-        "updatedAt": "2026-10-02T14:45:01+07:00",
+        "updatedAt": "2026-10-02T20:31:01+07:00",
         "message": "บันทึกข้อมูลระดับน้ำ"
     }
 },
