@@ -82,7 +82,7 @@ CAMERAS = {
         "unit": "ซม.",
         "status": "critical",
         "statusText": "วิกฤต ธงแดง",
-        "updatedAt": "",
+        "updatedAt": "2026-10-02T13:55:00+07:00",
         "message": "บันทึกข้อมูลระดับน้ำ"
     }
 },
@@ -95,7 +95,7 @@ CAMERAS = {
 "CCTV-02": {
     "id": "CCTV-02",
 
-    "enabled": true,
+    "enabled": True,
 
     "name": "เทศบาลนครปากเกร็ด (ปากเกร็ด)",
     "location": "ท่าน้ำปากเกร็ด-หัวถนน",
