@@ -1505,72 +1505,772 @@ function renderCamera(camera) {
 }
 
 
-/* =========================
-   VIDEO
-========================= */
+/* =========================================================
+   CCTV HLS PLAYER
+   เน้นความเสถียรสำหรับ Live CCTV
+========================================================= */
+
+let hls = null;
+
+let hlsRetryCount = 0;
+
+let stallTimer = null;
+
+let lastPlayingTime = 0;
+
+
+/* =========================================================
+   STREAM CONFIG
+========================================================= */
+
+const CCTV_STREAM_URL =
+    'https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1';
+
+
+/* =========================================================
+   SETUP VIDEO
+========================================================= */
 
 function setupVideo(camera) {
 
     const video =
-        document.getElementById("cctvVideo");
+        document.getElementById('cctvVideo');
 
     if (!video) {
         return;
     }
 
-    if (hls) {
 
-        try {
-            hls.destroy();
-        } catch (e) {}
+    /* -----------------------------------------
+       ล้าง player ตัวเก่า
+    ----------------------------------------- */
 
-        hls = null;
-    }
+    destroyHLS();
 
 
-    if (Hls.isSupported()) {
+    /* -----------------------------------------
+       reset state
+    ----------------------------------------- */
+
+    hlsRetryCount = 0;
+
+    lastPlayingTime = 0;
+
+
+    /* -----------------------------------------
+       ตั้งค่าพื้นฐาน video
+    ----------------------------------------- */
+
+    video.autoplay = true;
+
+    video.muted = true;
+
+    video.playsInline = true;
+
+    video.controls = true;
+
+    video.preload = 'auto';
+
+
+    /* -----------------------------------------
+       ใช้ stream ของกล้อง
+       CCTV-01 ใช้ URL ที่เว็บต้นฉบับใช้งาน
+    ----------------------------------------- */
+
+    const streamURL =
+        camera.stream ||
+        CCTV_STREAM_URL;
+
+
+    /* =====================================================
+       HLS.JS
+    ===================================================== */
+
+    if (window.Hls && Hls.isSupported()) {
 
         hls = new Hls({
 
-            enableWorker: true,
+            /*
+             * ไม่เปิด Low Latency
+             *
+             * CCTV ตัวนี้เน้นให้ภาพไม่หมุน
+             * มากกว่าการลด latency ให้ต่ำที่สุด
+             */
+            lowLatencyMode: false,
 
-            lowLatencyMode: true,
 
-            maxBufferLength: 10
+            /*
+             * ให้ player มี buffer สำรอง
+             */
+            maxBufferLength: 20,
+
+            maxMaxBufferLength: 30,
+
+            maxBufferSize: 60 * 1000 * 1000,
+
+            maxBufferHole: 0.5,
+
+
+            /*
+             * Live sync
+             *
+             * ยอมให้ player อยู่หลัง live edge
+             * เล็กน้อยเพื่อความเสถียร
+             */
+            liveSyncDurationCount: 3,
+
+            liveMaxLatencyDurationCount: 7,
+
+
+            /*
+             * ถ้าโหลด segment แรกช้า
+             * ไม่ต้องพยายามกระโดดมั่ว
+             */
+            initialLiveManifestSize: 2,
+
+
+            /*
+             * ถ้าเจอ network error
+             * ให้ HLS.js retry เอง
+             */
+            manifestLoadingMaxRetry: 4,
+
+            manifestLoadingRetryDelay: 1000,
+
+            manifestLoadingMaxRetryTimeout: 8000,
+
+
+            levelLoadingMaxRetry: 4,
+
+            levelLoadingRetryDelay: 1000,
+
+            levelLoadingMaxRetryTimeout: 8000,
+
+
+            fragLoadingMaxRetry: 5,
+
+            fragLoadingRetryDelay: 1000,
+
+            fragLoadingMaxRetryTimeout: 8000,
+
+
+            /*
+             * ป้องกัน buffer ย้อนหลังเยอะเกินไป
+             */
+            backBufferLength: 30,
+
+
+            /*
+             * ไม่ทดสอบ bandwidth แบบ aggressive
+             */
+            testBandwidth: true,
+
+            abrEwmaFastLive: 3,
+
+            abrEwmaSlowLive: 9
 
         });
 
-        hls.loadSource(camera.stream);
+
+        /* -----------------------------------------
+           โหลด stream
+        ----------------------------------------- */
+
+        hls.loadSource(streamURL);
 
         hls.attachMedia(video);
 
+
+        /* =================================================
+           MANIFEST PARSED
+        ================================================= */
+
         hls.on(
             Hls.Events.MANIFEST_PARSED,
-            function() {
+            function () {
 
-                video.play().catch(() => {});
+                console.log(
+                    '[CCTV] Manifest loaded'
+                );
+
+                playVideo();
+
+            }
+        );
+
+
+        /* =================================================
+           FRAG BUFFERED
+        ================================================= */
+
+        hls.on(
+            Hls.Events.FRAG_BUFFERED,
+            function () {
+
+                hlsRetryCount = 0;
+
+                lastPlayingTime =
+                    video.currentTime;
+
+            }
+        );
+
+
+        /* =================================================
+           ERROR HANDLER
+        ================================================= */
+
+        hls.on(
+            Hls.Events.ERROR,
+            function (
+                event,
+                data
+            ) {
+
+                console.warn(
+                    '[CCTV HLS]',
+                    data
+                );
+
+
+                /*
+                 * ถ้า error ไม่ fatal
+                 * ไม่ต้องทำอะไร
+                 */
+
+                if (!data.fatal) {
+                    return;
+                }
+
+
+                /* =========================================
+                   NETWORK ERROR
+                ========================================= */
+
+                if (
+                    data.type ===
+                    Hls.ErrorTypes.NETWORK_ERROR
+                ) {
+
+                    console.warn(
+                        '[CCTV] Network error - retry'
+                    );
+
+
+                    hlsRetryCount++;
+
+
+                    if (
+                        hlsRetryCount <= 5
+                    ) {
+
+                        setTimeout(
+                            function () {
+
+                                if (!hls) {
+                                    return;
+                                }
+
+                                try {
+
+                                    hls.startLoad();
+
+                                } catch (e) {
+
+                                    console.warn(e);
+
+                                }
+
+                            },
+                            1500
+                        );
+
+                        return;
+                    }
+
+                }
+
+
+                /* =========================================
+                   MEDIA ERROR
+                ========================================= */
+
+                if (
+                    data.type ===
+                    Hls.ErrorTypes.MEDIA_ERROR
+                ) {
+
+                    console.warn(
+                        '[CCTV] Media error - recover'
+                    );
+
+
+                    try {
+
+                        hls.recoverMediaError();
+
+                        hlsRetryCount = 0;
+
+                        return;
+
+                    } catch (e) {
+
+                        console.warn(e);
+
+                    }
+
+                }
+
+
+                /* =========================================
+                   UNKNOWN / FATAL
+                ========================================= */
+
+                console.warn(
+                    '[CCTV] Fatal HLS error - reload player'
+                );
+
+
+                restartHLS(
+                    streamURL
+                );
 
             }
         );
 
     }
 
+
+    /* =====================================================
+       SAFARI / iOS / NATIVE HLS
+    ===================================================== */
+
     else if (
         video.canPlayType(
-            "application/vnd.apple.mpegurl"
+            'application/vnd.apple.mpegurl'
         )
     ) {
 
-        video.src = camera.stream;
+        video.src = streamURL;
 
         video.addEventListener(
-            "loadedmetadata",
-            function() {
+            'loadedmetadata',
+            function () {
 
-                video.play().catch(() => {});
+                playVideo();
+
+            },
+            {
+                once: true
+            }
+        );
+
+    }
+
+
+    else {
+
+        console.error(
+            '[CCTV] Browser does not support HLS'
+        );
+
+    }
+
+
+    /* =====================================================
+       VIDEO EVENTS
+    ===================================================== */
+
+    video.addEventListener(
+        'playing',
+        function () {
+
+            console.log(
+                '[CCTV] Playing'
+            );
+
+            lastPlayingTime =
+                video.currentTime;
+
+        }
+    );
+
+
+    video.addEventListener(
+        'waiting',
+        function () {
+
+            console.log(
+                '[CCTV] Buffering...'
+            );
+
+            startStallWatch(
+                video,
+                streamURL
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        'stalled',
+        function () {
+
+            console.log(
+                '[CCTV] Stream stalled'
+            );
+
+            startStallWatch(
+                video,
+                streamURL
+            );
+
+        }
+    );
+
+
+    video.addEventListener(
+        'canplay',
+        function () {
+
+            playVideo();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   PLAY VIDEO
+========================================================= */
+
+function playVideo() {
+
+    const video =
+        document.getElementById('cctvVideo');
+
+    if (!video) {
+        return;
+    }
+
+
+    video.play()
+        .then(
+            function () {
+
+                console.log(
+                    '[CCTV] Playback started'
+                );
+
+            }
+        )
+        .catch(
+            function (error) {
+
+                console.warn(
+                    '[CCTV] Autoplay blocked',
+                    error
+                );
 
             }
         );
+
+}
+
+
+/* =========================================================
+   STALL WATCHDOG
+========================================================= */
+
+function startStallWatch(
+    video,
+    streamURL
+) {
+
+    if (stallTimer) {
+        clearTimeout(stallTimer);
+    }
+
+
+    stallTimer =
+        setTimeout(
+            function () {
+
+                if (!video) {
+                    return;
+                }
+
+
+                /*
+                 * ถ้ากลับมาเล่นแล้ว
+                 * ไม่ต้อง restart
+                 */
+
+                if (
+                    !video.paused &&
+                    !video.ended &&
+                    video.readyState >= 3
+                ) {
+
+                    return;
+
+                }
+
+
+                console.warn(
+                    '[CCTV] Long buffering detected'
+                );
+
+
+                /*
+                 * ลองกระโดดกลับไปยัง live position
+                 * ก่อนที่จะสร้าง player ใหม่
+                 */
+
+                if (
+                    hls &&
+                    hls.liveSyncPosition !== null &&
+                    hls.liveSyncPosition !== undefined
+                ) {
+
+                    try {
+
+                        video.currentTime =
+                            hls.liveSyncPosition;
+
+                        playVideo();
+
+                        return;
+
+                    } catch (e) {
+
+                        console.warn(e);
+
+                    }
+
+                }
+
+
+                /*
+                 * ถ้ายังไม่หาย
+                 * restart HLS
+                 */
+
+                restartHLS(
+                    streamURL
+                );
+
+            },
+            8000
+        );
+
+}
+
+
+/* =========================================================
+   RESTART HLS
+========================================================= */
+
+function restartHLS(
+    streamURL
+) {
+
+    console.warn(
+        '[CCTV] Restarting HLS player'
+    );
+
+
+    const video =
+        document.getElementById('cctvVideo');
+
+    if (!video) {
+        return;
+    }
+
+
+    if (hls) {
+
+        try {
+
+            hls.destroy();
+
+        } catch (e) {}
+
+        hls = null;
+
+    }
+
+
+    hlsRetryCount = 0;
+
+
+    setTimeout(
+        function () {
+
+            if (
+                !window.Hls ||
+                !Hls.isSupported()
+            ) {
+
+                return;
+
+            }
+
+
+            hls =
+                new Hls({
+
+                    lowLatencyMode: false,
+
+                    maxBufferLength: 20,
+
+                    maxMaxBufferLength: 30,
+
+                    maxBufferSize:
+                        60 * 1000 * 1000,
+
+                    maxBufferHole: 0.5,
+
+                    liveSyncDurationCount: 3,
+
+                    liveMaxLatencyDurationCount: 7,
+
+                    initialLiveManifestSize: 2,
+
+                    manifestLoadingMaxRetry: 4,
+
+                    manifestLoadingRetryDelay: 1000,
+
+                    levelLoadingMaxRetry: 4,
+
+                    levelLoadingRetryDelay: 1000,
+
+                    fragLoadingMaxRetry: 5,
+
+                    fragLoadingRetryDelay: 1000,
+
+                    backBufferLength: 30
+
+                });
+
+
+            hls.loadSource(
+                streamURL
+            );
+
+            hls.attachMedia(
+                video
+            );
+
+
+            hls.on(
+                Hls.Events.MANIFEST_PARSED,
+                function () {
+
+                    playVideo();
+
+                }
+            );
+
+
+            hls.on(
+                Hls.Events.ERROR,
+                function (
+                    event,
+                    data
+                ) {
+
+                    if (!data.fatal) {
+                        return;
+                    }
+
+
+                    if (
+                        data.type ===
+                        Hls.ErrorTypes.NETWORK_ERROR
+                    ) {
+
+                        hls.startLoad();
+
+                    }
+
+                    else if (
+                        data.type ===
+                        Hls.ErrorTypes.MEDIA_ERROR
+                    ) {
+
+                        hls.recoverMediaError();
+
+                    }
+
+                    else {
+
+                        restartHLS(
+                            streamURL
+                        );
+
+                    }
+
+                }
+            );
+
+
+        },
+        1000
+    );
+
+}
+
+
+/* =========================================================
+   DESTROY HLS
+========================================================= */
+
+function destroyHLS() {
+
+    if (stallTimer) {
+
+        clearTimeout(
+            stallTimer
+        );
+
+        stallTimer = null;
+
+    }
+
+
+    if (hls) {
+
+        try {
+
+            hls.destroy();
+
+        } catch (e) {}
+
+        hls = null;
+
+    }
+
+
+    const video =
+        document.getElementById('cctvVideo');
+
+
+    if (video) {
+
+        try {
+
+            video.pause();
+
+            video.removeAttribute(
+                'src'
+            );
+
+            video.load();
+
+        } catch (e) {}
 
     }
 
