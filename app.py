@@ -59,6 +59,8 @@ CAMERAS = {
 
         "stream": "https://stream.firsttech.co.th/live/nakornnont.stream/index.m3u8?cookieCheck=1",
 
+            # รูปภาพสำหรับการ์ดเลือกจุดตรวจวัด
+    "thumbnail": "/cctvtum01.png",
         # โลโก้หลักของจังหวัด
         "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
@@ -105,6 +107,9 @@ CAMERAS = {
         "description": "จุดวัด ท่าน้ำปากเกร็ด-หัวถนน",
 
         "stream": "https://thaiclouderp.com/video/pakkret-river.m3u8",
+
+                    # รูปภาพสำหรับการ์ดเลือกจุดตรวจวัด
+    "thumbnail": "/cctvtum02.png",
 
         "provinceLogo": "https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png",
 
