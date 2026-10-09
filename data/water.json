@@ -1,0 +1,4 @@
+{
+  "CCTV-01": {"value": 36.5, "status": "critical", "updatedAt": "2026-10-02T20:31:01+07:00"},
+  "CCTV-02": {"value": 27.5, "status": "warning",  "updatedAt": "2026-10-02T20:31:01+07:00"}
+}
