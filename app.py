@@ -58,7 +58,6 @@ CAMERAS = {
         "municipalityLogo": "https://nakornnont.go.th/images/content/logo-139-1/logo.png",
         "agencyLogo": "https://cctv-nont.firsttech.co.th/img/FirstTech_Logo.e48d7620.png",
         "agencyName": "Firsttech Design Co., Ltd.",
-        "waterStatusImage": "https://i.postimg.cc/2yzLSLGN/phe-mh-wre-xng-(8).png",
         # เปิดใช้เมื่อ calibrate ภาพจริงแล้วเท่านั้น
         "vision": {"enabled": False},
     },
@@ -73,7 +72,6 @@ CAMERAS = {
         "municipalityLogo": "https://thaiclouderp.com/video/asset/images/pakkret_logo.png",
         "agencyLogo": "https://thaiclouderp.com/video/asset/images/ccs_logo.png",
         "agencyName": "Cloud Computing Solutions Co., Ltd.",
-        "waterStatusImage": "https://i.postimg.cc/ZYNCZFhB/phe-mh-wre-xng-(9).png",
         "vision": {"enabled": False},
     },
 }

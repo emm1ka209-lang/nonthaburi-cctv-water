@@ -386,13 +386,10 @@ function renderWater(c) {
 }
 
 /* ---------- player ---------- */
-function overlay(show, text, btn) {
-  const o = $("ov"); if (!o) return;
-  o.classList.toggle("show", show);
-  if (text) $("ovT").innerHTML = esc(text) + (btn ? `<br><button id="rb">${t("retry")}</button>` : "");
-  if (btn) $("rb").onclick = () => { retry = 0; startPlayer(current); };
-  o.querySelector(".spin").style.display = btn ? "none" : "";
-}
+// ภาพค้างได้ ไม่มี UI บังวิดีโอ: overlay โชว์เฉพาะตอนเชื่อมต่อครั้งแรก
+// หลังจากเล่นแล้วถ้าสัญญาณหลุด จะกู้คืนเงียบ ๆ ใน instance เดิม ภาพสุดท้ายยังค้างให้ดูอยู่
+let hlsWait = 0;
+function overlay(show) { const o = $("ov"); if (o) o.classList.toggle("show", show); }
 function badge(on, text) { const l = $("live"); if (l) { l.textContent = text; l.classList.toggle("off", !on); } }
 function stopPlayer() {
   clearTimeout(retryT); clearInterval(snapT);
@@ -400,47 +397,47 @@ function stopPlayer() {
   const v = $("vid"); if (v) { v.pause(); v.removeAttribute("src"); v.load(); }
 }
 function startPlayer(c) {
-  stopPlayer();
+  stopPlayer(); retry = 0;
   const v = $("vid"); if (!v) return;
-  $("snap").hidden = true; v.hidden = false;
+  $("snap").hidden = true; v.hidden = false; overlay(true);
   v.onplaying = () => { retry = 0; overlay(false); badge(true, t("live")); };
-  v.onwaiting = () => overlay(true, t("loading"));
   if (window.Hls && Hls.isSupported()) {
     hls = new Hls({lowLatencyMode:false, backBufferLength:30, maxBufferLength:15, liveSyncDurationCount:4, liveMaxLatencyDurationCount:12});
     hls.loadSource(c.stream); hls.attachMedia(v);
     hls.on(Hls.Events.MANIFEST_PARSED, () => v.play().catch(() => {}));
-    hls.on(Hls.Events.ERROR, (_, d) => {
-      if (!d.fatal) return;
-      if (d.type === Hls.ErrorTypes.MEDIA_ERROR && retry++ < 2) return hls.recoverMediaError();
-      reconnect(c);
-    });
+    hls.on(Hls.Events.ERROR, (_, d) => d.fatal && heal(c, d));
   } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
-    v.src = c.stream; v.onerror = () => reconnect(c); v.play().catch(() => {});
-  } else if (!window.Hls && retry++ < 5) retryT = setTimeout(() => startPlayer(c), 600);
+    v.src = c.stream; v.play().catch(() => {});
+    v.onerror = () => { clearTimeout(retryT); retryT = setTimeout(() => { v.src = c.stream; v.play().catch(() => {}); }, 3000); };
+  } else if (!window.Hls && ++hlsWait <= 8) retryT = setTimeout(() => startPlayer(c), 600);
   else snapshotMode(c);
 }
-function reconnect(c) {
-  if (++retry > 4) return snapshotMode(c);
-  overlay(true, t("reconn")); clearTimeout(retryT);
-  retryT = setTimeout(() => current && current.id === c.id && startPlayer(c), Math.min(1500 * 2 ** retry, 12000));
+function heal(c, d) {                       // กู้คืนเงียบ ๆ ไม่ destroy ไม่ล้างภาพ
+  clearTimeout(retryT);
+  retryT = setTimeout(() => {
+    if (!hls || !current || current.id !== c.id) return;
+    if (d.type === Hls.ErrorTypes.MEDIA_ERROR) { if (retry > 2) hls.swapAudioCodec(); hls.recoverMediaError(); }
+    else if (d.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
+    else hls.loadSource(c.stream);
+  }, Math.min(1000 * 2 ** Math.min(retry++, 4), 10000));
 }
-function snapshotMode(c) {
-  if (hls) { hls.destroy(); hls = null; }
+function snapshotMode(c) {                  // เฉพาะเบราว์เซอร์ที่เล่น HLS ไม่ได้เลย
   const v = $("vid"), s = $("snap"); if (!v || !s) return;
   v.hidden = true; s.hidden = false; badge(false, t("snap"));
   const load = () => {
     const i = new Image();
     i.onload = () => { s.src = i.src; overlay(false); };
-    i.onerror = () => overlay(true, t("snapFail"), true);
     i.src = `/api/snapshot/${encodeURIComponent(c.id)}?t=${Date.now()}`;
   };
   load(); snapT = setInterval(load, 10000);
 }
 
 /* ---------- boot ---------- */
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) return stopPlayer();
-  loadCameras(); if (current) startPlayer(current);
+document.addEventListener("visibilitychange", () => {   // สลับแท็บ: พักโหลด ไม่ทำลายผู้เล่น
+  if (document.hidden) { hls && hls.stopLoad(); return; }
+  loadCameras();
+  const v = $("vid");
+  if (hls && v) { hls.startLoad(); if (hls.liveSyncPosition) v.currentTime = hls.liveSyncPosition; v.play().catch(() => {}); }
 });
 setInterval(() => !document.hidden && loadCameras(), 60000);
 applyTheme(); setSystem(null);
