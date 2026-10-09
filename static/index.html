@@ -2,7 +2,8 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5b35b5">
 <meta name="description" content="ดูภาพสดและระดับน้ำริมแม่น้ำเจ้าพระยา จังหวัดนนทบุรี">
 <title>NontWater · ระดับน้ำนนทบุรี</title>
 <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png">
@@ -12,272 +13,398 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js" defer></script>
 <style>
 :root{
-  --purple:#5b35b5;--purple-dark:#45218f;--purple-soft:#f4f0ff;
-  --text:#29263b;--muted:#6f6b80;--border:#e6e1f2;--bg:#f7f6fb;--card:#fff;
-  --normal:#14934a;--warning:#c98f00;--critical:#d63a3a;--none:#8b88a0;
-  --radius:14px;--shadow:0 6px 22px rgba(55,40,100,.07);
+  --brand:#6a43d6;--brand-2:#8a68f0;--bg:#f4f2fb;--card:#fff;--text:#27243a;--muted:#6f6b84;--border:#e5e0f3;
+  --glass:rgba(255,255,255,.72);--soft:#efeafc;--shadow:0 10px 30px rgba(60,40,120,.09);
+  --normal:#14934a;--warning:#c98f00;--critical:#d63a3a;--none:#8b88a0;--r:18px;
+}
+[data-theme="dark"]{
+  --brand:#9a7cff;--brand-2:#b9a3ff;--bg:#0f0d18;--card:#1a1728;--text:#ece9f8;--muted:#a09bb8;--border:#2b2740;
+  --glass:rgba(26,23,40,.72);--soft:#262040;--shadow:0 10px 30px rgba(0,0,0,.4);
+  --normal:#3ecf84;--warning:#f0b429;--critical:#ff6b6b;
 }
 *{box-sizing:border-box}
-html,body{margin:0;font-family:"Noto Sans Thai",system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.5}
-button{font:inherit;color:inherit}
-:focus-visible{outline:3px solid #9c7df0;outline-offset:2px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans Thai",system-ui,sans-serif;color:var(--text);line-height:1.5;
+  background:radial-gradient(900px 420px at 15% -5%,color-mix(in srgb,var(--brand) 16%,transparent),transparent),var(--bg);min-height:100vh;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+:focus-visible{outline:3px solid var(--brand-2);outline-offset:2px}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
-/* header */
-.header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;
-  min-height:64px;padding:8px 20px;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:12px;min-width:0}
-.brand img{width:40px;height:40px;object-fit:contain}
-.brand b{display:block;font-size:clamp(15px,2.2vw,19px);font-weight:800;line-height:1.25}
-.brand small{display:block;color:var(--muted);font-size:12px}
-.head-right{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted);flex-shrink:0}
-.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:99px;background:var(--purple-soft);color:var(--purple-dark);font-weight:600}
+/* loader */
+#bar{position:fixed;left:0;top:0;height:3px;width:0;z-index:200;background:linear-gradient(90deg,var(--brand),var(--brand-2));transition:width .35s ease,opacity .3s}
+.splash{position:fixed;inset:0;z-index:150;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);transition:opacity .4s,visibility .4s}
+.splash.hide{opacity:0;visibility:hidden}
+.splash img{width:84px}.splash b{font-size:18px;font-weight:700;text-align:center;padding:0 24px}
+
+/* floating glass nav */
+.nav{position:fixed;z-index:50;top:max(12px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(1120px,calc(100% - 24px));
+  height:60px;padding:0 10px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:99px;
+  background:var(--glass);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border:1px solid var(--border);box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;min-width:0}
+.brand img{width:34px;height:34px;object-fit:contain}
+.brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);line-height:1}
+.links{display:flex;gap:4px}
+.links a{padding:8px 16px;border-radius:99px;font-size:14px;font-weight:600;color:var(--muted);text-decoration:none}
+.links a:hover{color:var(--text)}
+.links a[aria-current="page"]{background:var(--soft);color:var(--brand)}
+.tools{display:flex;align-items:center;gap:6px}
+.ibtn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:99px;font-size:13px;font-weight:700;color:var(--muted);background:var(--soft)}
+.ibtn:hover{color:var(--brand)}
+.sys{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border-radius:99px;font-size:13px;font-weight:700;background:var(--soft);color:var(--brand)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--none)}
-.pill.ok .dot{background:var(--normal);box-shadow:0 0 0 0 rgba(20,147,74,.5);animation:pulse 2s infinite}
-.pill.bad{background:#fdecec;color:#a42626}.pill.bad .dot{background:var(--critical)}
-@keyframes pulse{70%{box-shadow:0 0 0 7px rgba(20,147,74,0)}100%{box-shadow:0 0 0 0 rgba(20,147,74,0)}}
+.sys.ok .dot{background:var(--normal);animation:pulse 2s infinite}
+.sys.bad{color:var(--critical)}.sys.bad .dot{background:var(--critical)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--normal) 55%,transparent)}70%,100%{box-shadow:0 0 0 7px transparent}}
 
 /* layout */
-.page{max-width:1280px;margin:0 auto;padding:20px}
-.layout{display:grid;grid-template-columns:290px 1fr;gap:20px;align-items:start}
-.panel-title{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--muted)}
+main{flex:1;width:100%;max-width:1120px;margin:0 auto;padding:96px 16px 36px}
+.view{animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.hero h1{margin:6px 0 4px;font-size:clamp(26px,4.4vw,40px);line-height:1.2;font-weight:800;letter-spacing:-.01em}
+.hero p{margin:0 0 26px;color:var(--muted);max-width:56ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow)}
 
-/* camera list */
-.cams{display:flex;flex-direction:column;gap:12px}
-.cam{display:block;width:100%;padding:0;text-align:left;cursor:pointer;background:var(--card);border:2px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;transition:border-color .15s,box-shadow .15s}
-.cam:hover{border-color:#cfc4ee}
-.cam[aria-current="true"]{border-color:var(--purple);box-shadow:var(--shadow)}
-.cam img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#ddd9ea}
-.cam-body{padding:10px 12px 12px}
-.cam-name{font-weight:700;font-size:14px;line-height:1.35}
-.cam-loc{color:var(--muted);font-size:12px;margin-top:2px}
-.cam-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:12px}
-.lvl{font-weight:700}
-.lvl.normal{color:var(--normal)}.lvl.warning{color:var(--warning)}.lvl.critical{color:var(--critical)}
+/* camera card */
+.cam{display:block;text-align:left;overflow:hidden;padding:0;transition:transform .2s,border-color .2s}
+.cam:hover{transform:translateY(-3px);border-color:var(--brand)}
+.cam:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.thumb{position:relative;aspect-ratio:16/9;background:var(--soft)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.tag{position:absolute;left:12px;top:12px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:800;color:#fff;background:var(--critical)}
+.tag.off{background:#5a5670}
+.cam-body{padding:14px 16px 16px}
+.cam-name{font-weight:700;line-height:1.35}
+.cam-loc{font-size:13px;color:var(--muted)}
+.cam-lvl{display:flex;align-items:baseline;justify-content:space-between;margin-top:12px}
+.cam-lvl b{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--c)}
+.cam-lvl b small{font-size:13px;font-weight:600;color:var(--muted);margin-left:4px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;color:#fff;background:var(--c,var(--none))}
+.chip::before{content:"";width:9px;height:11px;background:#fff;clip-path:polygon(0 0,100% 25%,0 50%,0 100%)}
+.s-normal{--c:var(--normal)}.s-warning{--c:var(--warning)}.s-critical{--c:var(--critical)}.s-none{--c:var(--none)}
 
-/* viewer */
-.viewer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
-.viewer-head h1{margin:0;font-size:clamp(18px,2.4vw,24px);font-weight:800;line-height:1.3}
-.viewer-head p{margin:2px 0 0;color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
-.video{position:relative;background:#14111f;border-radius:var(--radius);overflow:hidden;aspect-ratio:16/9}
-.video video,.video img.snap{width:100%;height:100%;object-fit:contain;display:block}
-.video .stamp{position:absolute;right:10px;top:10px;padding:3px 9px;border-radius:6px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-variant-numeric:tabular-nums}
-.video .live{position:absolute;left:10px;top:10px;padding:3px 9px;border-radius:6px;background:var(--critical);color:#fff;font-size:12px;font-weight:700}
-.video .live.off{background:#5a5670}
-.overlay{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  background:rgba(20,17,31,.72);color:#fff;font-size:14px;text-align:center;padding:16px}
-.overlay.show{display:flex}
-.spinner{width:30px;height:30px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;animation:spin .9s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.overlay button{padding:7px 16px;border:0;border-radius:8px;background:#fff;color:var(--purple-dark);font-weight:700;cursor:pointer}
-.info{margin-top:16px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* skeleton */
+.sk{border-radius:var(--r);min-height:260px;background:linear-gradient(100deg,var(--card) 30%,var(--soft) 50%,var(--card) 70%);background-size:200% 100%;animation:sk 1.3s linear infinite;border:1px solid var(--border)}
+@keyframes sk{to{background-position:-200% 0}}
+
+/* camera page */
+.back{display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;padding:7px 14px 7px 10px;border-radius:99px;background:var(--soft);font-size:13px;font-weight:700;color:var(--brand);text-decoration:none}
+.head h1{margin:0;font-size:clamp(20px,3vw,28px);font-weight:800;line-height:1.3}
+.head p{margin:2px 0 16px;color:var(--muted);font-size:14px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.video{position:relative;background:#120f1d;border-radius:var(--r);overflow:hidden;aspect-ratio:16/9;box-shadow:var(--shadow)}
+.video video,.video img{width:100%;height:100%;object-fit:contain;display:block}
+.video .tag{background:var(--critical)}.video .tag.off{background:#5a5670}
+.ov{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(18,15,29,.74);color:#fff;font-size:14px;text-align:center;padding:16px}
+.ov.show{display:flex}
+.spin{width:30px;height:30px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ov button{padding:8px 18px;border-radius:99px;background:#fff;color:#45218f;font-weight:700}
+.orgs{margin-top:16px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .org{display:flex;align-items:center;gap:12px;min-width:0}
-.org img{width:44px;height:44px;object-fit:contain;flex-shrink:0}
+.org img{width:44px;height:44px;object-fit:contain;flex-shrink:0;background:#fff;border-radius:10px;padding:3px}
 .org b{display:block;font-size:13px}.org span{display:block;color:var(--muted);font-size:12px}
 
-/* water gauge: จุดเด่นของหน้า */
-.water{padding:18px}
-.water h2{margin:0 0 14px;font-size:15px;font-weight:700}
-.gauge-wrap{display:flex;gap:18px;align-items:stretch}
-.staff{position:relative;width:62px;height:230px;flex-shrink:0;border-radius:8px;background:linear-gradient(#e9e4f7,#cfc4ee);border:1px solid var(--border);overflow:hidden}
-.staff .fill{position:absolute;left:0;right:0;bottom:0;background:var(--c,var(--none));opacity:.85;transition:height .8s cubic-bezier(.3,.8,.3,1)}
-.staff .tick{position:absolute;right:0;width:14px;height:2px;background:rgba(41,38,59,.45)}
-.staff .tick.mid{width:22px}
-.staff .tick i{position:absolute;right:26px;top:-9px;font:600 10px "Noto Sans Thai",sans-serif;font-style:normal;color:#4d4863}
-.reading{display:flex;flex-direction:column;justify-content:center;min-width:0}
-.reading small{color:var(--muted);font-size:12px}
+/* gauge */
+.water{padding:20px}
+.water h2{margin:0 0 16px;font-size:15px;font-weight:700}
+.gw{display:flex;gap:20px}
+.staff{position:relative;width:64px;height:230px;flex-shrink:0;border-radius:10px;border:1px solid var(--border);background:var(--soft);overflow:hidden}
+.fill{position:absolute;left:0;right:0;bottom:0;background:var(--c,var(--none));opacity:.85;transition:height .8s cubic-bezier(.3,.8,.3,1)}
+.tick{position:absolute;right:0;width:12px;height:2px;background:var(--muted);opacity:.6}
+.tick.m{width:20px}
+.tick i{position:absolute;right:24px;top:-9px;font:600 10px "Noto Sans Thai";font-style:normal;color:var(--muted)}
+.rd{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.rd small{color:var(--muted);font-size:12px}
 .num{font-size:clamp(40px,6vw,52px);font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
 .num span{font-size:16px;font-weight:600;color:var(--muted);margin-left:5px}
-.flag{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:5px 12px;border-radius:99px;font-size:13px;font-weight:700;color:#fff;background:var(--c,var(--none));width:fit-content}
-.flag::before{content:"";width:10px;height:12px;background:#fff;clip-path:polygon(0 0,100% 25%,0 50%,0 100%,0 100%)}
-.meta{margin-top:16px;border-top:1px solid var(--border);padding-top:12px;font-size:13px}
+.rd .chip{margin-top:10px;width:fit-content;font-size:13px}
+.meta{margin:16px 0 0;padding-top:12px;border-top:1px solid var(--border);font-size:13px}
 .meta div{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
 .meta dt{color:var(--muted)}.meta dd{margin:0;font-weight:600;text-align:right}
-.stale{margin-top:10px;padding:8px 10px;border-radius:8px;background:#fff6dd;color:#7a5600;font-size:12px}
-.water-img{display:block;width:100%;margin-top:14px;border-radius:10px}
-.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.stale{margin-top:12px;padding:9px 12px;border-radius:10px;background:color-mix(in srgb,var(--warning) 16%,transparent);color:var(--text);font-size:12px}
+.empty{padding:44px 20px;text-align:center;color:var(--muted)}
 
-/* splash */
-.splash{position:fixed;inset:0;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#fff;transition:opacity .35s,visibility .35s}
-.splash.hide{opacity:0;visibility:hidden}
-.splash img{width:84px}.splash b{font-size:20px;font-weight:800;text-align:center;padding:0 20px}
+/* footer */
+footer{margin-top:auto;border-top:1px solid var(--border);background:var(--glass)}
+.foot{max-width:1120px;margin:0 auto;padding:24px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.foot .brand{color:var(--text)}
 
-@media (max-width:980px){
-  .layout{grid-template-columns:1fr}
-  .cams{flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
-  .cam{flex:0 0 240px;scroll-snap-align:start}
-  .grid{grid-template-columns:1fr}
+/* mobile tab bar + settings */
+.tabbar{display:none}
+.sheet-bg{position:fixed;inset:0;z-index:90;background:rgba(10,8,20,.45);display:none}
+.sheet-bg.show{display:block}
+.sheet{position:fixed;z-index:95;left:50%;bottom:0;transform:translate(-50%,105%);width:min(480px,100%);padding:20px 20px calc(24px + env(safe-area-inset-bottom));
+  background:var(--card);border-radius:24px 24px 0 0;transition:transform .3s cubic-bezier(.3,.8,.3,1)}
+.sheet.show{transform:translate(-50%,0)}
+.sheet h3{margin:0 0 14px;font-size:17px}
+.sheet h4{margin:16px 0 8px;font-size:13px;color:var(--muted)}
+.seg{display:flex;gap:6px;padding:4px;border-radius:99px;background:var(--soft)}
+.seg button{flex:1;padding:8px;border-radius:99px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--brand);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+
+/* toast */
+#toasts{position:fixed;z-index:120;left:50%;top:84px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{padding:10px 18px;border-radius:99px;background:var(--text);color:var(--bg);font-size:13px;font-weight:600;box-shadow:var(--shadow);animation:in .3s}
+
+@media (max-width:980px){.cols{grid-template-columns:1fr}}
+@media (max-width:720px){
+  .nav{justify-content:center;height:56px}
+  .links,.tools{display:none}
+  .brand{font-size:18px}.brand img{width:38px;height:38px}
+  main{padding-top:88px;padding-bottom:110px}
+  .orgs{grid-template-columns:1fr}
+  .tabbar{display:flex;position:fixed;z-index:60;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));width:min(360px,calc(100% - 28px));
+    padding:6px;border-radius:99px;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);box-shadow:var(--shadow)}
+  .tabbar a,.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 4px;border-radius:99px;font-size:11px;font-weight:700;color:var(--muted);text-decoration:none}
+  .tabbar [aria-current="page"]{background:var(--soft);color:var(--brand)}
+  #toasts{top:76px}
 }
-@media (max-width:560px){
-  .page{padding:12px}.header{padding:8px 12px}
-  .head-right .clock{display:none}
-  .info{grid-template-columns:1fr}
-  .staff{height:200px}
-}
+@media (max-width:420px){.staff{height:200px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-
+<div id="bar"></div>
 <div id="splash" class="splash" role="status">
   <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png" alt="">
-  <b>ระบบกล้องวงจรปิดตรวจวัดระดับน้ำ จังหวัดนนทบุรี</b>
+  <b data-i="splash"></b>
+</div>
+<div id="toasts" aria-live="polite"></div>
+
+<nav class="nav" aria-label="main">
+  <a class="brand" href="#/" style="text-decoration:none;color:inherit">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png" alt="">
+    <span>NontWater<small data-i="tag"></small></span>
+  </a>
+  <div class="links">
+    <a href="#/" id="lnkHome" data-i="home"></a>
+    <a href="#/cameras" id="lnkCams" data-i="points"></a>
+  </div>
+  <div class="tools">
+    <span id="sys" class="sys"><span class="dot"></span><span id="sysT"></span></span>
+    <button class="ibtn" id="btnLang" aria-label="Language"></button>
+    <button class="ibtn" id="btnTheme" aria-label="Theme"></button>
+  </div>
+</nav>
+
+<main id="app"></main>
+
+<footer>
+  <div class="foot">
+    <a class="brand" href="#/" style="text-decoration:none">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png" alt="" style="width:30px;height:30px">
+      <span data-i="footName"></span>
+    </a>
+    <span id="credits"></span>
+    <span>© 2026 NontWater</span>
+  </div>
+</footer>
+
+<div class="tabbar">
+  <a href="#/" id="tabHome"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span data-i="home"></span></a>
+  <a href="#/cameras" id="tabCams"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg><span data-i="points"></span></a>
+  <button id="tabSet"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span data-i="settings"></span></button>
 </div>
 
-<header class="header">
-  <div class="brand">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Seal_Nonthaburi.png" alt="ตราจังหวัดนนทบุรี">
-    <div><b>ระบบตรวจวัดระดับน้ำ จังหวัดนนทบุรี</b><small>CCTV Water Monitoring System</small></div>
-  </div>
-  <div class="head-right">
-    <span class="clock" id="clock">--</span>
-    <span id="sys" class="pill"><span class="dot"></span><span id="sysText">กำลังตรวจสอบ</span></span>
-  </div>
-</header>
-
-<main class="page">
-  <div class="layout">
-    <aside>
-      <h2 class="panel-title">เลือกจุดตรวจวัด</h2>
-      <div id="cams" class="cams"><div class="empty">กำลังโหลด...</div></div>
-    </aside>
-    <section id="viewer" aria-live="polite"></section>
-  </div>
-</main>
+<div id="sheetBg" class="sheet-bg"></div>
+<div id="sheet" class="sheet" role="dialog" aria-modal="true">
+  <h3 data-i="settings"></h3>
+  <h4 data-i="theme"></h4>
+  <div class="seg" id="segTheme"><button data-v="system" data-i="tSystem"></button><button data-v="light" data-i="tLight"></button><button data-v="dark" data-i="tDark"></button></div>
+  <h4 data-i="language"></h4>
+  <div class="seg" id="segLang"><button data-v="th">ไทย</button><button data-v="en">English</button></div>
+</div>
 
 <script>
 "use strict";
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const safeUrl = u => /^(https?:)?\/\//.test(u || "") || String(u || "").startsWith("/") ? esc(u) : "";
-const STALE_HOURS = 6, REFRESH_MS = 60000, SNAP_MS = 10000;
-const fmt = d => { const t = new Date(d); return isNaN(t) ? "--" : t.toLocaleString("th-TH", {dateStyle:"medium", timeStyle:"short"}); };
+const url = u => /^(https?:)?\/\//.test(u || "") || String(u || "").startsWith("/") ? esc(u) : "";
+const store = { get(k){ try{return localStorage.getItem(k)}catch{return null} }, set(k,v){ try{localStorage.setItem(k,v)}catch{} } };
 
-let cameras = [], current = null, hls = null, retry = 0, retryTimer = null, snapTimer = null;
+/* ---------- i18n ---------- */
+const L = {
+ th:{splash:"ระบบกล้องวงจรปิดตรวจวัดระดับน้ำ จังหวัดนนทบุรี",tag:"ระดับน้ำนนทบุรี",home:"หน้าแรก",points:"จุดตรวจวัด",settings:"ตั้งค่า",theme:"โหมดสี",language:"ภาษา",
+  tSystem:"ตามระบบ",tLight:"สว่าง",tDark:"มืด",online:"ระบบออนไลน์",offline:"เชื่อมต่อไม่ได้",checking:"กำลังตรวจสอบ",
+  heroT:"ระดับน้ำแม่น้ำเจ้าพระยา ดูสดได้ทุกจุด",heroS:"ภาพสดจากกล้องวงจรปิดและระดับน้ำล่าสุดในจังหวัดนนทบุรี เลือกจุดตรวจวัดเพื่อดูรายละเอียด",
+  back:"กลับ",current:"ระดับน้ำปัจจุบัน",unit:"ซม.",scale:"ซม. จากเกณฑ์วัด",camId:"รหัสกล้อง",loc:"จุดติดตั้ง",rec:"บันทึกข้อมูลเมื่อ",agency:"หน่วยงานผู้ดูแลระบบ",
+  point:"จุดวัด",open:"เปิดใช้งาน",maint:"กำลังปรับปรุง",live:"● LIVE",snap:"ภาพนิ่ง",connecting:"กำลังเชื่อมต่อกล้อง...",reconn:"สัญญาณหลุด กำลังเชื่อมต่อใหม่...",
+  loading:"กำลังโหลดภาพ...",snapFail:"ไม่สามารถดึงภาพจากกล้องได้ในขณะนี้",retry:"ลองใหม่",reload:"โหลดใหม่",loadFail:"โหลดข้อมูลไม่ได้ กรุณาลองใหม่อีกครั้ง",
+  none:"ยังไม่มีจุดตรวจวัดที่เปิดใช้งาน",notFound:"ไม่พบจุดตรวจวัดนี้",noData:"ไม่มีข้อมูล",stale:h=>`ข้อมูลระดับน้ำไม่ได้อัปเดตมา ${h} ชั่วโมงแล้ว ควรตรวจสอบกับเจ้าหน้าที่`,
+  normal:"ปกติ ธงเขียว",warning:"เฝ้าระวัง ธงเหลือง",critical:"วิกฤต ธงแดง",footName:"ระบบตรวจวัดระดับน้ำ จังหวัดนนทบุรี",by:"ข้อมูลภาพโดย",back2:"สัญญาณกลับมาแล้ว",lost:"เชื่อมต่อเซิร์ฟเวอร์ไม่ได้"},
+ en:{splash:"CCTV Water Monitoring System, Nonthaburi",tag:"Nonthaburi water level",home:"Home",points:"Stations",settings:"Settings",theme:"Appearance",language:"Language",
+  tSystem:"System",tLight:"Light",tDark:"Dark",online:"System online",offline:"Offline",checking:"Checking",
+  heroT:"Chao Phraya water level, live at every station",heroS:"Live CCTV and the latest water readings across Nonthaburi. Pick a station for details.",
+  back:"Back",current:"Current water level",unit:"cm",scale:"cm on gauge",camId:"Camera ID",loc:"Location",rec:"Recorded",agency:"Operated by",
+  point:"Station",open:"Active",maint:"Under maintenance",live:"● LIVE",snap:"Snapshot",connecting:"Connecting to camera...",reconn:"Signal lost, reconnecting...",
+  loading:"Loading video...",snapFail:"Can't get an image from the camera right now",retry:"Retry",reload:"Reload",loadFail:"Couldn't load data. Please try again.",
+  none:"No active stations yet",notFound:"Station not found",noData:"No data",stale:h=>`Water level not updated for ${h} hours. Please confirm with officials.`,
+  normal:"Normal · green flag",warning:"Watch · yellow flag",critical:"Critical · red flag",footName:"Nonthaburi Water Monitoring",by:"Video by",back2:"Connection restored",lost:"Can't reach the server"}
+};
+let lang = store.get("lang") === "en" ? "en" : "th";
+const t = (k, ...a) => { const v = L[lang][k]; return typeof v === "function" ? v(...a) : v ?? k; };
+const fmt = d => { const x = new Date(d); return isNaN(x) ? "--" : x.toLocaleString(lang === "en" ? "en-GB" : "th-TH", {dateStyle:"medium", timeStyle:"short"}); };
+
+/* ---------- theme ---------- */
+let theme = store.get("theme") || "system";
+const dark = matchMedia("(prefers-color-scheme: dark)");
+function applyTheme() {
+  const d = theme === "dark" || (theme === "system" && dark.matches);
+  document.documentElement.dataset.theme = d ? "dark" : "light";
+  $("btnTheme").textContent = {system:"◐", light:"☀", dark:"☾"}[theme];
+  document.querySelectorAll("#segTheme button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === theme));
+}
+dark.addEventListener("change", applyTheme);
+
+/* ---------- chrome ---------- */
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i]").forEach(e => e.textContent = t(e.dataset.i));
+  $("btnLang").textContent = lang === "th" ? "EN" : "TH";
+  document.querySelectorAll("#segLang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === lang));
+  setSystem(online);
+  const c = [...new Set(cameras.map(x => x.agencyName).filter(Boolean))];
+  $("credits").textContent = c.length ? t("by") + " " + c.join(" · ") : "";
+  route(true);
+}
+function setLang(v) { lang = v; store.set("lang", v); applyLang(); }
+function setTheme(v) { theme = v; store.set("theme", v); applyTheme(); }
+$("btnLang").onclick = () => setLang(lang === "th" ? "en" : "th");
+$("btnTheme").onclick = () => setTheme({system:"light", light:"dark", dark:"system"}[theme]);
+document.querySelectorAll("#segTheme button").forEach(b => b.onclick = () => setTheme(b.dataset.v));
+document.querySelectorAll("#segLang button").forEach(b => b.onclick = () => setLang(b.dataset.v));
+const sheet = open => { $("sheet").classList.toggle("show", open); $("sheetBg").classList.toggle("show", open); };
+$("tabSet").onclick = () => sheet(true); $("sheetBg").onclick = () => sheet(false);
+addEventListener("keydown", e => e.key === "Escape" && sheet(false));
+
+function toast(msg) {
+  const el = document.createElement("div"); el.className = "toast"; el.textContent = msg;
+  $("toasts").appendChild(el); setTimeout(() => el.remove(), 2800);
+}
+function progress() {
+  const b = $("bar"); b.style.opacity = 1; b.style.width = "70%";
+  setTimeout(() => { b.style.width = "100%"; setTimeout(() => { b.style.opacity = 0; b.style.width = 0; }, 300); }, 220);
+}
 
 /* ---------- data ---------- */
-async function loadCameras(first) {
+const STALE_H = 6;
+let cameras = [], online = null, loaded = false, current = null, hls = null, retry = 0, retryT = null, snapT = null;
+
+function setSystem(ok) {
+  const el = $("sys"); el.className = "sys " + (ok === null ? "" : ok ? "ok" : "bad");
+  $("sysT").textContent = ok === null ? t("checking") : ok ? t("online") : t("offline");
+}
+async function loadCameras() {
   try {
     const r = await fetch("/api/cameras", {cache:"no-store"});
     if (!r.ok) throw new Error(r.status);
     cameras = await r.json();
-    setSystem(true);
-    renderList();
-    if (first) {
-      const wanted = cameras.find(c => c.id === location.hash.slice(1) && c.enabled) || cameras.find(c => c.enabled);
-      wanted ? select(wanted.id) : $("viewer").innerHTML = '<div class="card empty">ขณะนี้ยังไม่มีจุดตรวจวัดที่เปิดใช้งาน</div>';
-    } else if (current) {
-      current = cameras.find(c => c.id === current.id) || current;
-      renderWater(current);               // อัปเดตระดับน้ำโดยไม่รีโหลดวิดีโอ
-    }
-  } catch (e) {
-    setSystem(false);
-    if (first) $("cams").innerHTML = '<div class="card empty">โหลดข้อมูลกล้องไม่ได้ กรุณาลองใหม่อีกครั้ง<br><br><button onclick="location.reload()">โหลดใหม่</button></div>';
+    if (online === false) toast(t("back2"));
+    online = true; setSystem(true);
+    const first = !loaded; loaded = true;
+    if (first) applyLang();
+    else if (route.view === "home") renderHome();
+    else if (current) { current = cameras.find(c => c.id === current.id) || current; renderWater(current); }
+  } catch {
+    if (online !== false) toast(t("lost"));
+    online = false; setSystem(false);
+    if (!loaded) $("app").innerHTML = `<div class="card empty">${t("loadFail")}<br><br><button class="ibtn" onclick="location.reload()">${t("reload")}</button></div>`;
   }
 }
-function setSystem(ok) {
-  $("sys").className = "pill " + (ok ? "ok" : "bad");
-  $("sysText").textContent = ok ? "ระบบออนไลน์" : "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้";
-}
+const stOf = w => w && w.value != null ? w.status : "none";
+const flag = w => stOf(w) === "none" ? t("noData") : t(w.status);
 
-/* ---------- list ---------- */
-function renderList() {
-  $("cams").innerHTML = cameras.map(c => {
-    const w = c.water || {};
-    const lvl = w.value == null ? "" : `<span class="lvl ${esc(w.status)}">${Number(w.value).toFixed(1)} ${esc(w.unit || "ซม.")}</span>`;
-    return `<button class="cam" data-id="${esc(c.id)}" ${c.enabled ? "" : "disabled"} aria-current="${current && current.id === c.id}">
-      <img src="${safeUrl(c.thumbnail)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
-      <div class="cam-body">
-        <div class="cam-name">${esc(c.name)}</div>
-        <div class="cam-loc">จุดวัด ${esc(c.location)}</div>
-        <div class="cam-row"><span>${c.enabled ? "เปิดใช้งาน" : "กำลังปรับปรุง"}</span>${lvl}</div>
-      </div></button>`;
+/* ---------- routing ---------- */
+function route(force) {
+  if (!loaded) { $("app").innerHTML = '<div class="grid"><div class="sk"></div><div class="sk"></div></div>'; return; }
+  const h = location.hash.replace(/^#\/?/, "");
+  const view = h === "" || h === "cameras" ? "home" : h;
+  const same = route.view === view && !force;
+  route.view = view;
+  const home = view === "home";
+  $("lnkHome").setAttribute("aria-current", home && h === "" ? "page" : "false");
+  $("lnkCams").setAttribute("aria-current", home && h === "cameras" ? "page" : "false");
+  $("tabHome").setAttribute("aria-current", home && h === "" ? "page" : "false");
+  $("tabCams").setAttribute("aria-current", !home || h === "cameras" ? "page" : "false");
+  if (same) { if (h === "cameras") $("list")?.scrollIntoView({behavior:"smooth", block:"start"}); return; }
+  stopPlayer(); progress();
+  if (home) { current = null; document.title = "NontWater · " + t("tag"); renderHome(); if (h === "cameras") setTimeout(() => $("list")?.scrollIntoView({behavior:"smooth", block:"start"}), 60); }
+  else renderCamera(view);
+  if (!force) scrollTo({top:0});
+}
+addEventListener("hashchange", () => route());
+
+/* ---------- home ---------- */
+function renderHome() {
+  const cards = cameras.map(c => {
+    const w = c.water || {}, s = stOf(w);
+    return `<button class="card cam s-${s}" ${c.enabled ? "" : "disabled"} data-id="${esc(c.id)}">
+      <div class="thumb"><img src="${url(c.thumbnail)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">
+        <span class="tag ${c.enabled ? "" : "off"}">${c.enabled ? t("live") : t("maint")}</span></div>
+      <div class="cam-body"><div class="cam-name">${esc(c.name)}</div><div class="cam-loc">${t("point")} ${esc(c.location)}</div>
+        <div class="cam-lvl"><b>${s === "none" ? "--" : Number(w.value).toFixed(1)}<small>${t("unit")}</small></b><span class="chip">${esc(flag(w))}</span></div></div></button>`;
   }).join("");
-  document.querySelectorAll(".cam").forEach(b => b.onclick = () => select(b.dataset.id));
+  $("app").innerHTML = `<div class="view"><div class="hero"><h1>${t("heroT")}</h1><p>${t("heroS")}</p></div>
+    <div id="list" class="grid" style="scroll-margin-top:92px">${cards || `<div class="card empty">${t("none")}</div>`}</div></div>`;
+  document.querySelectorAll(".cam").forEach(b => b.onclick = () => { location.hash = "#/" + b.dataset.id; });
 }
 
-/* ---------- viewer ---------- */
-function select(id) {
+/* ---------- camera page ---------- */
+function renderCamera(id) {
   const c = cameras.find(x => x.id === id);
-  if (!c || !c.enabled) return;
-  current = c;
-  history.replaceState(null, "", "#" + id);
-  document.title = c.name + " · NontWater";
-  renderList();
-  $("viewer").innerHTML = `
-    <div class="viewer-head"><div><h1>${esc(c.name)}</h1><p>จุดวัด ${esc(c.location)} · ${esc(c.id)}</p></div></div>
-    <div class="grid">
-      <div>
-        <div class="video">
-          <video id="vid" controls autoplay muted playsinline></video>
-          <img id="snap" class="snap" alt="ภาพนิ่งล่าสุดจากกล้อง" hidden>
-          <span id="live" class="live off">กำลังเชื่อมต่อ</span>
-          <div id="ov" class="overlay show"><div class="spinner"></div><div id="ovText">กำลังเชื่อมต่อกล้อง...</div></div>
-        </div>
-        <div class="card info">
-          <div class="org">${c.municipalityLogo ? `<img src="${safeUrl(c.municipalityLogo)}" alt="" onerror="this.remove()">` : ""}<div><b>${esc(c.name)}</b><span>${esc(c.location)}</span></div></div>
-          <div class="org">${c.agencyLogo ? `<img src="${safeUrl(c.agencyLogo)}" alt="" onerror="this.remove()">` : ""}<div><b>หน่วยงานผู้ดูแลระบบ</b><span>${esc(c.agencyName)}</span></div></div>
-        </div>
-      </div>
-      <div id="water" class="card water"></div>
-    </div>`;
-  renderWater(c);
-  startPlayer(c);
+  if (!c || !c.enabled) { $("app").innerHTML = `<div class="view card empty">${t("notFound")}<br><br><a class="back" href="#/">${t("home")}</a></div>`; return; }
+  current = c; document.title = c.name + " · NontWater";
+  $("app").innerHTML = `<div class="view">
+    <a class="back" href="#/cameras"><svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M15 18l-6-6 6-6"/></svg>${t("back")}</a>
+    <div class="head"><h1>${esc(c.name)}</h1><p>${t("point")} ${esc(c.location)} · ${esc(c.id)}</p></div>
+    <div class="cols"><div>
+      <div class="video"><video id="vid" controls autoplay muted playsinline></video><img id="snap" alt="" hidden>
+        <span id="live" class="tag off">${t("snap")}</span>
+        <div id="ov" class="ov show"><div class="spin"></div><div id="ovT">${t("connecting")}</div></div></div>
+      <div class="card orgs">
+        <div class="org">${c.municipalityLogo ? `<img src="${url(c.municipalityLogo)}" alt="" onerror="this.remove()">` : ""}<div><b>${esc(c.name)}</b><span>${esc(c.location)}</span></div></div>
+        <div class="org">${c.agencyLogo ? `<img src="${url(c.agencyLogo)}" alt="" onerror="this.remove()">` : ""}<div><b>${t("agency")}</b><span>${esc(c.agencyName)}</span></div></div>
+      </div></div>
+      <div id="water" class="card water"></div></div></div>`;
+  $("live").textContent = t("connecting").replace("...", "");
+  renderWater(c); startPlayer(c);
 }
 
 function renderWater(c) {
   const el = $("water"); if (!el) return;
-  const w = c.water || {}, has = w.value != null;
-  const st = has ? w.status : "none";
+  const w = c.water || {}, s = stOf(w), has = s !== "none";
   const pct = has ? Math.max(0, Math.min(100, Number(w.value))) : 0;
-  const ageH = w.updatedAt ? (Date.now() - new Date(w.updatedAt)) / 36e5 : null;
-  const ticks = [0,25,50,75,100].map(v => `<div class="tick mid" style="bottom:${v}%"><i>${v}</i></div>`).join("")
-              + [12.5,37.5,62.5,87.5].map(v => `<div class="tick" style="bottom:${v}%"></div>`).join("");
-  el.style.setProperty("--c", `var(--${st === "none" ? "none" : esc(st)})`);
-  el.innerHTML = `
-    <h2>ระดับน้ำปัจจุบัน</h2>
-    <div class="gauge-wrap">
-      <div class="staff" role="img" aria-label="ระดับน้ำ ${has ? pct + " เซนติเมตร" : "ไม่มีข้อมูล"}"><div class="fill" style="height:${pct}%"></div>${ticks}</div>
-      <div class="reading">
-        <small>ซม. จากเกณฑ์วัด</small>
-        <div class="num">${has ? Number(w.value).toFixed(1) : "--"}<span>${esc(w.unit || "ซม.")}</span></div>
-        <div class="flag">${esc(w.statusText || "ไม่มีข้อมูล")}</div>
-      </div>
-    </div>
-    ${ageH !== null && ageH > STALE_HOURS ? `<div class="stale">ข้อมูลระดับน้ำไม่ได้อัปเดตมาแล้ว ${Math.floor(ageH)} ชั่วโมง ควรตรวจสอบกับเจ้าหน้าที่</div>` : ""}
-    <dl class="meta">
-      <div><dt>รหัสกล้อง</dt><dd>${esc(c.id)}</dd></div>
-      <div><dt>จุดติดตั้ง</dt><dd>${esc(c.location)}</dd></div>
-      <div><dt>บันทึกข้อมูลเมื่อ</dt><dd>${w.updatedAt ? fmt(w.updatedAt) : "--"}</dd></div>
-    </dl>
-    ${c.waterStatusImage ? `<img class="water-img" src="${safeUrl(c.waterStatusImage)}" alt="แผนภาพสถานะระดับน้ำ" loading="lazy" onerror="this.remove()">` : ""}`;
+  const age = w.updatedAt ? (Date.now() - new Date(w.updatedAt)) / 36e5 : null;
+  const ticks = [0,25,50,75,100].map(v => `<div class="tick m" style="bottom:${v}%"><i>${v}</i></div>`).join("") + [12.5,37.5,62.5,87.5].map(v => `<div class="tick" style="bottom:${v}%"></div>`).join("");
+  el.className = `card water s-${s}`;
+  el.innerHTML = `<h2>${t("current")}</h2>
+    <div class="gw"><div class="staff" role="img" aria-label="${has ? pct + " " + t("unit") : t("noData")}"><div class="fill" style="height:${pct}%"></div>${ticks}</div>
+      <div class="rd"><small>${t("scale")}</small><div class="num">${has ? Number(w.value).toFixed(1) : "--"}<span>${t("unit")}</span></div><div class="chip">${esc(flag(w))}</div></div></div>
+    ${age !== null && age > STALE_H ? `<div class="stale">${t("stale", Math.floor(age))}</div>` : ""}
+    <dl class="meta"><div><dt>${t("camId")}</dt><dd>${esc(c.id)}</dd></div><div><dt>${t("loc")}</dt><dd>${esc(c.location)}</dd></div><div><dt>${t("rec")}</dt><dd>${w.updatedAt ? fmt(w.updatedAt) : "--"}</dd></div></dl>`;
 }
 
 /* ---------- player ---------- */
-function overlay(show, text, withRetry) {
-  const ov = $("ov"); if (!ov) return;
-  ov.classList.toggle("show", show);
-  if (text) $("ovText").innerHTML = esc(text) + (withRetry ? '<br><button id="retryBtn">ลองใหม่</button>' : "");
-  if (withRetry) $("retryBtn").onclick = () => { retry = 0; startPlayer(current); };
-  ov.querySelector(".spinner").style.display = withRetry ? "none" : "";
+function overlay(show, text, btn) {
+  const o = $("ov"); if (!o) return;
+  o.classList.toggle("show", show);
+  if (text) $("ovT").innerHTML = esc(text) + (btn ? `<br><button id="rb">${t("retry")}</button>` : "");
+  if (btn) $("rb").onclick = () => { retry = 0; startPlayer(current); };
+  o.querySelector(".spin").style.display = btn ? "none" : "";
 }
-function liveBadge(on, text) { const l = $("live"); if (l) { l.textContent = text; l.classList.toggle("off", !on); } }
-
+function badge(on, text) { const l = $("live"); if (l) { l.textContent = text; l.classList.toggle("off", !on); } }
 function stopPlayer() {
-  clearTimeout(retryTimer); clearInterval(snapTimer);
+  clearTimeout(retryT); clearInterval(snapT);
   if (hls) { hls.destroy(); hls = null; }
   const v = $("vid"); if (v) { v.pause(); v.removeAttribute("src"); v.load(); }
 }
-
 function startPlayer(c) {
   stopPlayer();
   const v = $("vid"); if (!v) return;
   $("snap").hidden = true; v.hidden = false;
-  v.onplaying = () => { retry = 0; overlay(false); liveBadge(true, "● LIVE"); };
-  v.onwaiting = () => overlay(true, "กำลังโหลดภาพ...");
+  v.onplaying = () => { retry = 0; overlay(false); badge(true, t("live")); };
+  v.onwaiting = () => overlay(true, t("loading"));
   if (window.Hls && Hls.isSupported()) {
     hls = new Hls({lowLatencyMode:false, backBufferLength:30, maxBufferLength:15, liveSyncDurationCount:4, liveMaxLatencyDurationCount:12});
     hls.loadSource(c.stream); hls.attachMedia(v);
@@ -289,47 +416,37 @@ function startPlayer(c) {
     });
   } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
     v.src = c.stream; v.onerror = () => reconnect(c); v.play().catch(() => {});
-  } else if (!window.Hls && retry++ < 5) {      // hls.js ยังโหลดไม่เสร็จ (defer)
-    retryTimer = setTimeout(() => startPlayer(c), 600);
-  } else { snapshotMode(c); }
+  } else if (!window.Hls && retry++ < 5) retryT = setTimeout(() => startPlayer(c), 600);
+  else snapshotMode(c);
 }
-
 function reconnect(c) {
-  retry++;
-  if (retry > 4) return snapshotMode(c);        // สตรีมใช้ไม่ได้ → สลับเป็นภาพนิ่งที่ server ดึงให้
-  overlay(true, "สัญญาณหลุด กำลังเชื่อมต่อใหม่...");
-  clearTimeout(retryTimer);
-  retryTimer = setTimeout(() => current && current.id === c.id && startPlayer(c), Math.min(1500 * 2 ** retry, 12000));
+  if (++retry > 4) return snapshotMode(c);
+  overlay(true, t("reconn")); clearTimeout(retryT);
+  retryT = setTimeout(() => current && current.id === c.id && startPlayer(c), Math.min(1500 * 2 ** retry, 12000));
 }
-
 function snapshotMode(c) {
   if (hls) { hls.destroy(); hls = null; }
   const v = $("vid"), s = $("snap"); if (!v || !s) return;
-  v.hidden = true; s.hidden = false;
-  liveBadge(false, "ภาพนิ่ง");
+  v.hidden = true; s.hidden = false; badge(false, t("snap"));
   const load = () => {
-    const img = new Image();
-    img.onload = () => { s.src = img.src; overlay(false); };
-    img.onerror = () => overlay(true, "ไม่สามารถดึงภาพจากกล้องได้ในขณะนี้", true);
-    img.src = `/api/snapshot/${encodeURIComponent(c.id)}?t=${Date.now()}`;
+    const i = new Image();
+    i.onload = () => { s.src = i.src; overlay(false); };
+    i.onerror = () => overlay(true, t("snapFail"), true);
+    i.src = `/api/snapshot/${encodeURIComponent(c.id)}?t=${Date.now()}`;
   };
-  load(); snapTimer = setInterval(load, SNAP_MS);
+  load(); snapT = setInterval(load, 10000);
 }
 
-/* ---------- misc ---------- */
-setInterval(() => {
-  const n = new Date();
-  $("clock").textContent = n.toLocaleString("th-TH", {dateStyle:"medium", timeStyle:"medium"});
-}, 1000);
-
-document.addEventListener("visibilitychange", () => {   // ประหยัดเน็ต: หยุดเมื่อสลับแท็บ
-  if (!current) return;
-  if (document.hidden) stopPlayer(); else { loadCameras(false); startPlayer(current); }
+/* ---------- boot ---------- */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) return stopPlayer();
+  loadCameras(); if (current) startPlayer(current);
 });
-window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id && (!current || id !== current.id)) select(id); });
-setInterval(() => !document.hidden && loadCameras(false), REFRESH_MS);
-
-loadCameras(true).finally(() => setTimeout(() => $("splash").classList.add("hide"), 250));
+setInterval(() => !document.hidden && loadCameras(), 60000);
+applyTheme(); setSystem(null);
+document.querySelectorAll("[data-i]").forEach(e => e.textContent = t(e.dataset.i));
+route();
+loadCameras().finally(() => setTimeout(() => { route(); $("splash").classList.add("hide"); }, 200));
 </script>
 </body>
 </html>
